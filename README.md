@@ -174,32 +174,24 @@
   [할인된 1인 당 1박 금액 / 할인된 총 금액]
 
 
-![DB](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/7f361f03-1283-4ddd-b6cc-e05687646117/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_204149.png)
+![DB초안](https://github.com/hotel-resevation-toy-project/mini-project/assets/62832081/ba9e529f-20a6-4e56-a13a-1c02442fdb0c)
 
 객체 설계 초안
 
-![Class](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/7123e53e-9590-4035-96d7-fccf5aaebcca/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_204221.png)
+![class초안](https://github.com/ojs258/Spring_TIL/assets/62832081/de7da95c-705d-414d-a5ed-19a43c0474cb)
 
 엔티티 설계 초안
 
-![Entity](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/bcecdf1b-6ee7-4e48-8320-82149f2380d6/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_204202.png)
+![Entity초안](https://github.com/ojs258/Spring_TIL/assets/62832081/3088d28e-5ee8-45c8-aa9b-75bacf8aa2ac)
 
 메서드 설계 진행 중
 
-![Method](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/3499827b-8cb4-4d29-9702-31a032cf9f79/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_204233.png)
+![method초안](https://github.com/ojs258/Spring_TIL/assets/62832081/860bdd94-b638-4a9d-9670-4d70b5ac0726)
 
 +api설계
 
 역할분담
 
-![roleAll](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/5d6d7a49-0aca-4b1c-8e9c-69e81931fae0/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_203539.png)
-
-![roleUserRepo](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/1a0e7d04-faab-4164-8bcb-659763fe3e36/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_202346.png)
-
-![roleUserServc](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/01c6afa6-254e-4622-906f-fbcc01ecb6b9/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_202412.png)
-
-![roleReserveRepo](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/f8d6031c-480c-4e77-8173-f79fcbdbc8d8/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_202426.png)
-
-![roleReserveServc](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/a6bfa4f9-9675-49f1-82b5-d0ffd7dec123/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_202443.png)
+![roleAll](https://github.com/ojs258/Spring_TIL/assets/62832081/9f8ba35a-ae07-4799-8404-4816f90872fd)
 
 +α 오류 코드 설계
