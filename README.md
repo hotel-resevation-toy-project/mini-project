@@ -27,7 +27,7 @@
     - Main
         - MySql
     - Test
-        - H2 Database
+        - H2 Database 2.2.220
 - 디자인패턴
     - 모놀리스 아키텍처(Monolithic Architecture) (단일 DB활용)
     - 모델-뷰-컨트롤러 패턴 (MVC, Model-View-Controller)
