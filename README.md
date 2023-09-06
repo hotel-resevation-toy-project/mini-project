@@ -179,12 +179,7 @@
 
   [할인된 1인 당 1박 금액 / 할인된 총 금액]
 
-<<<<<<< HEAD
-![DB](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/7f361f03-1283-4ddd-b6cc-e05687646117/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_204149.png)
-=======
-
 ![DB초안](https://github.com/hotel-resevation-toy-project/mini-project/assets/62832081/ba9e529f-20a6-4e56-a13a-1c02442fdb0c)
->>>>>>> beb30a06f6f4d32763b7912168813cbbfbc4ce7d
 
 객체 설계 초안
 
