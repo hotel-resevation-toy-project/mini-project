@@ -1,6 +1,14 @@
+## 정보
+
+- 팀 이름 : 그랜드 부다페스트 호텔
+- 프로젝트 명 : Hotel - Reservation
+- 조장 : 오진석
+- 부조장 : 김채림
+- 팀원 : 박지호, 서지원, 김태현, 호지원, 이다은
+
 ## 주제
 
-온라인 객실 예약 사이트
+- 온라인 객실 예약 사이트
 
 ## BackEnd
 
@@ -11,7 +19,7 @@
 - Denpendency
     - Java, Spring
         - Lombok
-        - Spring Configuration
+        - Spring Configuration Processor
         - Vaildation
         - SpringSecurity
         - JsonWebToken
@@ -23,6 +31,7 @@
         - log4jdbc
     - Web
         - Spring Web
+        - Thymeleaf
 - DataBase
     - Main
         - MySql
@@ -79,7 +88,6 @@
 
         - 인원 수
         - 침대 종류
-        - 층
         - 가격
     2. 예약 취소
 
@@ -97,9 +105,7 @@
    +α 예약 변경 가능 여부 확인 (예약 날짜, 입실 시간 등을 고려)
 
 
-디비 설계 진행 초안
-
-### 가상의 호텔, 객실 정보
+## 디비 더미 데이터 및 설계 초안
 
 ### 호텔A 의 객실정보
 
@@ -173,8 +179,12 @@
 
   [할인된 1인 당 1박 금액 / 할인된 총 금액]
 
+<<<<<<< HEAD
+![DB](https://prod-files-secure.s3.us-west-2.amazonaws.com/5a0c7f2b-2151-42e3-b1b5-da64686457fa/7f361f03-1283-4ddd-b6cc-e05687646117/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-09-05_204149.png)
+=======
 
 ![DB초안](https://github.com/hotel-resevation-toy-project/mini-project/assets/62832081/ba9e529f-20a6-4e56-a13a-1c02442fdb0c)
+>>>>>>> beb30a06f6f4d32763b7912168813cbbfbc4ce7d
 
 객체 설계 초안
 
