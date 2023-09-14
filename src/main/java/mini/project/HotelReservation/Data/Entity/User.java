@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.Data.Enum.UserRole;
 import mini.project.HotelReservation.Data.Enum.UserStatus;
+import org.springframework.web.bind.annotation.Mapping;
+
+import java.util.List;
 
 
 @Entity
@@ -39,8 +42,10 @@ public class User {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
-    @Enumerated(EnumType.STRING)
     private Hotel hotel;
+
+    @OneToMany(mappedBy = "user")
+    List<Reservation> reservations;
 
     public User(String name, String email, String password,
                 String phoneNumber, UserStatus status, UserRole role){
