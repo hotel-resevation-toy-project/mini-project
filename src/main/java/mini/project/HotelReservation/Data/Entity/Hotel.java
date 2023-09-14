@@ -46,7 +46,7 @@ public class Hotel {
     List<Room> rooms;
 
 
-    public Hotel(String address, String hotelName, String hotelPhoneNumber, String discountPolicy, LocalDateTime checkInTime, LocalDateTime checkOutTime, LocalDateTime startPeakTime, LocalDateTime endPeakTime) {
+    public Hotel(String address, String hotelName, String hotelPhoneNumber, DiscountPolicy discountPolicy, LocalDateTime checkInTime, LocalDateTime checkOutTime, LocalDateTime startPeakTime, LocalDateTime endPeakTime) {
         this.address = address;
         this.hotelName = hotelName;
         this.hotelPhoneNumber = hotelPhoneNumber;
