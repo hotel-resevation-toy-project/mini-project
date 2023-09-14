@@ -1,14 +1,14 @@
 package mini.project.HotelReservation.Data.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,7 +27,8 @@ public class Hotel {
     private String hotelPhoneNumber;
 
     @NotNull
-    private String discountPolicy;
+    @Enumerated(EnumType.STRING)
+    private DiscountPolicy discountPolicy;
 
     @NotNull
     private LocalDateTime checkInTime;
@@ -41,7 +42,8 @@ public class Hotel {
     @NotNull
     private LocalDateTime endPeakTime;
 
-
+    @OneToMany(mappedBy="hotel")
+    List<Room> rooms;
 
 
     public Hotel(String address, String hotelName, String hotelPhoneNumber, String discountPolicy, LocalDateTime checkInTime, LocalDateTime checkOutTime, LocalDateTime startPeakTime, LocalDateTime endPeakTime) {
