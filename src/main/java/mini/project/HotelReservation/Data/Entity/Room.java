@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.Data.Enum.RoomType;
+import org.springframework.web.bind.annotation.Mapping;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,17 +19,24 @@ public class Room {
     private Long roomId;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Integer roomPrice;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Integer roomStock;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
+
+    @ManyToOne
+    @Mapping(mappedBy = "room")
+    List<Reservation> reservations;
 
     public Room(RoomType roomType, Integer roomPrice, Integer roomStock, Hotel hotel) {
         this.roomType = roomType;
