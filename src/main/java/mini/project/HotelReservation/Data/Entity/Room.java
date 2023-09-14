@@ -34,8 +34,7 @@ public class Room {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @ManyToOne
-    @Mapping(mappedBy = "room")
+    @OneToMany(mappedBy = "room")
     List<Reservation> reservations;
 
     public Room(RoomType roomType, Integer roomPrice, Integer roomStock, Hotel hotel) {
