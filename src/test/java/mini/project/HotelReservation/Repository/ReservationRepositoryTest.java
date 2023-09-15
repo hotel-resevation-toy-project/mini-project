@@ -1,18 +1,21 @@
 package mini.project.HotelReservation.Repository;
 
-import mini.project.HotelReservation.Data.Entity.Hotel;
-import mini.project.HotelReservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.Data.Entity.Room;
-import mini.project.HotelReservation.Data.Entity.User;
-import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
-import mini.project.HotelReservation.Data.Enum.RoomType;
-import mini.project.HotelReservation.Data.Enum.UserRole;
-import mini.project.HotelReservation.Data.Enum.UserStatus;
+import mini.project.HotelReservation.Host.Data.Entity.Hotel;
+import mini.project.HotelReservation.Host.Data.Entity.Room;
+import mini.project.HotelReservation.Host.Data.Enum.DiscountPolicy;
+import mini.project.HotelReservation.Host.Repository.HotelRepository;
+import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
+import mini.project.HotelReservation.Reservation.Data.Enum.RoomType;
+import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
+import mini.project.HotelReservation.Host.Repository.RoomRepository;
+import mini.project.HotelReservation.User.Data.Entity.User;
+import mini.project.HotelReservation.User.Data.Enum.UserRole;
+import mini.project.HotelReservation.User.Data.Enum.UserStatus;
+import mini.project.HotelReservation.User.Repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -71,7 +74,7 @@ class ReservationRepositoryTest {
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_USER);
-        userRepository.save(user);
+        User saveUser = userRepository.save(user);
 
         Hotel hotel = new Hotel("서울",
                 "Hotel_A",
@@ -97,9 +100,9 @@ class ReservationRepositoryTest {
                 "010-1234-5678",
                 "오진석",
                 LocalDateTime.now(), LocalDateTime.now().plusDays(5));
-        reservationA.foreignUser(user);
+        reservationA.foreignUser(saveUser);
         reservationA.foreignRoom(roomA);
-        reservationRepository.save(reservationA);
+        Reservation re1 = reservationRepository.save(reservationA);
 
         Reservation reservationB = new Reservation("A-5",
                 1564878,
@@ -108,7 +111,7 @@ class ReservationRepositoryTest {
                 "010-1234-5678",
                 "오진석",
                 LocalDateTime.now(), LocalDateTime.now().plusDays(5));
-        reservationB.foreignUser(user);
+        reservationB.foreignUser(saveUser);
         reservationB.foreignRoom(roomB);
         reservationRepository.save(reservationB);
 
