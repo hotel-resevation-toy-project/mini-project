@@ -20,7 +20,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 //    TokenDecoder td;
-    
     @Override
     public void join(UserSignUpDto sud) {
         //탈퇴한 회원이 재가입하는 경우
