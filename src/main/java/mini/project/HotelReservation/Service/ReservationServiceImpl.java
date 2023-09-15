@@ -14,7 +14,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    private final TokenDecoder td;
+//    private final TokenDecoder td;
 
     @Override
     public ReservationDto reserve(ReserveDto reserveDto) {
