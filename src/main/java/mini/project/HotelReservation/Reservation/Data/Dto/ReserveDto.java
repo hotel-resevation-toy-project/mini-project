@@ -2,7 +2,7 @@ package mini.project.HotelReservation.Reservation.Data.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import mini.project.HotelReservation.Reservation.Data.Enum.RoomType;
+import mini.project.HotelReservation.enumerate.RoomType;
 
 import java.time.LocalDateTime;
 

@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.User.Data.Enum.UserRole;
-import mini.project.HotelReservation.User.Data.Enum.UserStatus;
+import mini.project.HotelReservation.enumerate.UserRole;
+import mini.project.HotelReservation.enumerate.UserStatus;
 import org.springframework.data.domain.Persistable;
 
 import java.util.List;

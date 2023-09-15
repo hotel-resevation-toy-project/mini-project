@@ -1,4 +1,4 @@
-package mini.project.HotelReservation.User.Data.Enum;
+package mini.project.HotelReservation.enumerate;
 
 public enum UserStatus {
     USER_STATUS_ACTIVE,

@@ -1,4 +1,4 @@
-package mini.project.HotelReservation.Reservation.Data.Enum;
+package mini.project.HotelReservation.enumerate;
 
 public enum RoomType {
     ROOM_TYPE_A_SINGLE,

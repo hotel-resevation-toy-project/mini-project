@@ -2,7 +2,7 @@ package mini.project.HotelReservation.Host.Repository;
 
 
 import mini.project.HotelReservation.Host.Data.Entity.Room;
-import mini.project.HotelReservation.Reservation.Data.Enum.RoomType;
+import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {

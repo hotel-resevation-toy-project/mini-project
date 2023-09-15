@@ -2,8 +2,8 @@ package mini.project.HotelReservation.User.Data.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import mini.project.HotelReservation.User.Data.Enum.UserRole;
-import mini.project.HotelReservation.User.Data.Enum.UserStatus;
+import mini.project.HotelReservation.enumerate.UserRole;
+import mini.project.HotelReservation.enumerate.UserStatus;
 
 @Data
 @AllArgsConstructor

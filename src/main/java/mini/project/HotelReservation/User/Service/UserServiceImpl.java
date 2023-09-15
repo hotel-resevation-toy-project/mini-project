@@ -5,7 +5,7 @@ import mini.project.HotelReservation.User.Data.Dto.UserDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
-import mini.project.HotelReservation.User.Data.Enum.UserStatus;
+import mini.project.HotelReservation.enumerate.UserStatus;
 import mini.project.HotelReservation.User.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +17,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-    UserRepository userRepository;
-    //todo: 태현 jwt 로직 구현 후 주석 풀기
-//    TokenDecoder td;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+    //todo : 태현
+    //TokenDecoder td;
     @Override
     public void join(UserSignUpDto sud) {
         //탈퇴한 회원이 재가입하는 경우
@@ -56,15 +58,11 @@ public class UserServiceImpl implements UserService{
     public UserDto logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException());
-
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
             throw new NoSuchElementException();
         }
-        //todo : jwt 생성 후 비밀번호 확인 로직 구현
-//        if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
-//
-//        }
+        if(passwordEncoder.matches(sid.getPassword(), user.getPassword()))
         return null;
     }
 

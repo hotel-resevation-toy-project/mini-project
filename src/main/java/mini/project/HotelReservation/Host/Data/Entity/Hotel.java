@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
-import mini.project.HotelReservation.Host.Data.Enum.DiscountPolicy;
+import mini.project.HotelReservation.enumerate.DiscountPolicy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

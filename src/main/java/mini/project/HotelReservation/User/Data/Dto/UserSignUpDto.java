@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import mini.project.HotelReservation.User.Data.Enum.UserRole;
+import mini.project.HotelReservation.enumerate.UserRole;
 
 @Data
 @AllArgsConstructor
