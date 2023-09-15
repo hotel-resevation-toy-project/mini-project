@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends AuditTime implements Persistable<Long> {
+public class User {
 
     @Id @GeneratedValue
     private Long userId;
