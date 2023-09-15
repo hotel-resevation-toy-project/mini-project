@@ -10,17 +10,16 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-//        http
-//                .authorizeHttpRequests((authz) -> authz
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(withDefaults());
+        http
+                .authorizeHttpRequests((authz) -> authz
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(withDefaults());
         return http.build();
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        //return (web) -> web.ignoring().antMatchers("/ignore1", "/ignore2");
-        return null;
+        return (web) -> web.ignoring().antMatchers("/ignore1", "/ignore2");
     }
 }
