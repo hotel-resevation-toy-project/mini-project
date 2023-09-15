@@ -3,7 +3,7 @@ package mini.project.HotelReservation.Host.Service;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
-import mini.project.HotelReservation.Host.Data.Enum.DiscountPolicy;
+import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReserveDto;
 

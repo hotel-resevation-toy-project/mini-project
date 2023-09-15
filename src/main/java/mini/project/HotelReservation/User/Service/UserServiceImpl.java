@@ -5,7 +5,7 @@ import mini.project.HotelReservation.User.Data.Dto.UserDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
-import mini.project.HotelReservation.User.Data.Enum.UserStatus;
+import mini.project.HotelReservation.enumerate.UserStatus;
 import mini.project.HotelReservation.User.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
