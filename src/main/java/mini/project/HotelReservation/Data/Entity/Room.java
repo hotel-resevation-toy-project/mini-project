@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mini.project.HotelReservation.Data.AuditTime;
 import mini.project.HotelReservation.Data.Enum.RoomType;
 import org.springframework.web.bind.annotation.Mapping;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "ROOMS")
-public class Room {
+public class Room extends AuditTime {
 
     @Id @GeneratedValue
     private Long roomId;

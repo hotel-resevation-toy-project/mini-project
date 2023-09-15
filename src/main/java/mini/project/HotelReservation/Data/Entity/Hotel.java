@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mini.project.HotelReservation.Data.AuditTime;
 import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "HOTELS")
-public class Hotel {
+public class Hotel extends AuditTime {
     @Id @GeneratedValue
     private Long hotelId;
 

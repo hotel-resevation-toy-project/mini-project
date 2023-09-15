@@ -1,4 +1,4 @@
-package mini.project.HotelReservation.Entity;
+package mini.project.HotelReservation.Repository;
 
 import mini.project.HotelReservation.Data.Entity.Hotel;
 import mini.project.HotelReservation.Data.Entity.Reservation;
@@ -8,10 +8,7 @@ import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
 import mini.project.HotelReservation.Data.Enum.RoomType;
 import mini.project.HotelReservation.Data.Enum.UserRole;
 import mini.project.HotelReservation.Data.Enum.UserStatus;
-import mini.project.HotelReservation.Repository.HotelRepository;
-import mini.project.HotelReservation.Repository.ReservationRepository;
-import mini.project.HotelReservation.Repository.RoomRepository;
-import mini.project.HotelReservation.Repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
-class ReservationTest {
+class ReservationRepositoryTest {
 
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
@@ -36,27 +32,34 @@ class ReservationTest {
     private final RoomRepository roomRepository;
 
     @Autowired
-    public ReservationTest(ReservationRepository reservationRepository, UserRepository userRepository, HotelRepository hotelRepository, RoomRepository roomRepository) {
+    public ReservationRepositoryTest(ReservationRepository reservationRepository, UserRepository userRepository, HotelRepository hotelRepository, RoomRepository roomRepository) {
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
     }
 
+    @BeforeEach
+    public void init(){
+        reservationRepository.deleteAll();
+        userRepository.deleteAll();
+        hotelRepository.deleteAll();
+    }
+
     @Test
     void 예약_번호로_예약_조회() {
-        Reservation reservationA = new Reservation("A-1",
+        Reservation reservationA = new Reservation("A-3",
                 123456,
                 RoomType.ROOM_TYPE_A_SINGLE,
                 "A",
                 "010-1234-5678",
                 "오진석",
                 LocalDateTime.now(), LocalDateTime.now().plusDays(5));
-        reservationRepository.save(reservationA);
+        Reservation save = reservationRepository.save(reservationA);
 
-        Reservation result = reservationRepository.findByReserveNumber("A-1");
+        Reservation result = reservationRepository.findByReserveNumber("A-3");
 
-        assertEquals(result,reservationA);
+        assertEquals(result,save);
     }
 
     @Test
@@ -87,7 +90,7 @@ class ReservationTest {
         roomRepository.save(roomA);
         roomRepository.save(roomB);
 
-        Reservation reservationA = new Reservation("A-1",
+        Reservation reservationA = new Reservation("A-4",
                 1234568,
                 RoomType.ROOM_TYPE_A_SINGLE,
                 "A",
@@ -98,7 +101,7 @@ class ReservationTest {
         reservationA.foreignRoom(roomA);
         reservationRepository.save(reservationA);
 
-        Reservation reservationB = new Reservation("A-2",
+        Reservation reservationB = new Reservation("A-5",
                 1564878,
                 RoomType.ROOM_TYPE_B_TWIN,
                 "A",
@@ -186,7 +189,7 @@ class ReservationTest {
 
         //when
         reservationRepository.deleteByReserveNumber("A-1");
-        List<Reservation> result = reservationRepository.findAllByUser_UserId(1L);
+        List<Reservation> result = reservationRepository.findAll();
 
         assertEquals(result.size(),1);
     }

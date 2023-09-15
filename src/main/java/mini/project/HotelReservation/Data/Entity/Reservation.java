@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mini.project.HotelReservation.Data.AuditTime;
 import mini.project.HotelReservation.Data.Dto.ReserveDto;
 import mini.project.HotelReservation.Data.Enum.RoomType;
+import org.springframework.data.domain.Persistable;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "RESERVATIONS")
-public class Reservation {
+public class Reservation extends AuditTime implements Persistable<Long> {
     @Id @GeneratedValue
     private Long reserveId;
 
@@ -61,12 +63,19 @@ public class Reservation {
         this.checkOutDate = checkOutDate;
     }
 
-
-
     //비즈니스 로직
     public Reservation createReserve(User user, Room room, ReserveDto reserveDto) {
-
         return null;
+    }
+
+    @Override
+    public Long getId() {
+        return null;
+    }
+
+    @Override
+    public boolean isNew() {
+        return false;
     }
 
     // 연관관계 메서드
