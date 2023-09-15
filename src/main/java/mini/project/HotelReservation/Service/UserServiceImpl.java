@@ -7,7 +7,6 @@ import mini.project.HotelReservation.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.Data.Entity.User;
 import mini.project.HotelReservation.Data.Enum.UserStatus;
 import mini.project.HotelReservation.Repository.UserRepository;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     UserRepository userRepository;
+    //todo: 태현 jwt 로직 구현 후 주석 풀기
 //    TokenDecoder td;
     @Override
     public void join(UserSignUpDto sud) {
@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService{
     public UserDto logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException());
+
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
             throw new NoSuchElementException();
