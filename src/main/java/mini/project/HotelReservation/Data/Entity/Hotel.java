@@ -62,7 +62,7 @@ public class Hotel extends AuditTime {
     }
 
     //비즈니스 로직
-    private void changePolicy(DiscountPolicy dis;){
+    public void changePolicy(DiscountPolicy dis;){
         discountPolicy = dis;
     }
 
