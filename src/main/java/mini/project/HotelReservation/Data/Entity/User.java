@@ -3,19 +3,20 @@ package mini.project.HotelReservation.Data.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import mini.project.HotelReservation.Data.AuditTime;
 import mini.project.HotelReservation.Data.Enum.UserRole;
 import mini.project.HotelReservation.Data.Enum.UserStatus;
-import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.data.domain.Persistable;
 
 import java.util.List;
-
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends AuditTime implements Persistable<Long> {
 
     @Id @GeneratedValue
     private Long userId;
@@ -47,6 +48,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Reservation> reservations;
 
+    @Builder
     public User(String name, String email, String password,
                 String phoneNumber, UserStatus status, UserRole role){
         this.name = name;
@@ -55,7 +57,6 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.status = status;
         this.role = role;
-
     }
 
     //비즈니스 로직
@@ -67,7 +68,18 @@ public class User {
     private void upDateInfo(User user){
 
     }
-    private void changeStatus(String Status){
-
+    public void changeStatus(){
+        this.status = UserStatus.USER_STATUS_ACTIVE;
     }
+
+    @Override
+    public Long getId() {
+        return null;
+    }
+
+    @Override
+    public boolean isNew() {
+        return false;
+    }
+
 }
