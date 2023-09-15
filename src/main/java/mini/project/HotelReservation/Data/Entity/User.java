@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "USERS")
-public class User extends AuditTime {
+public class User extends AuditTime implements Persistable<Long>{
 
     @Id @GeneratedValue
     private Long userId;
