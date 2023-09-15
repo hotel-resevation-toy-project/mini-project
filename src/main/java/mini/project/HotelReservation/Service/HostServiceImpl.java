@@ -2,16 +2,20 @@ package mini.project.HotelReservation.Service;
 
 import mini.project.HotelReservation.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Data.Dto.ReserveDto;
-import mini.project.HotelReservation.Repository.UserRepository;
-import mini.project.HotelReservation.Service.HostService;
-
+import mini.project.HotelReservation.Data.Entity.Hotel;
+import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
+import mini.project.HotelReservation.Repository.HotelRepository;
 import java.util.List;
 
 public class HostServiceImpl implements HostService {
-    private UserRepository userRepository;
+    private HotelRepository hotelRepository;
+    //todo: jwt 구현후 주석풀기
 //    private TokenDecoder td;
     @Override
-    public void changePolicy(String policy) {
+    public void changePolicy(DiscountPolicy policy) {
+        Long hotelId = td.asdasd();
+        Hotel hotel = hotelRepository.findByHotelId(hotelId);
+        hotel.changePolicy((DiscountPolicy) policy);
 
     }
 

@@ -9,7 +9,6 @@ import mini.project.HotelReservation.Data.AuditTime;
 import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -62,6 +61,8 @@ public class Hotel extends AuditTime {
     }
 
     //비즈니스 로직
-    private void changePolicy(){}
+    public void changePolicy(DiscountPolicy dis){
+        discountPolicy = dis;
+    }
 
 }
