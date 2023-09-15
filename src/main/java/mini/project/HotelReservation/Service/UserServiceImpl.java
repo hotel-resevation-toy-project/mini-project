@@ -19,10 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
-    //todo : 태현
-    //TokenDecoder td;
+    
     @Override
     public void join(UserSignUpDto sud) {
         //탈퇴한 회원이 재가입하는 경우
