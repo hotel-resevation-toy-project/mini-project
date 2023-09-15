@@ -7,12 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.Data.Enum.DiscountPolicy;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "HOTELS")
 public class Hotel {
     @Id @GeneratedValue
     private Long hotelId;
@@ -31,30 +34,30 @@ public class Hotel {
     private DiscountPolicy discountPolicy;
 
     @NotNull
-    private LocalDateTime checkInTime;
+    private LocalTime checkInTime;
 
     @NotNull
-    private LocalDateTime checkOutTime;
+    private LocalTime checkOutTime;
 
     @NotNull
-    private LocalDateTime startPeakTime;
+    private LocalDate startPeakDate;
 
     @NotNull
-    private LocalDateTime endPeakTime;
+    private LocalDate endPeakDate;
 
     @OneToMany(mappedBy="hotel")
     List<Room> rooms;
 
 
-    public Hotel(String address, String hotelName, String hotelPhoneNumber, DiscountPolicy discountPolicy, LocalDateTime checkInTime, LocalDateTime checkOutTime, LocalDateTime startPeakTime, LocalDateTime endPeakTime) {
+    public Hotel(String address, String hotelName, String hotelPhoneNumber, DiscountPolicy discountPolicy, LocalTime checkInTime, LocalTime checkOutTime, LocalDate startPeakDate, LocalDate endPeakDate) {
         this.address = address;
         this.hotelName = hotelName;
         this.hotelPhoneNumber = hotelPhoneNumber;
         this.discountPolicy = discountPolicy;
         this.checkInTime = checkInTime;
         this.checkOutTime = checkOutTime;
-        this.startPeakTime = startPeakTime;
-        this.endPeakTime = endPeakTime;
+        this.startPeakDate = startPeakDate;
+        this.endPeakDate = endPeakDate;
     }
 
     //비즈니스 로직

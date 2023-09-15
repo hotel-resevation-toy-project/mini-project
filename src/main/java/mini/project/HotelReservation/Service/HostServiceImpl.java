@@ -9,7 +9,7 @@ import java.util.List;
 
 public class HostServiceImpl implements HostService {
     private UserRepository userRepository;
-    private TokenDecoder td;
+//    private TokenDecoder td;
     @Override
     public void changePolicy(String policy) {
 

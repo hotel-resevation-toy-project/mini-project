@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "ROOMS")
 public class Room {
 
     @Id @GeneratedValue
@@ -23,11 +24,9 @@ public class Room {
     private RoomType roomType;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     private Integer roomPrice;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     private Integer roomStock;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -37,11 +36,12 @@ public class Room {
     @OneToMany(mappedBy = "room")
     List<Reservation> reservations;
 
-    public Room(RoomType roomType, Integer roomPrice, Integer roomStock, Hotel hotel) {
+    // 연관관계 매핑은 생성자에서 빼야함 진석 -> 다은
+    // 생성자에 Hotel을 빼고 아래의 foreignHotel이용해야함
+    public Room(RoomType roomType, Integer roomPrice, Integer roomStock) {
         this.roomType = roomType;
         this.roomPrice = roomPrice;
         this.roomStock = roomStock;
-        this.hotel = hotel;
     }
 
     //비즈니스 로직

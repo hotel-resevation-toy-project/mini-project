@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "RESERVATIONS")
 public class Reservation {
     @Id @GeneratedValue
     private Long reserveId;
@@ -21,7 +22,7 @@ public class Reservation {
     private String reserveNumber;
 
     @NotNull
-    private String reservePrice;
+    private Integer reservePrice;
 
     @NotNull
     private RoomType roomType;
@@ -49,7 +50,7 @@ public class Reservation {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public Reservation(String reserveNumber, String reservePrice, RoomType roomType, String hotelName, String phoneNumber, String userName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
+    public Reservation(String reserveNumber, Integer reservePrice, RoomType roomType, String hotelName, String phoneNumber, String userName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
         this.reserveNumber = reserveNumber;
         this.reservePrice = reservePrice;
         this.roomType = roomType;
@@ -63,16 +64,16 @@ public class Reservation {
 
 
     //비즈니스 로직
-    Reservation createReserve(User user, Room room, ReserveDto reserveDto) {
+    public Reservation createReserve(User user, Room room, ReserveDto reserveDto) {
 
         return null;
     }
 
     // 연관관계 메서드
-    void foreignUser(User foreignUser){
+    public void foreignUser(User foreignUser){
         user = foreignUser;
     }
-    void foreignRoom(Room foreignRoom){
+    public void foreignRoom(Room foreignRoom){
         room = foreignRoom;
     }
     
