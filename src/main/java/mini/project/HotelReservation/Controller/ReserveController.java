@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ReserveController {
 
     private static ReservationService reservationService;
-    
     @Autowired
     public ReserveController(ReservationService reservationService){
         this.reservationService = reservationService;
