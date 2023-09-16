@@ -6,6 +6,7 @@ import mini.project.HotelReservation.Reservation.Data.Dto.ReservationDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReserveDto;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
+import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final TokenDecoder td;
 //td.tokenToIds(String token);
     //예약
-
     @Override
     public ReservationDto reserve(ReserveDto reserveDto) {
 /*
@@ -66,17 +66,15 @@ public class ReservationServiceImpl implements ReservationService {
         예약 순서 → 타입별 전체 객실 수 - 타입별 남은 객실 수 = 타입별 예약 순서
         */
 
-        //todo: ? 에 예약 순서 들어가야함
+        // todo: ? 에 예약 순서 들어가야함
         String reserveNumber =
         reserveDto.getHotelName()+reserveDto.getRoomType().toString()
                 + "?" + reserveDto.getCheckInDate().toLocalDate().toString();
 
 //        List<Reservation> findAllByUser_UserId(Long userId)
 
-    List<Reservation> reservationList = reservationRepository.findAllByUser_UserId(td.tokenToIds(String token));
 
-
-        //todo: 유저이름 가져오자..
+        // todo: 유저이름 가져오자
         Reservation reservation =
                 new Reservation(
                         reserveNumber,
@@ -88,7 +86,6 @@ public class ReservationServiceImpl implements ReservationService {
                         reserveDto.getCheckInDate(),
                         reserveDto.getCheckOutDate()
                 );
-
 
 
 
@@ -108,22 +105,19 @@ public class ReservationServiceImpl implements ReservationService {
     //해당 유저의 예약 리스트
     @Override
     public List<ReservationDto> reservations() {
-
-
-        return null;
+        return reservationRepository.findAllByUser_UserId(td.tokenToIds(String token));
     }
 
     //예약 상세 정보
     @Override
     public ReservationDto reserveInfo(String reserveNumber) {
-
-
         return null;
     }
 
     //예약 취소
     @Override
     public void reserveDelete(String reserveNumber) {
+        
 
     }
 }
