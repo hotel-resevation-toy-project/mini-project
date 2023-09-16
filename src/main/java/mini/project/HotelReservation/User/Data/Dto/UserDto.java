@@ -2,6 +2,7 @@ package mini.project.HotelReservation.User.Data.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
 
@@ -19,4 +20,6 @@ public class UserDto {
     private final UserStatus status;
 
     private final UserRole role;
+
+    private final JwtTokenDecoder token;
 }

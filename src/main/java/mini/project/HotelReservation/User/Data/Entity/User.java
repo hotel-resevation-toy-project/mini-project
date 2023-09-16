@@ -8,18 +8,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
+import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
-import org.springframework.data.domain.Persistable;
-
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "USERS")
-public class User extends AuditTime implements Persistable<Long>{
+public class User extends AuditTime {
 
     @Id @GeneratedValue
     private Long userId;
@@ -62,27 +61,24 @@ public class User extends AuditTime implements Persistable<Long>{
         this.role = role;
     }
 
-    //비즈니스 로직
-
-    //연관관계 메소드
-    private void foreignHotel(Hotel hotel){
-        //호텔 가입
+    //유저가 호텔인 경우, 호텔 아이디를 조회해서 호텔 가져오기
+    public void foreignHotel(Hotel hotel){
+            this.hotel = hotel;
     }
-    private void upDateInfo(User user){
 
+    public void upDateInfo(User user){
+        name = user.getName();
+        email = user.getEmail();
+        password = user.getPassword();
+        phoneNumber = user.getPhoneNumber();
     }
+
     public void changeStatus(){
         this.status = UserStatus.USER_STATUS_ACTIVE;
     }
 
-    @Override
-    public Long getId() {
-        return null;
-    }
-
-    @Override
-    public boolean isNew() {
-        return false;
+    public void deactive(){
+        this.status = UserStatus.USER_STATUS_DEACTIVE;
     }
 
 }
