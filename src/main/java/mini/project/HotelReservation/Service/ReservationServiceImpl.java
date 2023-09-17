@@ -27,16 +27,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Integer reservePrice() {
-        return null;
-    }
-
-    @Override
-    public void getHotel() {
-
-    }
-
-    @Override
     public List<ReservationDto> reservations() {
         return null;
     }
