@@ -61,6 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .reservePrice(discountPrice(reserveDto.getReservePrice()))
                 .build();
 
+
         return new ReservationDto(
                 reservation.getUserName(),
                 reservation.getPhoneNumber(),
@@ -92,12 +93,21 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
         // reservationDto로 옮겨 담기
 
-        return reservation;
+        return new ReservationDto(
+                reservation.getUserName(),
+                reservation.getPhoneNumber(),
+                reservation.getHotelName(),
+                reservation.getRoomType(),
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate(),
+                reservation.getReserveNumber(),
+                reservation.getReservePrice()
+        );
     }
 
     //예약 취소
     @Override
     public void reserveDelete(String reserveNumber) {
-
+        //reserveNumber(reserve_id) db에서 걍 바로 삭제
     }
 }
