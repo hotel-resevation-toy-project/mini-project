@@ -1,5 +1,6 @@
 package mini.project.HotelReservation.User.Service;
 
+
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService{
             user.get().changeStatus();
         }
 
+        //USER가 가입하는 경우
         User user = User.builder()
                 .name(sud.getName())
                 .email(sud.getEmail())
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService{
                 .role(sud.getRole())
                 .build();
 
+        //HOST가 가입하는 경우
         if(sud.getRole() == UserRole.ROLE_HOST){
             Hotel hotel = hotelRepository.findByHotelName(sud.getName());
             user.foreignHotel(hotel);
