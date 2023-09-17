@@ -1,6 +1,6 @@
 package mini.project.HotelReservation.Reservation.Service;
 
-import lombok.Builder;
+
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -10,11 +10,9 @@ import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
-import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 

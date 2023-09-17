@@ -10,8 +10,7 @@ import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.enumerate.RoomType;
-
-import java.util.List;
+import java.util.Optional;
 
 public class HostServiceImpl implements HostService {
     private HotelRepository hotelRepository;
@@ -46,8 +45,7 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public List<HotelReservationResponseDto> reserveList() {
-
-        return null;
+    public Optional<HotelReservationResponseDto> reserveList(Long hotelId) {
+        return hotelRepository.findReservationByHotelIdy(hotelId);
     }
 }
