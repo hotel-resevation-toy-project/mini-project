@@ -12,12 +12,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,7 +46,7 @@ public class JwtTokenDecoder implements TokenDecoder{
     }
 
     @Override
-    public String createToken(String role, String... ids) {
+    public void createToken(String role, String... ids) {
         Claims claims = Jwts.claims();
         // 호텔 ID가 포함된 ids라면 Host 계정이므로 hotelID도 저장한다
         if(ids.length > 1){
@@ -61,7 +65,14 @@ public class JwtTokenDecoder implements TokenDecoder{
                 .setExpiration(new Date(now.getTime() + tokenValidMillisecond)) // 토큰 만료 기간
                 .signWith(key) // 암호화 알고리즘과 SecretKey 세팅
                 .compact(); // 패키징
-        return token;
+
+        // 생성된 토큰값 세션에 저장
+        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        req.getSession().setAttribute("Token", token);
+
+        // 헤더에 전송
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Authorization", "Token " + token);
     }
 
     // 토큰으로 클레임을 만들고 이를 이용해 유저 객체를 만들어서 최종적으로 authentication 객체를 리턴
@@ -128,5 +139,24 @@ public class JwtTokenDecoder implements TokenDecoder{
 //            logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    @Override
+    public Optional<User> currentUser() {
+        // 현재 유저 정보는 SecurityContextHolder에
+        //    Authentication객체에 (principal, 유효한지, 역할)로 저장해놓은 상태이므로
+        //          Authentication 가져오기
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            // Security Context에 인증 정보가 업슨ㄴ 상태
+            return Optional.empty();
+        }
+
+        User user = null;   // princiapl객체로 저장된 user를 받기 위한 코드
+        if (authentication.getPrincipal() instanceof User) {
+            user = (User) authentication.getPrincipal();
+        }
+        return Optional.ofNullable(user);
     }
 }

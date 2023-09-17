@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -43,5 +44,12 @@ public class TestCode {
         String role = jwtTokenDecoder.tokenToRole(token);
         assertEquals(ids, new Long[]{1L, 2L});
         assertEquals(role, "user");
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 토큰 형식의 토큰으로 payload를 조회할 경우 예외를 발생시킨다.")
+    void getPayloadByInvalidToken() {
+        assertThatExceptionOfType(TokenInvalidFormException.class)
+                .isThrownBy(() -> jwtTokenDecoder.getPayload(null));
     }
 }
