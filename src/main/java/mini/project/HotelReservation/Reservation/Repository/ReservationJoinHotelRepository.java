@@ -9,7 +9,7 @@ import java.util.List;
 public interface ReservationJoinHotelRepository {
 
     Hotel findByHotelName(String hotelName);
-    List<Reservation> findByHotelNameAndRoomType(String hotelName, RoomType roomType);
-
+    List<Reservation> findReservationListByHotelNameAndRoomType(String hotelName, RoomType roomType);
+    Long findReservationCountByHotelNameAndRoomType(String hotelName, RoomType roomType);
     List<Reservation> findByHotelId(Long id);
 }

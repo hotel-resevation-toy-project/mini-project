@@ -7,6 +7,7 @@ import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
+import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.User.Data.Dto.*;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.UserRole;
@@ -16,8 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -66,9 +70,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDto logIn(UserSignInDto sid) {
+    public void logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
-                () -> new NoSuchElementException());
+                () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
 
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
@@ -77,8 +81,14 @@ public class UserServiceImpl implements UserService{
 
         //todo : 비밀 번호 확인
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
-            JwtTokenDecoder token =td.createToken();
-            return new UserDto(user, token);
+
+            if (user.getRole() == UserRole.ROLE_USER) {
+                td.createToken(String.valueOf(user.getRole()),String.valueOf(user.getUserId()));
+            } else {
+                td.createToken(String.valueOf(user.getRole()),
+                                String.valueOf(user.getUserId()),
+                                String.valueOf(user.getHotel().getHotelId()));
+            }
         }else {
             throw new NoSuchElementException();
         }
@@ -87,10 +97,10 @@ public class UserServiceImpl implements UserService{
     //todo : update
     @Override
     public UserDto update(UserDto userDto) {
-        User user = userRepository.findById(td.);
+        User user = userRepository.findById(td.currentUser.get().getUserId());
 
-        user.upDateInfo(uswerDto);
-        return null;
+        user.updateInfo(userDto);
+        return userDto;
     }
 
     @Override
@@ -103,8 +113,25 @@ public class UserServiceImpl implements UserService{
         }
         user.deactive();
     }
+    @Override
+    public List<UserReservationResponseDto> reservationList(Long userId){
+        List<Reservation> reservationsByUserId = userRepository.findReservationsByUserId(userId);
+        List<UserReservationResponseDto> reservations = new ArrayList<>();
+        for (Reservation reservation : reservationsByUserId) {
+            reservations.add(new UserReservationResponseDto(reservation.getHotelName(),
+                                                            reservation.getCheckInDate(),
+                                                            reservation.getCheckOutDate()));
+        }
+        return reservations;
+    }
 
-    public Optional<UserReservationResponseDto> reserveList(Long userId){
-        return userRepository.findReservationByUserId(userId);
+    @Override
+    public User loadUserByUserId(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            throw new NoSuchElementException("해당 유저를 찾을 수 없습니다.");
+        }
     }
 }

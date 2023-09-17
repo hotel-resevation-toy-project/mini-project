@@ -3,6 +3,8 @@ package mini.project.HotelReservation.Reservation.Service;
 
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
+import mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy.DaysDiscountPolicy;
+import mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy.PeakDiscountPolicy;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReserveDto;
@@ -34,10 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationDto reserve(ReserveDto reserveDto) {
 
         //호텔 객체 생성
-        Hotel hotel =
-                reservationRepository.findByHotelName(reserveDto.getHotelName());
-
-
+        Hotel hotel = reservationRepository.findByHotelName(reserveDto.getHotelName());
         /*
         [호텔명 + 객실종류 +예약 순서 + 입실 년,월,일]
         예약 순서 → 타입별 전체 객실 수 - 타입별 남은 객실 수 = 타입별 예약 순서
@@ -84,14 +83,14 @@ public class ReservationServiceImpl implements ReservationService {
     //해당 유저의 예약 리스트
     @Override
     public List<ReservationDto> reservations() {
-        return reservationRepository.findAllByUser_UserId(td.tokenToIds(String token));
+        return reservationRepository.findAllByUser_UserId(td.currentUser.get().getUserId());
     }
 
     //예약 상세 정보
     @Override
     public ReservationDto reserveInfo(String reserveNumber) {
-        Reservation reservation =
-                reservationRepository.findByReserveNumber(reserveNumber);
+        Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
+        // reservationDto로 옮겨 담기
 
         return reservation;
     }

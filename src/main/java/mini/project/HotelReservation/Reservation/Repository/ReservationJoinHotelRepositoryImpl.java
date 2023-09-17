@@ -25,7 +25,7 @@ public class ReservationJoinHotelRepositoryImpl implements ReservationJoinHotelR
     }
 
     @Override
-    public List<Reservation> findByHotelNameAndRoomType(String hotelName, RoomType roomType) {
+    public List<Reservation> findReservationListByHotelNameAndRoomType(String hotelName, RoomType roomType) {
         return em.createQuery("select r from Reservation r " +
                         "join r.room ro " +
                         "join ro.hotel h " +
@@ -33,6 +33,18 @@ public class ReservationJoinHotelRepositoryImpl implements ReservationJoinHotelR
                 .setParameter("roomType", roomType)
                 .setParameter("hotelName", hotelName)
                 .getResultList();
+    }
+
+    @Override
+    public Long findReservationCountByHotelNameAndRoomType(String hotelName, RoomType roomType) {
+
+        return em.createQuery("select count(*) from Reservation r " +
+                        "join r.room ro " +
+                        "join ro.hotel h " +
+                        "where ro.roomType = :roomType and h.hotelName = :hotelName", Long.class)
+                .setParameter("roomType", roomType)
+                .setParameter("hotelName", hotelName)
+                .getSingleResult();
     }
 
     @Override

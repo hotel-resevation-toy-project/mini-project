@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "RESERVATIONS")
-public class Reservation extends AuditTime implements Persistable<Long> {
+public class Reservation extends AuditTime {
     @Id @GeneratedValue
     private Long reserveId;
 
@@ -87,17 +87,6 @@ public class Reservation extends AuditTime implements Persistable<Long> {
                 getCheckInDate(),
                 getCheckOutDate());
     }
-
-    @Override
-    public Long getId() {
-        return null;
-    }
-
-    @Override
-    public boolean isNew() {
-        return false;
-    }
-
     // 연관관계 메서드
     public void foreignUser(User foreignUser){
         user = foreignUser;
