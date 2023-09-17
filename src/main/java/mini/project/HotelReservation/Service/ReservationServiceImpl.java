@@ -1,7 +1,10 @@
+package mini.project.HotelReservation.Service;
+
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.Data.Dto.ReservationDto;
-import mini.project.HotelReservation.Data.Dto.ReserveDto;
-import mini.project.HotelReservation.Repository.ReservationRepository;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReserveDto;
+import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
+import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
