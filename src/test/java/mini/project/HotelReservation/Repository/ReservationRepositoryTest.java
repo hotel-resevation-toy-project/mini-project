@@ -245,7 +245,7 @@ class ReservationRepositoryTest {
         reservationRepository.save(reservationB);
 
         //when
-        List<Reservation> hotelA = reservationRepository.findByHotelNameAndRoomType("Hotel_A", RoomType.ROOM_TYPE_A_SINGLE);
+        List<Reservation> hotelA = reservationRepository.findReservationListByHotelNameAndRoomType("Hotel_A", RoomType.ROOM_TYPE_A_SINGLE);
 
         assertEquals(hotelA.size(),2);
     }
