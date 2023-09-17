@@ -19,6 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
+    //tion : 예약된거~!
+    //ve : 예약해야하는거~!
+
     private final ReservationRepository reservationRepository;
 
 /*
@@ -62,7 +65,9 @@ public class ReservationServiceImpl implements ReservationService {
         Hotel hotel =
                 reservationRepository.findByHotelName(reserveDto.getHotelName());
 
-        /*[호텔명 + 객실종류 +예약 순서 + 입실 년,월,일]
+
+        /*
+        [호텔명 + 객실종류 +예약 순서 + 입실 년,월,일]
         예약 순서 → 타입별 전체 객실 수 - 타입별 남은 객실 수 = 타입별 예약 순서
         */
 
@@ -73,10 +78,9 @@ public class ReservationServiceImpl implements ReservationService {
 
 //        List<Reservation> findAllByUser_UserId(Long userId)
 
-
         // todo: 유저이름 가져오자
-        Reservation reservation =
-                new Reservation(
+        Reservation reservation = null;
+                reservation.createReserve(
                         reserveNumber,
                         discountPrice(reserveDto.getReservePrice()),
                         reserveDto.getRoomType(),
@@ -86,6 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
                         reserveDto.getCheckInDate(),
                         reserveDto.getCheckOutDate()
                 );
+
 
 
 
@@ -111,13 +116,16 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationDto reserveInfo(String reserveNumber) {
-        return null;
+        Reservation reservation =
+                reservationRepository.findByReserveNumber(reserveNumber);
+
+        return reservation;
     }
 
     //예약 취소
     @Override
     public void reserveDelete(String reserveNumber) {
-        
+
 
     }
 }
