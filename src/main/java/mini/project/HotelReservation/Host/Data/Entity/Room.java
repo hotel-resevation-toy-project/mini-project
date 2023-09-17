@@ -50,20 +50,12 @@ public class Room extends AuditTime {
         hotel = foreignHotel;
     }
     public void reserveSequence(){
-
     }
-    public void modifyPrice(RoomType roomType, Integer price){
-
-    }
-    public void plusStock(){
-
+    public void modifyPrice(Integer price){
+        roomPrice = roomPrice - price;
     }
 
-    public void minusStock(){
-
+    public void modifyStock(Integer newStock){
+        roomStock = newStock;
     }
-    public void cancel(){
-
-    }
-
 }
