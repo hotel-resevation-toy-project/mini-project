@@ -109,6 +109,6 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 취소
     @Override
     public void reserveDelete(String reserveNumber) {
-
+        //reserveNumber(reserve_id) db에서 걍 바로 삭제
     }
 }
