@@ -3,6 +3,7 @@ package mini.project.HotelReservation.Reservation.Data.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import mini.project.HotelReservation.User.Data.Entity.User;
+import mini.project.HotelReservation.enumerate.RoomType;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +12,13 @@ import java.time.LocalDateTime;
 public class ReservationDto {
 
     private String userName;
-    private Integer userPhoneNumber;
+    private String phoneNumber;
     private String hotelName;
-    private String roomType;
+    private RoomType roomType;
     private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
     private String reserveNumber;
-    private Integer totalPrice;
+    private Integer reservePrice;
 
 
 }

@@ -3,6 +3,7 @@ package mini.project.HotelReservation.Reservation.Data.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
@@ -54,15 +55,16 @@ public class Reservation extends AuditTime implements Persistable<Long> {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @Builder
     public Reservation(String reserveNumber, Integer reservePrice, RoomType roomType, String hotelName, String phoneNumber, String userName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
-        this.reserveNumber = reserveNumber;
-        this.reservePrice = reservePrice;
-        this.roomType = roomType;
-        this.hotelName = hotelName;
-        this.phoneNumber = phoneNumber;
         this.userName = userName;
+        this.hotelName = hotelName;
+        this.roomType = roomType;
+        this.phoneNumber = phoneNumber;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+        this.reserveNumber = reserveNumber;
+        this.reservePrice = reservePrice;
     }
 
     //비즈니스 로직
