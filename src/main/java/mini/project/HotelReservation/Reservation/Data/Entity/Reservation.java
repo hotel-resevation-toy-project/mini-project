@@ -67,7 +67,23 @@ public class Reservation extends AuditTime implements Persistable<Long> {
 
     //비즈니스 로직
     public Reservation createReserve(User user, Room room, ReserveDto reserveDto) {
-        return null;
+
+        this.user = user;
+        this.room = room;
+        this.roomType = reserveDto.getRoomType();
+        this.hotelName = reserveDto.getHotelName();
+        this.reservePrice = reserveDto.getReservePrice();
+        this.checkInDate = reserveDto.getCheckInDate();
+        this.checkOutDate = reserveDto.getCheckOutDate();
+
+        return new Reservation(getReserveNumber(),
+                getReservePrice(),
+                getRoomType(),
+                getHotelName(),
+                getPhoneNumber(),
+                getUserName(),
+                getCheckInDate(),
+                getCheckOutDate());
     }
 
     @Override
