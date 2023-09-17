@@ -1,5 +1,3 @@
-package mini.project.HotelReservation.Service;
-
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Data.Dto.ReservationDto;
 import mini.project.HotelReservation.Data.Dto.ReserveDto;
@@ -13,7 +11,6 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    
 //    !! 아직 없는 정책이라 빨간줄이라서 묶어둠
     /*    private final PeakDiscountPolicy peakDiscountPolicy;
     private final DaysDiscountPolicy daysDiscountPolicy;*/
@@ -48,6 +45,3 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void reserveDelete(String reserveNumber) {
-
-    }
-}
