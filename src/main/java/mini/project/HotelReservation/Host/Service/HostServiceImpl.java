@@ -46,6 +46,6 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public Optional<HotelReservationResponseDto> reserveList(Long hotelId) {
-        return hotelRepository.findReservationByHotelIdy(hotelId);
+        return hotelRepository.findReservationByHotelId(hotelId);
     }
 }

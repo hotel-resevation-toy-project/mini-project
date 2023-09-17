@@ -11,5 +11,5 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     Hotel findByHotelName(String hotelName);
     Hotel findByHotelId(Long hotelId);
-    Optional<HotelReservationResponseDto> findReservationByHotelIdy(Long hotelId);
+    Optional<HotelReservationResponseDto> findReservationByHotelId(Long hotelId);
 }
