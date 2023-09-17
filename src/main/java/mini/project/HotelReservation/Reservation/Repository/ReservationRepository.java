@@ -20,5 +20,8 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long>, 
     @Override
     List<Reservation> findByHotelNameAndRoomType(String hotelName, RoomType roomType);
 
+    @Override
+    List<Reservation> findByHotelId(Long id);
+
     void deleteByReserveNumber(String reserveNumber);
 }
