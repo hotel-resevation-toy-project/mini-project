@@ -225,7 +225,7 @@ class ReservationRepositoryTest {
         Reservation reservationA = new Reservation("A-1",
                 1234568,
                 RoomType.ROOM_TYPE_A_SINGLE,
-                "A",
+                hotel.getHotelName(),
                 "010-1234-5678",
                 "오진석",
                 LocalDateTime.now(), LocalDateTime.now().plusDays(5));
@@ -235,8 +235,8 @@ class ReservationRepositoryTest {
 
         Reservation reservationB = new Reservation("A-2",
                 1564878,
-                RoomType.ROOM_TYPE_B_TWIN,
-                "A",
+                RoomType.ROOM_TYPE_A_SINGLE,
+                hotel.getHotelName(),
                 "010-1234-5678",
                 "오진석",
                 LocalDateTime.now(), LocalDateTime.now().plusDays(5));
@@ -245,6 +245,8 @@ class ReservationRepositoryTest {
         reservationRepository.save(reservationB);
 
         //when
-        reservationRepository.findByHotelNameAndRoomType()
+        List<Reservation> hotelA = reservationRepository.findByHotelNameAndRoomType("Hotel_A", RoomType.ROOM_TYPE_A_SINGLE);
+
+        assertEquals(hotelA.size(),2);
     }
 }
