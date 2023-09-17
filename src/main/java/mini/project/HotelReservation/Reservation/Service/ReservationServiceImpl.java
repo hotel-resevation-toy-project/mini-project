@@ -64,6 +64,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .reservePrice(discountPrice(reserveDto.getReservePrice()))
                 .build();
 
+
         return new ReservationDto(
                 reservation.getUserName(),
                 reservation.getPhoneNumber(),
@@ -86,7 +87,7 @@ public class ReservationServiceImpl implements ReservationService {
     //해당 유저의 예약 리스트
     @Override
     public List<ReservationDto> reservations() {
-        return reservationRepository.findAllByUser_UserId(td.tokenToIds(String token));
+        return reservationRepository.findAllByUser_UserId(/*td.tokenToIds(String token)*/);
     }
 
     //예약 상세 정보
@@ -95,7 +96,16 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation =
                 reservationRepository.findByReserveNumber(reserveNumber);
 
-        return reservation;
+        return new ReservationDto(
+                reservation.getUserName(),
+                reservation.getPhoneNumber(),
+                reservation.getHotelName(),
+                reservation.getRoomType(),
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate(),
+                reservation.getReserveNumber(),
+                reservation.getReservePrice()
+        );
     }
 
     //예약 취소
