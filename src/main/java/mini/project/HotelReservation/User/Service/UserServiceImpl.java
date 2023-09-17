@@ -7,10 +7,7 @@ import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
-import mini.project.HotelReservation.User.Data.Dto.UserDto;
-import mini.project.HotelReservation.User.Data.Dto.UserDeactiveDto;
-import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
-import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
+import mini.project.HotelReservation.User.Data.Dto.*;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
@@ -27,11 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
-
     private final HotelRepository hotelRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private TokenDecoder td;
 
     @Override
@@ -108,5 +102,9 @@ public class UserServiceImpl implements UserService{
             throw new NoResultException("비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();
+    }
+
+    public Optional<UserReservationResponseDto> reserveList(Long userId){
+        return userRepository.findReservationByUserId(userId);
     }
 }
