@@ -84,7 +84,8 @@ public class ReservationServiceImpl implements ReservationService {
     //해당 유저의 예약 리스트
     @Override
     public List<ReservationDto> reservations() {
-        return reservationRepository.findAllByUser_UserId(td.currentUser.get().getUserId());
+        reservationRepository.findAllByUser_UserId(td.currentUser().get().getUserId());
+        return null;
     }
 
     //예약 상세 정보
