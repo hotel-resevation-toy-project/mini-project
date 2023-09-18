@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.User.Data.Dto.UserDto;
+import mini.project.HotelReservation.User.Data.Dto.response.UserInfoDto;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
 import java.util.List;
@@ -66,11 +66,11 @@ public class User extends AuditTime {
             this.hotel = hotel;
     }
 
-    public void updateInfo(UserDto userDto){
-        name = userDto.getName();
-        email = userDto.getEmail();
-        password = userDto.getPassword();
-        phoneNumber = userDto.getPhoneNumber();
+    public void updateInfo(UserInfoDto userInfoDto){
+        name = userInfoDto.getName();
+        email = userInfoDto.getEmail();
+        password = userInfoDto.getPassword();
+        phoneNumber = userInfoDto.getPhoneNumber();
     }
 
     public void changeStatus(){
