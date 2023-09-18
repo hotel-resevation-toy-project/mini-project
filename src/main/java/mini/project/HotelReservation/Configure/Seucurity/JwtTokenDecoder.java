@@ -18,10 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -84,14 +81,17 @@ public class JwtTokenDecoder implements TokenDecoder{
         // 토큰에서 추출한 Role을 기반으로 시큐리티 메소드에 들어갈 Authority Collection 생성
         // List형태로 생성하는 이유는, 한 User마다 여러 역할을 가질 수 있기 때문이다
         // User A가 게시판1에서는 관리자이지만 게시판2에서는 그냥 user일 수 있음.
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(new String[]{tokenToRole(token)}).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+//        Collection<? extends GrantedAuthority> authorities =
+//                Arrays.stream(new String[]{tokenToRole(token)}).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
+        setAuths.add(new SimpleGrantedAuthority(tokenToRole(token)));
 
         // Filter단계에서는 매개변수값이 principal(우리로 치면 회원), 인증정보확인(값이 들어만 있으면 됨)으로
         // 권한 확인 전의 Authentication 객체를 생성하고 현재 메소드를 대기하고 있다가
         // 아래 UsernamePassword~~의 매개변수에 authorities(역할)이 포함되어 생성자가 실행되면
         // 권한을 인가받고 SecurityContextHolder에 저장되어 우리가 사용한다.
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, setAuths);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class JwtTokenDecoder implements TokenDecoder{
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-        return (Long[]) Arrays.stream(info.split("/")).mapToLong(Long::parseLong).boxed().toArray();
+        return Arrays.stream(info.split("/")).mapToLong(Long::parseLong).boxed().toArray(Long[]::new);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class JwtTokenDecoder implements TokenDecoder{
     public String resolveToken(HttpServletRequest req) {
         // 세션에 있는 토큰값 추출해서 사용
         // 나중에 UserController에서 세션값 key 어떻게 저장했는지 보고 변경
-        return String.valueOf(req.getSession().getAttribute("token"));
+        return String.valueOf(req.getSession().getAttribute("Token"));
     }
 
     @Override
@@ -149,11 +149,11 @@ public class JwtTokenDecoder implements TokenDecoder{
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
-            // Security Context에 인증 정보가 업슨ㄴ 상태
+            // Security Context에 인증 정보가 없는 상태
             return Optional.empty();
         }
 
-        User user = null;   // princiapl객체로 저장된 user를 받기 위한 코드
+        User user = null;   // principal객체로 저장된 user를 받기 위한 코드
         if (authentication.getPrincipal() instanceof User) {
             user = (User) authentication.getPrincipal();
         }
