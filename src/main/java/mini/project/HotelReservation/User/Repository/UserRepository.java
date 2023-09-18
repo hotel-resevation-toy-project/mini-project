@@ -2,7 +2,6 @@ package mini.project.HotelReservation.User.Repository;
 
 
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.User.Data.Dto.UserReservationResponseDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

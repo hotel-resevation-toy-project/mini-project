@@ -3,12 +3,15 @@ package mini.project.HotelReservation.User.Service;
 
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.User.Data.Dto.*;
+import mini.project.HotelReservation.User.Data.Dto.request.UserDeactiveDto;
+import mini.project.HotelReservation.User.Data.Dto.request.UserSignInRequestDto;
+import mini.project.HotelReservation.User.Data.Dto.request.UserSignUpDto;
+import mini.project.HotelReservation.User.Data.Dto.response.UserInfoDto;
+import mini.project.HotelReservation.User.Data.Dto.response.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
@@ -21,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void logIn(UserSignInDto sid) {
+    public UserInfoDto logIn(UserSignInRequestDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
 
@@ -79,7 +81,6 @@ public class UserServiceImpl implements UserService{
             throw new NoSuchElementException();
         }
 
-        //todo : 비밀 번호 확인
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
 
             if (user.getRole() == UserRole.ROLE_USER) {
@@ -92,15 +93,14 @@ public class UserServiceImpl implements UserService{
         }else {
             throw new NoSuchElementException();
         }
+        return new UserInfoDto(user);
     }
 
-    //todo : update
     @Override
-    public UserDto update(UserDto userDto) {
-        User user = userRepository.findById(td.currentUser.get().getUserId());
-
-        user.updateInfo(userDto);
-        return userDto;
+    public void updateInfo(UserInfoDto userInfoDto) {
+        User user = userRepository.findById(td.currentUser().get().getUserId()).orElseThrow(
+                () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
+        user.updateInfo(userInfoDto);
     }
 
     @Override
@@ -114,11 +114,11 @@ public class UserServiceImpl implements UserService{
         user.deactive();
     }
     @Override
-    public List<UserReservationResponseDto> reservationList(Long userId){
+    public List<UserReservationDto> reservationList(Long userId){
         List<Reservation> reservationsByUserId = userRepository.findReservationsByUserId(userId);
-        List<UserReservationResponseDto> reservations = new ArrayList<>();
+        List<UserReservationDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByUserId) {
-            reservations.add(new UserReservationResponseDto(reservation.getHotelName(),
+            reservations.add(new UserReservationDto(reservation.getHotelName(),
                                                             reservation.getCheckInDate(),
                                                             reservation.getCheckOutDate()));
         }
