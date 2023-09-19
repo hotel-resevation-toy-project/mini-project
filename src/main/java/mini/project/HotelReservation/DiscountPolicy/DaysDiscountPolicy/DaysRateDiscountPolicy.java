@@ -1,6 +1,5 @@
 package mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy;
 
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 
 @Component

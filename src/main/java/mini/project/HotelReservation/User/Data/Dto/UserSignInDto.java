@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class UserSignInRequestDto {
+public class UserSignInDto {
     @NotBlank(message = "이메일을 입력해주세요.")
     private final String email;
 
