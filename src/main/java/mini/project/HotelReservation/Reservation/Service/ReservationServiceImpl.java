@@ -97,9 +97,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponseDto reserveInfo(String reserveNumber) {
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
 
-        return new ReservationResponseDto(reservation.getUserName(), reservation.getPhoneNumber(),
-                reservation.getHotelName(), reservation.getRoomType(), reservation.getCheckInDate(),
-                reservation.getCheckOutDate(), reservation.getReserveNumber(), reservation.getReservePrice());
+        return null;
     }
 
     //예약 취소
