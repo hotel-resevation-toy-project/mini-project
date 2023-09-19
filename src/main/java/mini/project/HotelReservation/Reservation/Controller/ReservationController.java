@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reservation")
 public class ReservationController {
     private final ReservationService reservationService;
-    private ReservationRequestDto requestDto = new ReservationRequestDto();
+    // 임의 주석
+    //private ReservationRequestDto requestDto = new ReservationRequestDto();
 //
 //    @GetMapping("/hotels")
 //    String hotelList(Model model){

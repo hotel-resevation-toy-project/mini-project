@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import org.springframework.security.core.Authentication;
 
-import java.util.Optional;
 
 public interface TokenDecoder {
     void init();

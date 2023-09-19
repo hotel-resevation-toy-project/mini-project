@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 @Data
 @RequiredArgsConstructor
 public class ReservationResponseDto {
-    private final RoomType roomType;
+    private final String userName;
+    private final String phoneNumber;
     private final String hotelName;
-    private final Integer reservePrice;
+    private final RoomType roomType;
     private final LocalDateTime checkInDate;
     private final LocalDateTime checkOutDate;
+    private final String reservationNumber;
+    private final Integer reservePrice;
 }
