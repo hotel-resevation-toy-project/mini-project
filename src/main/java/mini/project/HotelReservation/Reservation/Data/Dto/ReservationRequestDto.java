@@ -2,17 +2,18 @@ package mini.project.HotelReservation.Reservation.Data.Dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.enumerate.RoomType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ReservationRequestDto {
-    private String hotelName;
-    private LocalDateTime checkInDate;
-    private LocalDateTime checkOutDate;
-    private RoomType roomType;
-    private Integer price;
+    private final String hotelName;
+    private final LocalDate checkInDate;
+    private final LocalDate checkOutDate;
+    private final RoomType roomType;
+    private final Integer oneDayPrice;
 }
