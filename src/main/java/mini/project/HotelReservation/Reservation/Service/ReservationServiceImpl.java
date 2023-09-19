@@ -77,7 +77,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
     @Override
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
-
+        return null;
     }
 
     @Override
@@ -95,6 +95,7 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
+        return null;
     }
 
     //예약 취소
