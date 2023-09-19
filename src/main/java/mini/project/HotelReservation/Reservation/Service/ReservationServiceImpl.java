@@ -15,9 +15,11 @@ import mini.project.HotelReservation.Reservation.Repository.ReservationRepositor
 import mini.project.HotelReservation.User.Repository.UserRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.enumerate.RoomType;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,22 +71,81 @@ public class ReservationServiceImpl implements ReservationService {
         //원가
         int reservePrice = requestDto.getOneDayPrice()*days;
         //할인될 값
-        int totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
+        int totalDiscount = 0;
+//                discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
         //결제 값
         int pay = reservePrice - totalDiscount;
 
+        int peakDiscount = 0;
+        int daysDiscount = 0;
+
+        switch (hotel.getDiscountPolicy().toString()) {
+            case "POLICY_PEAK" :
+                //성수기에 해당 여부 확인
+                LocalDate hotelStartPeakDate =
+                        LocalDate.of(requestDto.getCheckInDate().getYear(),hotel.getStartPeakDate().getMonth(),hotel.getStartPeakDate().getDayOfMonth());
+                LocalDate hotelEndPeakDate =
+                        LocalDate.of(requestDto.getCheckOutDate().getYear(),hotel.getEndPeakDate().getMonth(),hotel.getEndPeakDate().getDayOfMonth());
+
+                if(hotelStartPeakDate.compareTo(requestDto.getCheckInDate())<-1){
+                    if(hotelEndPeakDate.compareTo(requestDto.getCheckOutDate())>-1){
+                        //숙박일 모두 성수기에 해당
+                        totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
+                    }else{
+                        //일부만 성수기에 해당
+                        totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),
+                                days-(hotelEndPeakDate.compareTo(requestDto.getCheckOutDate())))
+                                +reservePrice*(hotelEndPeakDate.compareTo(requestDto.getCheckOutDate()));
+                    }
+                }else{
+                    //모두 비성수기에 해당
+                    totalDiscount = 0;
+                }
+                break;
+            case "POLICY_DAYS" :
+                totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
+                break;
+            default :
+            //성수기에 해당 여부 확인
+                hotelStartPeakDate =
+                        LocalDate.of(requestDto.getCheckInDate().getYear(),hotel.getStartPeakDate().getMonth(),hotel.getStartPeakDate().getDayOfMonth());
+                hotelEndPeakDate =
+                        LocalDate.of(requestDto.getCheckOutDate().getYear(),hotel.getEndPeakDate().getMonth(),hotel.getEndPeakDate().getDayOfMonth());
+
+                if(hotelStartPeakDate.compareTo(requestDto.getCheckInDate())<-1){
+                    if(hotelEndPeakDate.compareTo(requestDto.getCheckOutDate())>-1){
+                        //숙박일 모두 성수기에 해당
+                        peakDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
+                    }else{
+                        //일부만 성수기에 해당
+                        peakDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),
+                                days-(hotelEndPeakDate.compareTo(requestDto.getCheckOutDate())))
+                                +reservePrice*(hotelEndPeakDate.compareTo(requestDto.getCheckOutDate()));
+                    }
+                }else{
+                    //모두 비성수기에 해당
+                    peakDiscount = 0;
+                }
+
+                daysDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
+
+                totalDiscount = Math.max(peakDiscount,daysDiscount);
+
+                break;
+        }
         return new DiscountPriceDto(totalDiscount,totalDiscount,pay,hotel.getDiscountPolicy().toString());
     }
+
+
     @Override
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
-
+        return null;
     }
 
     @Override
     public Integer discountPrice(DiscountPolicy discountPolicy,
                                  Integer reservePrice,
                                  Integer days){
-
         return switch (discountPolicy.toString()) {
             case "POLICY_PEAK" -> peakDiscountPolicy.discount(reservePrice, days);
             case "POLICY_DAYS" -> daysDiscountPolicy.discount(reservePrice, days);
@@ -95,6 +156,7 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
+        return null;
     }
 
     //예약 취소
