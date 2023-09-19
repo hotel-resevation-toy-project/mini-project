@@ -9,13 +9,11 @@ import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import java.util.List;
 
 public interface ReservationService {
-    List<Hotel> findByHotelList();
-    List<Hotel> findByRoomList();
-    DiscountPriceDto priceCalculator(ReservationRequestDto requestDto);
-    Integer discountPrice(DiscountPolicy discountPolicy,
-                          Integer reservePrice,
-                          Integer days);
-    ReservationResponseDto reserve(ReservationRequestDto requestDto,
+    List<HotelDto> findByHotelList();
+    List<RoomDto> findByRoomList(String hotelName);
+    DiscountPriceDto priceCalculator();
+    Integer discountPrice(Integer reservePrice);
+    ReservationResponseDto reserve(ReservationRequestDto reservationReqDto,
                                    DiscountPriceDto discountPriceDto);
     ReservationResponseDto reserveInfo(String reserveNumber);
     void reserveDelete(String reserveNumber);
