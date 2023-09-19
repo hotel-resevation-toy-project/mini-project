@@ -1,10 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>메인 페이지</title>
+    <style>
+        header{
+            position: fixed;
+            top: 0; left: 0;
+            height: 100px;
+            width: 100%;
+            background-color: #ddd;/*header*/
+        }
+        section{
+
+        }
+        footer{
+            position: fixed;
+            bottom: 0; left: 0;
+            height: 100px;
+            width: 100%;
+            background-color: #ddd;  /*    footer 확인용*/
+        }
+
+        #btn_home{
+            float: left;
+        }
+        #div_logout{
+
+            float: right;
+        }
+
+    </style>
 </head>
 <body>
+    <div id ="div_base">
+        <header>
+            <button id = "btn_home">
+                Home
+            </button>
+            <div id ="div_logout">
+                <button id = "btn_logout">
+                    Logout
+                </button>
+                <button id ="btn_manage">
+                    Manage
+                </button>
+            </div>
 
+        </header>
+        <section>
+
+        </section>
+        <footer>
+
+        </footer>
+    </div>
 </body>
 </html>
