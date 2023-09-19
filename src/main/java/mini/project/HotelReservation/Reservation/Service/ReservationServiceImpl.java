@@ -92,14 +92,14 @@ public class ReservationServiceImpl implements ReservationService {
             case "POLICY_PEAK" :
                 CheckPeakDays(hotelStartPeakDate,hotelEndPeakDate,requestDto.getCheckInDate(),requestDto.getCheckOutDate());
                 checkPeakDays = CheckPeakDays(hotelStartPeakDate,hotelEndPeakDate,requestDto.getCheckInDate(),requestDto.getCheckOutDate());
-                totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),checkPeakDays[0]) + checkPeakDays[1]*requestDto.getOneDayPrice();
+                totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),checkPeakDays[0]);
                 break;
             case "POLICY_DAYS" :
                 totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
                 break;
             default :
                 checkPeakDays = CheckPeakDays(hotelStartPeakDate,hotelEndPeakDate,requestDto.getCheckInDate(),requestDto.getCheckOutDate());
-                peakDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),checkPeakDays[0]) + checkPeakDays[1]*requestDto.getOneDayPrice();
+                peakDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),checkPeakDays[0]);
                 daysDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
                 totalDiscount = Math.max(peakDiscount,daysDiscount);
                 break;
