@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
+import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
+import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 
 import java.time.LocalDate;
@@ -45,9 +47,14 @@ public class Hotel extends AuditTime {
     @NotNull
     private LocalDate endPeakDate;
 
-    @OneToMany(mappedBy="hotel")
-    List<Room> rooms;
+    @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
+    private List<Room> rooms;
 
+    @OneToOne(mappedBy = "user_id",fetch = FetchType.LAZY)
+    private User user;
+
+    @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
     public Hotel(String address, String hotelName, String hotelPhoneNumber, DiscountPolicy discountPolicy, LocalTime checkInTime, LocalTime checkOutTime, LocalDate startPeakDate, LocalDate endPeakDate) {
         this.address = address;
@@ -58,6 +65,11 @@ public class Hotel extends AuditTime {
         this.checkOutTime = checkOutTime;
         this.startPeakDate = startPeakDate;
         this.endPeakDate = endPeakDate;
+    }
+
+    //연관관계 메서드
+    public void foreignUser(User foreignUser) {
+        user = foreignUser;
     }
 
     //비즈니스 로직

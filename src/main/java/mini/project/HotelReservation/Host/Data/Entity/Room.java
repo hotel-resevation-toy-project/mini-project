@@ -34,21 +34,19 @@ public class Room extends AuditTime {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "room")
-    List<Reservation> reservations;
-
-    // 연관관계 매핑은 생성자에서 빼야함 진석 -> 다은
-    // 생성자에 Hotel을 빼고 아래의 foreignHotel이용해야함
     public Room(RoomType roomType, Integer roomPrice, Integer roomStock) {
         this.roomType = roomType;
         this.roomPrice = roomPrice;
         this.roomStock = roomStock;
     }
 
-    //비즈니스 로직
+    //연관 관계 메서드
     public void foreignHotel(Hotel foreignHotel) {
         hotel = foreignHotel;
+        hotel.getRooms().add(this);
     }
+    //비즈니스 로직
+
     public void reserveSequence(){
     }
     public void modifyPrice(Integer price){
