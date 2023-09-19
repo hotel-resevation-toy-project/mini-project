@@ -1,33 +1,31 @@
 package mini.project.HotelReservation.Configure;
 
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.User.Repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest
-//@Import(TestSecurityConfig.class) // JWT 인증과정을 무시하기 위해 사용
 public class TestCode {
+    private final UserRepository userRepository;
+    private final JwtTokenDecoder jwtTokenDecoder;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JwtTokenDecoder jwtTokenDecoder;
+    public TestCode(UserRepository userRepository, JwtTokenDecoder jwtTokenDecoder) {
+        this.userRepository = userRepository;
+        this.jwtTokenDecoder = jwtTokenDecoder;
+    }
 
     @BeforeEach
     public void init(){
         userRepository.deleteAll();
         jwtTokenDecoder.init();
     }
-    // 테스트 코드 모두 createToken 반환값이 String임을 생각하고 작성한 코드라
-    // 의미가 없어짐
 
     @Test
     @DisplayName("토큰이 생성됨")
