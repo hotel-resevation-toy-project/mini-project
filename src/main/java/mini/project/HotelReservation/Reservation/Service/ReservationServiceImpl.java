@@ -13,6 +13,7 @@ import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Repository.UserRepository;
+import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +61,19 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public DiscountPriceDto priceCalculator(ReservationRequestDto requestDto) {
+
+        //호텔 객체 생성
+        Hotel hotel = hotelRepository.findByHotelName(requestDto.getHotelName());
+        //숙박일
+        int days = requestDto.getCheckOutDate().compareTo(requestDto.getCheckInDate());
+        //원가
+        int reservePrice = requestDto.getOneDayPrice()*days;
+        //할인될 값
+        int totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
+        //결제 값
+        int pay = reservePrice - totalDiscount;
+
+        return new DiscountPriceDto(totalDiscount,totalDiscount,pay,hotel.getDiscountPolicy().toString());
     }
     @Override
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
@@ -67,21 +81,20 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Integer discountPrice(Integer reservePrice){
-        return reservePrice;
+    public Integer discountPrice(DiscountPolicy discountPolicy,
+                                 Integer reservePrice,
+                                 Integer days){
 
+        return switch (discountPolicy.toString()) {
+            case "POLICY_PEAK" -> peakDiscountPolicy.discount(reservePrice, days);
+            case "POLICY_DAYS" -> daysDiscountPolicy.discount(reservePrice, days);
+            default ->
+                    Math.max(peakDiscountPolicy.discount(reservePrice, days), daysDiscountPolicy.discount(reservePrice, days));
+        };
+    }
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
-        Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
-
-        return new ReservationResponseDto(
-                reservation.getRoomType(),
-                reservation.getHotelName(),
-                reservation.getReservePrice(),
-                reservation.getCheckInDate(),
-                reservation.getCheckOutDate()
-        );
     }
 
     //예약 취소
