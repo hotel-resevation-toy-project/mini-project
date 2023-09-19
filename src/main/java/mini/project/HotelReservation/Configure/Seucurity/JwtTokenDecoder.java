@@ -160,7 +160,7 @@ public class JwtTokenDecoder implements TokenDecoder{
         if (authentication.getPrincipal() instanceof User) {
             user = (User) authentication.getPrincipal();
         }
-        return Optional.ofNullable(user);
+        return null;
     }
 
     // Test용 임시 추가

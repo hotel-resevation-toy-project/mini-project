@@ -47,8 +47,8 @@ public class User extends AuditTime {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "user")
-    List<Reservation> reservations;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
     @Builder
     public User(String name, String email, String password,
@@ -62,8 +62,9 @@ public class User extends AuditTime {
     }
 
     //유저가 호텔인 경우, 호텔 아이디를 조회해서 호텔 가져오기
-    public void foreignHotel(Hotel hotel){
-            this.hotel = hotel;
+    public void foreignHotel(Hotel foreignHotel){
+            hotel = foreignHotel;
+            hotel.foreignUser(this);
     }
 
     public void updateInfo(UserInfoDto userInfoDto){

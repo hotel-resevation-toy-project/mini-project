@@ -8,10 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 
-public interface HotelRepository extends JpaRepository<Hotel, Long> {
+public interface HotelRepository extends JpaRepository<Hotel, Long>{
 
     Hotel findByHotelName(String hotelName);
     Hotel findByHotelId(Long hotelId);
-    @Query("select r from Hotel h join h.rooms ro join ro.reservations r where h.hotelId = :hotelId")
-    List<Reservation> findReservationByHotelId(Long hotelId);
+
 }

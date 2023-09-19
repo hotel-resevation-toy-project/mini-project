@@ -9,6 +9,7 @@ import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy.DaysDiscountPolicy;
 import mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy.PeakDiscountPolicy;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
+import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
@@ -30,6 +31,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
+    private final HotelRepository hotelRepository;
 
     private final PeakDiscountPolicy peakDiscountPolicy;
     private final DaysDiscountPolicy daysDiscountPolicy;
@@ -57,7 +59,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
 
         //호텔 객체 생성
-        Hotel hotel = reservationRepository.findByHotelName(reservationReqDto.getHotelName());
+        Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
 
         //숙박일
         int days = reservationReqDto.getCheckOutDate().toLocalDate().compareTo(reservationReqDto.getCheckInDate().toLocalDate());

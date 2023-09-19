@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
+import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.enumerate.RoomType;
@@ -46,13 +47,13 @@ public class Reservation extends AuditTime {
     @NotNull
     private LocalDateTime checkOutDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
     public Reservation(String reserveNumber, Integer reservePrice, RoomType roomType, String hotelName, String phoneNumber, String userName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
         this.userName = userName;
@@ -66,10 +67,9 @@ public class Reservation extends AuditTime {
     }
 
     //비즈니스 로직
-    public Reservation createReserve(User user, Room room, ReservationResponseDto reservationResponseDto) {
-
-        this.user = user;
-        this.room = room;
+    public Reservation createReserve(User user, Hotel hotel, ReservationResponseDto reservationResponseDto) {
+        foreignUser(user);
+        foreignHotel(hotel);
         this.roomType = reservationResponseDto.getRoomType();
         this.hotelName = reservationResponseDto.getHotelName();
         this.reservePrice = reservationResponseDto.getReservePrice();
@@ -87,11 +87,11 @@ public class Reservation extends AuditTime {
     }
     // 연관관계 메서드
     public void foreignUser(User foreignUser){
-        user = foreignUser;
+        this.user = foreignUser;
+        user.getReservations().add(this);
     }
-    public void foreignRoom(Room foreignRoom){
-        room = foreignRoom;
+    public void foreignHotel(Hotel foreignHotel){
+        this.hotel = foreignHotel;
+        hotel.getReservations().add(this);
     }
-    
-
 }
