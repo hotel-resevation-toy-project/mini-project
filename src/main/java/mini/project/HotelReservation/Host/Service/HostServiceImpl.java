@@ -22,7 +22,7 @@ public class HostServiceImpl implements HostService {
     private final RoomRepository roomRepository;
     private final ReservationRepository reservationRepository;
     private final TokenDecoder td;
-    
+
     @Override
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = 1L/*td.asdfasd()*/;
