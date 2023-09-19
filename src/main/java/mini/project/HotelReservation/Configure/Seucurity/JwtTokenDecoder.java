@@ -19,7 +19,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -142,21 +141,52 @@ public class JwtTokenDecoder implements TokenDecoder{
     }
 
     @Override
-    public Optional<User> currentUser() {
+    public User currentUser() {
         // 현재 유저 정보는 SecurityContextHolder에
         //    Authentication객체에 (principal, 유효한지, 역할)로 저장해놓은 상태이므로
         //          Authentication 가져오기
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null) {
-            // Security Context에 인증 정보가 없는 상태
-            return Optional.empty();
+        if(authentication == null){
+            throw new NoSuchElementException("로그인 먼저 시도해주세요.");
         }
+        
+//        {
+//            // Security Context에 인증 정보가 없는 상태
+//            return Optional.empty();
+//        }
 
         User user = null;   // principal객체로 저장된 user를 받기 위한 코드
         if (authentication.getPrincipal() instanceof User) {
             user = (User) authentication.getPrincipal();
         }
         return Optional.ofNullable(user);
+    }
+
+    // Test용 임시 추가
+    @Override
+    public String createToken(int i, String role, String... ids) {
+        Claims claims = Jwts.claims();
+        // 호텔 ID가 포함된 ids라면 Host 계정이므로 hotelID도 저장한다
+        if(ids.length > 1){
+            claims.setSubject(ids[0]+"/"+ids[1]);
+        } else{ // HOST가 아니라면 유저ID만 저장한다.
+            claims.setSubject(ids[0]);
+        }
+        // Audience(대상) 값에 role 등록
+        claims.setAudience(role);
+        // 유효기간 계산할 현재 시간 저장
+        Date now = new Date();
+
+        String token =Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)   // 토큰 생성 시간
+                .setExpiration(new Date(now.getTime() + tokenValidMillisecond)) // 토큰 만료 기간
+                .signWith(key) // 암호화 알고리즘과 SecretKey 세팅
+                .compact(); // 패키징
+
+        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        req.getSession().setAttribute("Token", token);
+        return token;
     }
 }

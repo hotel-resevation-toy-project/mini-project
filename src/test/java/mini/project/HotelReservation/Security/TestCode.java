@@ -30,16 +30,17 @@ public class TestCode {
     }
     // 테스트 코드 모두 createToken 반환값이 String임을 생각하고 작성한 코드라
     // 의미가 없어짐
-//
-//    @Test
-//    @DisplayName("토큰이 생성됨")
-//    void creatToken(){
-//        // Controller에 Mock객체로 받아서 사용할 것
-//        //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
-//        jwtTokenDecoder.createToken("user", "1","2");
-//        //assertNotEquals(token, null);
-//    }
-//
+
+    @Test
+    @DisplayName("토큰이 생성됨")
+    void creatToken(){
+        // Controller에 Mock객체로 받아서 사용할 것
+        //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
+        String token = jwtTokenDecoder.createToken(1,"user", "1","2");
+
+        assertNotEquals(token, null);
+    }
+
 //    @Test
 //    @DisplayName("토큰의 payload값이 조회된다.")
 //    void getPayLoadByValidToken(){
