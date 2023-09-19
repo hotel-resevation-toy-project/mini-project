@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    Room findAllByHotel_HotelIdAndRoomType(Long hotelId, RoomType roomType);
+    Room findByHotel_HotelIdAndRoomType(Long hotelId, RoomType roomType);
     @Query("SELECT r FROM Room r " +
             "JOIN Hotel h " +
             "WHERE r.hotel.hotelId = h.hotelId " +

@@ -50,7 +50,7 @@ public class Hotel extends AuditTime {
     @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
     private List<Room> rooms;
 
-    @OneToOne(mappedBy = "user_id",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "hotel",fetch = FetchType.LAZY)
     private User user;
 
     @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="cmm/layout_login">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 페이지</title>
+</head>
+<body>
+<section layout:fragment = "f-content">
+    <div>
+        <button type = "button" class="btn btn-info btn-large form control"
+        id="btn_login">Login</button>
+        <th:block layout:fragment="f-script">
+            <script>
+                $(function() {
+                    $("#btn_joinForm").on("click", function() {
+                        location.href = "[[@{/join}]]"; // /join 페이지로 이동 , 안 되면 [[]]지워보기
+                    });
+                });
+            </script>
+        </th:block>
+    </div>
+    <div>
+        <button type="button" class="btn btn-secondary btn-large form-control"
+                id="btn_joinForm">Join</button>
+    </div>
+</section>
+</body>
+</html>

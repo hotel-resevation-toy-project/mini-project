@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.User.Data.Entity.User;
+import mini.project.HotelReservation.User.Repository.UserRepository;
 import mini.project.HotelReservation.User.Service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,8 +25,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class JwtTokenDecoder implements TokenDecoder{
 
+    private final UserRepository userRepository;
 
-    private final UserService userService;
     // JWT 서명에 들어갈 secretKey
     private final String secretKey ="TheGrandBudapestHotel";
     // secretKey값을 디코딩한 결과를 저장하는 Key
@@ -75,22 +76,20 @@ public class JwtTokenDecoder implements TokenDecoder{
     @Override
     public Authentication getAuthentication(String token) {
         // 토큰에서 추출한 userId를 기반으로 user객체 생성
-        User principal = userService.loadUserByUserId(tokenToIds(token)[0]);
-
         // 토큰에서 추출한 Role을 기반으로 시큐리티 메소드에 들어갈 Authority Collection 생성
         // List형태로 생성하는 이유는, 한 User마다 여러 역할을 가질 수 있기 때문이다
         // User A가 게시판1에서는 관리자이지만 게시판2에서는 그냥 user일 수 있음.
-
+        User principal = userRepository.findById(tokenToIds(token)[0]).get();
 //        Collection<? extends GrantedAuthority> authorities =
 //                Arrays.stream(new String[]{tokenToRole(token)}).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-        setAuths.add(new SimpleGrantedAuthority(tokenToRole(token)));
+        setAuths.add(new SimpleGrantedAuthority(principal.getRole().toString()));
 
         // Filter단계에서는 매개변수값이 principal(우리로 치면 회원), 인증정보확인(값이 들어만 있으면 됨)으로
         // 권한 확인 전의 Authentication 객체를 생성하고 현재 메소드를 대기하고 있다가
         // 아래 UsernamePassword~~의 매개변수에 authorities(역할)이 포함되어 생성자가 실행되면
         // 권한을 인가받고 SecurityContextHolder에 저장되어 우리가 사용한다.
-        return new UsernamePasswordAuthenticationToken(principal, token, setAuths);
+        return new UsernamePasswordAuthenticationToken(principal, "", setAuths);
     }
 
     @Override
@@ -147,20 +146,17 @@ public class JwtTokenDecoder implements TokenDecoder{
         //          Authentication 가져오기
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        // Security Context에 인증 정보가 없는 상태
         if(authentication == null){
             throw new NoSuchElementException("로그인 먼저 시도해주세요.");
         }
-        
-//        {
-//            // Security Context에 인증 정보가 없는 상태
-//            return Optional.empty();
-//        }
 
-        User user = null;   // principal객체로 저장된 user를 받기 위한 코드
+        // principal객체로 저장된 user를 받기 위한 코드
         if (authentication.getPrincipal() instanceof User) {
-            user = (User) authentication.getPrincipal();
+            return (User) authentication.getPrincipal();
+        } else {
+            throw new NullPointerException("로그인 먼저 시도해주세요.");
         }
-        return null;
     }
 
     // Test용 임시 추가
