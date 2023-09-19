@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void updateInfo(UserInfoDto userInfoDto) {
-        User user = userRepository.findById(td.currentUser().get().getUserId()).orElseThrow(
+        User user = userRepository.findById(td.currentUser().getUserId()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
         user.updateInfo(userInfoDto);
     }

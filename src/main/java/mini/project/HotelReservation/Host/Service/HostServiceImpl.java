@@ -8,6 +8,7 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
+import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.enumerate.RoomType;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class HostServiceImpl implements HostService {
     private HotelRepository hotelRepository;
-
+    private ReservationRepository reservationRepository;
     private RoomRepository roomRepository;
 
     private TokenDecoder td;
@@ -50,7 +51,7 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public List<HotelReservationResponseDto> reservationList(Long hotelId) {
-        List<Reservation> reservationsByHotelId = hotelRepository.findReservationByHotelId(hotelId);
+        List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
         List<HotelReservationResponseDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByHotelId) {
             reservations.add(new HotelReservationResponseDto(reservation.getReserveNumber(),
