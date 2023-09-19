@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class ReserveDto {
+public class ReservationResponseDto {
     private RoomType roomType;
     private String hotelName;
     private Integer reservePrice;
