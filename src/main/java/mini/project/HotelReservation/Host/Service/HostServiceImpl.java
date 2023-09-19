@@ -1,5 +1,6 @@
 package mini.project.HotelReservation.Host.Service;
 
+import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationResponseDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -8,20 +9,25 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
+import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.enumerate.RoomType;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class HostServiceImpl implements HostService {
-    private HotelRepository hotelRepository;
+    private final HotelRepository hotelRepository;
+    private final RoomRepository roomRepository;
+    private final ReservationRepository reservationRepository;
+    private final TokenDecoder td;
 
-    private RoomRepository roomRepository;
-
-    private TokenDecoder td;
     @Override
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = 1L/*td.asdfasd()*/;
@@ -34,7 +40,7 @@ public class HostServiceImpl implements HostService {
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = 1L/*td.asdfasd()*/;
         RoomType roomType = priceDto.getRoomType();
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
+        Room room = roomRepository.findAllByHotel_HotelIdAndRoomType(hotelId, roomType);
 
         room.modifyPrice(priceDto.getDiscountPrice());
     }
@@ -43,14 +49,14 @@ public class HostServiceImpl implements HostService {
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = 1L/*td.asdfasd()*/;
         RoomType roomType =roomStockDto.getRoomType();
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
+        Room room = roomRepository.findAllByHotel_HotelIdAndRoomType(hotelId, roomType);
 
         room.modifyStock(roomStockDto.getRoomStock());
     }
 
     @Override
     public List<HotelReservationResponseDto> reservationList(Long hotelId) {
-        List<Reservation> reservationsByHotelId = hotelRepository.findReservationByHotelId(hotelId);
+        List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
         List<HotelReservationResponseDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByHotelId) {
             reservations.add(new HotelReservationResponseDto(reservation.getReserveNumber(),
