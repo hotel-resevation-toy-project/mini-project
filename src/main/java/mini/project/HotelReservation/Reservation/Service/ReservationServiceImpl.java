@@ -52,15 +52,6 @@ public class ReservationServiceImpl implements ReservationService {
     public Integer discountPrice(DiscountPolicy discountPolicy,
                                  Integer reservePrice,
                                  Integer days){
-
-        switch (discountPolicy.toString()){
-            case "POLICY_PEAK":
-                return peakDiscountPolicy.discount(reservePrice,days);
-            case "POLICY_DAYS":
-                return daysDiscountPolicy.discount(reservePrice,days);
-            default:
-                return Math.max(peakDiscountPolicy.discount(reservePrice, days), daysDiscountPolicy.discount(reservePrice, days));
-        }
     }
 
     //예약 상세 정보
