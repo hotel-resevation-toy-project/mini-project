@@ -1,24 +1,25 @@
 package mini.project.HotelReservation.Reservation.Service;
 
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy.DaysDiscountPolicy;
 import mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy.PeakDiscountPolicy;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
-import mini.project.HotelReservation.enumerate.RoomType;
+import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -57,14 +58,16 @@ public class ReservationServiceImpl implements ReservationService {
         //호텔 객체 생성
         Hotel hotel = reservationRepository.findByHotelName(reservationReqDto.getHotelName());
 
-        // todo: ? 에 예약 순서 들어가야함
-        String reserveNumber =
-                reservationReqDto.getHotelName()+ reservationReqDto.getRoomType().toString()
-                + "?" + reservationReqDto.getCheckInDate().toLocalDate().toString();
+        switch (hotel.getDiscountPolicy().toString()){
+            case "POLICY_PEAK":
 
-        User user = userRepository.findById(td.currentUser().get().getUserId()).orElseThrow(
-                () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
-        );
+                break;
+            case "POLICY_DAYS":
+                break;
+            case "POLICY_ALL":
+                break;
+        }
+
 
         return new ReservationResponseDto(
                 reservationReqDto.getRoomType(),
@@ -77,7 +80,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Integer discountPrice(Integer reservePrice){
-
         return reservePrice;
     }
 
@@ -98,7 +100,6 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 취소
     @Override
     public void reserveDelete(String reserveNumber) {
-        //reserveNumber(reserve_id) db에서 걍 바로 삭제
-
+        reservationRepository.deleteByReserveNumber(reserveNumber);
     }
 }
