@@ -18,11 +18,11 @@ import java.util.List;
 
 
 public class HostServiceImpl implements HostService {
-    private HotelRepository hotelRepository;
-    private ReservationRepository reservationRepository;
-    private RoomRepository roomRepository;
-
-    private TokenDecoder td;
+    private final HotelRepository hotelRepository;
+    private final RoomRepository roomRepository;
+    private final ReservationRepository reservationRepository;
+    private final TokenDecoder td;
+    
     @Override
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = 1L/*td.asdfasd()*/;
