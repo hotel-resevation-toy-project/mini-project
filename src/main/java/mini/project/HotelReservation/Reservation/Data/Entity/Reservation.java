@@ -8,10 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReserveDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.User.Data.Entity.User;
-import org.springframework.data.domain.Persistable;
 
 import java.time.LocalDateTime;
 
@@ -55,7 +54,6 @@ public class Reservation extends AuditTime {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Builder
     public Reservation(String reserveNumber, Integer reservePrice, RoomType roomType, String hotelName, String phoneNumber, String userName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
         this.userName = userName;
         this.hotelName = hotelName;
@@ -68,15 +66,15 @@ public class Reservation extends AuditTime {
     }
 
     //비즈니스 로직
-    public Reservation createReserve(User user, Room room, ReserveDto reserveDto) {
+    public Reservation createReserve(User user, Room room, ReservationResponseDto reservationResponseDto) {
 
         this.user = user;
         this.room = room;
-        this.roomType = reserveDto.getRoomType();
-        this.hotelName = reserveDto.getHotelName();
-        this.reservePrice = reserveDto.getReservePrice();
-        this.checkInDate = reserveDto.getCheckInDate();
-        this.checkOutDate = reserveDto.getCheckOutDate();
+        this.roomType = reservationResponseDto.getRoomType();
+        this.hotelName = reservationResponseDto.getHotelName();
+        this.reservePrice = reservationResponseDto.getReservePrice();
+        this.checkInDate = reservationResponseDto.getCheckInDate();
+        this.checkOutDate = reservationResponseDto.getCheckOutDate();
 
         return new Reservation(getReserveNumber(),
                 getReservePrice(),
