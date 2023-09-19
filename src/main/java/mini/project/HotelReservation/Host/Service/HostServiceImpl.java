@@ -30,7 +30,7 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public void changePolicy(DiscountPolicy policy) {
-        Long hotelId = 1L/*td.asdfasd()*/;
+        Long hotelId = td.currentUser().getUserId();
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
         hotel.changePolicy((DiscountPolicy) policy);
 
@@ -38,7 +38,7 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public void modifyRoomPrice(PriceDto priceDto) {
-        Long hotelId = 1L/*td.asdfasd()*/;
+        Long hotelId = td.currentUser().getUserId();
         RoomType roomType = priceDto.getRoomType();
         Room room = roomRepository.findAllByHotel_HotelIdAndRoomType(hotelId, roomType);
 
@@ -47,7 +47,7 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public void modifyRoomStock(RoomStockDto roomStockDto) {
-        Long hotelId = 1L/*td.asdfasd()*/;
+        Long hotelId = td.currentUser().getUserId();
         RoomType roomType =roomStockDto.getRoomType();
         Room room = roomRepository.findAllByHotel_HotelIdAndRoomType(hotelId, roomType);
 
