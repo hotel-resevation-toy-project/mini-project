@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReservationRequestDto {
     private String hotelName;
-    /*private String checkInDate;
-    private String checkOutDate;*/
     private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
     private RoomType roomType;
