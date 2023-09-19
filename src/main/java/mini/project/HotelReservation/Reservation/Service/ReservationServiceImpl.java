@@ -47,12 +47,14 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public DiscountPriceDto priceCalculator(ReservationRequestDto requestDto) {
     }
+    @Override
+    public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
+
+    }
 
     @Override
-    public Integer discountPrice(DiscountPolicy discountPolicy,
-                                 Integer reservePrice,
-                                 Integer days){
-    }
+    public Integer discountPrice(Integer reservePrice){
+        return reservePrice;
 
     //예약 상세 정보
     @Override
