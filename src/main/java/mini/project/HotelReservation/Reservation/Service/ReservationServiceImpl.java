@@ -6,15 +6,19 @@ import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy.DaysDiscountPolicy;
 import mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy.PeakDiscountPolicy;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
+import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
+import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -31,26 +35,44 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final TokenDecoder td;
 
+    @Override
+    public List<Hotel> findByHotelList() {
+        return null;
+    }
+
+    @Override
+    public List<Hotel> findByRoomList() {
+        return null;
+    }
+
+    @Override
+    public DiscountPriceDto priceCalculator() {
+        return null;
+    }
+
     //예약
     @Override
-    public ReservationDto reserve(ReservationResponseDto reservationResponseDto) {
+    public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
 
         //호텔 객체 생성
-        Hotel hotel = reservationRepository.findByHotelName(reservationResponseDto.getHotelName());
-        /*
-        [호텔명 + 객실종류 +예약 순서 + 입실 년,월,일]
-        예약 순서 → 타입별 전체 객실 수 - 타입별 남은 객실 수 = 타입별 예약 순서
-        */
+        Hotel hotel = reservationRepository.findByHotelName(reservationReqDto.getHotelName());
 
         // todo: ? 에 예약 순서 들어가야함
         String reserveNumber =
-        reservationResponseDto.getHotelName()+ reservationResponseDto.getRoomType().toString()
-                + "?" + reservationResponseDto.getCheckInDate().toLocalDate().toString();
+                reservationReqDto.getHotelName()+ reservationReqDto.getRoomType().toString()
+                + "?" + reservationReqDto.getCheckInDate().toLocalDate().toString();
 
-        User user = userRepository.findById(td.).orElseThrow(
+        User user = userRepository.findById(td.currentUser().get().getUserId()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
         );
 
+        return new ReservationResponseDto(
+                reservationReqDto.getRoomType(),
+                reservationReqDto.getHotelName(),
+                discountPrice(reservationReqDto.getPrice()),
+                reservationReqDto.getCheckInDate(),
+                reservationReqDto.getCheckOutDate()
+        );
     }
 
     @Override
@@ -59,22 +81,17 @@ public class ReservationServiceImpl implements ReservationService {
         return reservePrice;
     }
 
-
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
-        // reservationDto로 옮겨 담기
 
-        return new ReservationDto(
-                reservation.getUserName(),
-                reservation.getPhoneNumber(),
-                reservation.getHotelName(),
+        return new ReservationResponseDto(
                 reservation.getRoomType(),
+                reservation.getHotelName(),
+                reservation.getReservePrice(),
                 reservation.getCheckInDate(),
-                reservation.getCheckOutDate(),
-                reservation.getReserveNumber(),
-                reservation.getReservePrice()
+                reservation.getCheckOutDate()
         );
     }
 
@@ -82,5 +99,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void reserveDelete(String reserveNumber) {
         //reserveNumber(reserve_id) db에서 걍 바로 삭제
+
     }
 }
