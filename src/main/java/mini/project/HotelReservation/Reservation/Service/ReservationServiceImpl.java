@@ -47,7 +47,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public DiscountPriceDto priceCalculator() {
-        return null;
+        return new DiscountPriceDto();
     }
 
     //예약
