@@ -95,8 +95,6 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
-        Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
-
         return null;
     }
 
