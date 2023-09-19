@@ -7,11 +7,10 @@ import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.User.Data.Dto.request.UserDeactiveDto;
-import mini.project.HotelReservation.User.Data.Dto.request.UserSignInRequestDto;
-import mini.project.HotelReservation.User.Data.Dto.request.UserSignUpDto;
-import mini.project.HotelReservation.User.Data.Dto.response.UserInfoDto;
-import mini.project.HotelReservation.User.Data.Dto.response.UserReservationDto;
+import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
+import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
+import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
+import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
@@ -72,7 +71,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserInfoDto logIn(UserSignInRequestDto sid) {
+    public void logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
 
@@ -90,10 +89,10 @@ public class UserServiceImpl implements UserService{
                                 String.valueOf(user.getUserId()),
                                 String.valueOf(user.getHotel().getHotelId()));
             }
+            new UserInfoDto(user);
         }else {
             throw new NoSuchElementException();
         }
-        return new UserInfoDto(user);
     }
 
     @Override
@@ -104,11 +103,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deactive(String email, UserDeactiveDto udd) {
+    public void deactive(String email, UserSignInDto usd) {
         User user = userRepository.findStatusByEmail(email).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
         );
-        if(passwordEncoder.matches(udd.getPassword(), user.getPassword())){
+        if(passwordEncoder.matches(usd.getPassword(), user.getPassword())){
             throw new NoResultException("비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();

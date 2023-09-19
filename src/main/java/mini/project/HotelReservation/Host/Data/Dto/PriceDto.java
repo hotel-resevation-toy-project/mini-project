@@ -1,12 +1,12 @@
 package mini.project.HotelReservation.Host.Data.Dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.enumerate.RoomType;
 
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PriceDto {
-    private RoomType roomType;
-    private Integer discountPrice;
+    private final RoomType roomType;
+    private final Integer discountPrice;
 }

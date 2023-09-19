@@ -1,4 +1,4 @@
-package mini.project.HotelReservation.User.Data.Dto.response;
+package mini.project.HotelReservation.User.Data.Dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

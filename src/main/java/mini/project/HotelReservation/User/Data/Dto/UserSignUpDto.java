@@ -1,4 +1,4 @@
-package mini.project.HotelReservation.User.Data.Dto.request;
+package mini.project.HotelReservation.User.Data.Dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

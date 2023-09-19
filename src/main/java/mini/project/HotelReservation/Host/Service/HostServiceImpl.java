@@ -8,14 +8,13 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import mini.project.HotelReservation.User.Data.Dto.UserReservationResponseDto;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.enumerate.RoomType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 public class HostServiceImpl implements HostService {
     private HotelRepository hotelRepository;
@@ -54,10 +53,10 @@ public class HostServiceImpl implements HostService {
         List<Reservation> reservationsByHotelId = hotelRepository.findReservationByHotelId(hotelId);
         List<HotelReservationResponseDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByHotelId) {
-            reservations.add(new HotelReservationResponseDto(reservation.getHotelName(),
-                                                             reservation.getCheckInDate(),
-                                                               reservation.getCheckOutDate()));
+            reservations.add(new HotelReservationResponseDto(reservation.getReserveNumber(),
+                                                             reservation.getUserName(),
+                                                               reservation.getPhoneNumber()));
         }
         return reservations;
-
+    }
 }

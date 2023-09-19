@@ -1,21 +1,20 @@
 package mini.project.HotelReservation.Host.Data.Dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
-import org.springframework.data.jpa.repository.Query;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class HotelReservationResponseDto {
-    private String reserveNumber;
-    private String userName;
-    private String userPhoneNumber;
+    private final String reserveNumber;
+    private final String userName;
+    private final String userPhoneNumber;
 
 
-    public HotelReservationResponseDto(String hotelName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
+    public HotelReservationResponseDto(Reservation reservation) {
+        reserveNumber = reservation.getReserveNumber();
+        userName = reservation.getUserName();
+        userPhoneNumber = reservation.getPhoneNumber();
     }
 }
