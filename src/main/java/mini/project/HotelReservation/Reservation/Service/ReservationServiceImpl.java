@@ -49,6 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public DiscountPriceDto priceCalculator() {
         return new DiscountPriceDto();
+    //1박당 가격, 숙박일수
     }
 
     //예약
@@ -58,13 +59,23 @@ public class ReservationServiceImpl implements ReservationService {
         //호텔 객체 생성
         Hotel hotel = reservationRepository.findByHotelName(reservationReqDto.getHotelName());
 
+        //숙박일
+        int days = reservationReqDto.getCheckOutDate().toLocalDate().compareTo(reservationReqDto.getCheckInDate().toLocalDate());
+
+        //할인될 값
+        int totalDiscount=0;
+
         switch (hotel.getDiscountPolicy().toString()){
             case "POLICY_PEAK":
-
+                totalDiscount = peakDiscountPolicy.discount(reservationReqDto.getPrice(),days);
                 break;
             case "POLICY_DAYS":
+                totalDiscount = daysDiscountPolicy.discount(reservationReqDto.getPrice(),days);
                 break;
             case "POLICY_ALL":
+                int peakDiscount = peakDiscountPolicy.discount(reservationReqDto.getPrice(),days);
+                int daysDiscount = daysDiscountPolicy.discount(reservationReqDto.getPrice(),days);
+                totalDiscount = Math.max(peakDiscount, daysDiscount);
                 break;
         }
 
