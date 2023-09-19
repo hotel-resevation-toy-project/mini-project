@@ -1,10 +1,10 @@
 package mini.project.HotelReservation.User.Service;
 
 
-import mini.project.HotelReservation.User.Data.Dto.request.UserSignInDto;
-import mini.project.HotelReservation.User.Data.Dto.request.UserSignUpDto;
-import mini.project.HotelReservation.User.Data.Dto.response.UserInfoDto;
-import mini.project.HotelReservation.User.Data.Dto.response.UserReservationDto;
+import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
+import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
+import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
+import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
 
 import java.util.List;
