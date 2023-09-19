@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +35,6 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
     private final PeakDiscountPolicy peakDiscountPolicy;
@@ -69,9 +71,10 @@ public class ReservationServiceImpl implements ReservationService {
         //호텔 객체 생성
         Hotel hotel = hotelRepository.findByHotelName(requestDto.getHotelName());
         //숙박일
-        int days = requestDto.getCheckOutDate().compareTo(requestDto.getCheckInDate());
+        int days = (int)ChronoUnit.DAYS.between(requestDto.getCheckInDate(), requestDto.getCheckOutDate());
+
         //원가
-        int reservePrice = requestDto.getOneDayPrice()*days;
+        int reservePrice = requestDto.getOneDayPrice() * days;
         //할인될 값
         int totalDiscount = 0;
 //                discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
@@ -81,28 +84,26 @@ public class ReservationServiceImpl implements ReservationService {
         int peakDiscount = 0;
         int daysDiscount = 0;
 
-        int[] checkPeakDays = new int[2];
+        LocalDate hotelStartPeakDate = LocalDate.of(requestDto.getCheckInDate().getYear(),
+                                                    hotel.getStartPeakDate().getMonth(),
+                                                    hotel.getStartPeakDate().getDayOfMonth());
 
-        LocalDate hotelStartPeakDate =
-                LocalDate.of(requestDto.getCheckInDate().getYear(),hotel.getStartPeakDate().getMonth(),hotel.getStartPeakDate().getDayOfMonth());
-        LocalDate hotelEndPeakDate =
-                LocalDate.of(requestDto.getCheckOutDate().getYear(),hotel.getEndPeakDate().getMonth(),hotel.getEndPeakDate().getDayOfMonth());
+        LocalDate hotelEndPeakDate = LocalDate.of(requestDto.getCheckOutDate().getYear(),
+                                                    hotel.getEndPeakDate().getMonth(),
+                                                    hotel.getEndPeakDate().getDayOfMonth());
 
-        switch (hotel.getDiscountPolicy().toString()) {
-            case "POLICY_PEAK" :
-                CheckPeakDays(hotelStartPeakDate,hotelEndPeakDate,requestDto.getCheckInDate(),requestDto.getCheckOutDate());
-                checkPeakDays = CheckPeakDays(hotelStartPeakDate,hotelEndPeakDate,requestDto.getCheckInDate(),requestDto.getCheckOutDate());
-                totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),checkPeakDays[0]);
-                break;
-            case "POLICY_DAYS" :
-                totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
-                break;
-            default :
-                checkPeakDays = CheckPeakDays(hotelStartPeakDate,hotelEndPeakDate,requestDto.getCheckInDate(),requestDto.getCheckOutDate());
-                peakDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),checkPeakDays[0]);
-                daysDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
-                totalDiscount = Math.max(peakDiscount,daysDiscount);
-                break;
+        int[] peakDays = CheckPeakDays(hotelStartPeakDate, hotelEndPeakDate, requestDto.getCheckInDate(), requestDto.getCheckOutDate());
+        switch (hotel.getDiscountPolicy()) {
+            case POLICY_PEAK -> {
+                totalDiscount = discountPrice(hotel.getDiscountPolicy(), requestDto.getOneDayPrice(), peakDays[0]);
+            }
+            case POLICY_DAYS ->
+                    totalDiscount = discountPrice(hotel.getDiscountPolicy(), requestDto.getOneDayPrice(), days);
+            default -> {
+                peakDiscount = discountPrice(hotel.getDiscountPolicy(), requestDto.getOneDayPrice(), peakDays[0]);
+                daysDiscount = discountPrice(hotel.getDiscountPolicy(), requestDto.getOneDayPrice(), days);
+                totalDiscount = Math.max(peakDiscount, daysDiscount);
+            }
         }
         return new DiscountPriceDto(totalDiscount,totalDiscount,pay,hotel.getDiscountPolicy().toString());
     }
@@ -110,26 +111,14 @@ public class ReservationServiceImpl implements ReservationService {
     //성수기를 판별하여 성수기에 해당하는 숙박일과 해당하지 않는 숙박일을 리턴해주는 메서드
     public int[] CheckPeakDays(LocalDate hotelStartPeakDate, LocalDate hotelEndPeakDate, LocalDate checkInDate, LocalDate checkOutDate){
 
-        hotelStartPeakDate = LocalDate.of(LocalDate.now().getYear(),checkInDate.getMonth(),checkInDate.getDayOfMonth());
-        hotelEndPeakDate = LocalDate.of(LocalDate.now().getYear(), checkOutDate.getMonth(),checkOutDate.getDayOfMonth());
-
         //[0] = 성수기에 해당하는 숙박일, [1] = 성수기에 해당하지 않는 숙박일
         int[] peakDays = new int[2];
-
-        if(hotelStartPeakDate.compareTo(checkInDate)<-1){
-            if(hotelEndPeakDate.compareTo(checkOutDate)>-1){
-                //숙박일 모두 성수기에 해당
-                peakDays[0] = checkOutDate.compareTo(checkInDate);
-                peakDays[1] = 0;
-            }else{
-                //일부만 성수기에 해당
-                peakDays[0] = checkOutDate.compareTo(checkInDate) - checkOutDate.compareTo(hotelEndPeakDate);
-                peakDays[1] = checkOutDate.compareTo(hotelEndPeakDate);
+        for (LocalDate i = checkInDate; i.isBefore(checkOutDate); i.plusDays(1)) {
+            if (i.isAfter(hotelStartPeakDate) && i.isBefore(hotelEndPeakDate)) {
+                peakDays[0]++;
+            } else {
+                peakDays[1]++;
             }
-        }else{
-            //모두 비성수기에 해당
-            peakDays[0] = 0;
-            peakDays[1] = checkOutDate.compareTo(checkInDate);
         }
         return peakDays;
     }
