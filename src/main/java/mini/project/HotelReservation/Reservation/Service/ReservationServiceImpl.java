@@ -59,12 +59,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public DiscountPriceDto priceCalculator() {
-        return new DiscountPriceDto();
-    //1박당 가격, 숙박일수
+    public DiscountPriceDto priceCalculator(ReservationRequestDto requestDto) {
     }
-
-    //예약
     @Override
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
 
@@ -73,7 +69,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Integer discountPrice(Integer reservePrice){
         return reservePrice;
-    }
 
     //예약 상세 정보
     @Override
