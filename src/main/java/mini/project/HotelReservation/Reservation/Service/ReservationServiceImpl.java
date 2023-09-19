@@ -46,34 +46,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public DiscountPriceDto priceCalculator(ReservationRequestDto requestDto) {
-
-        //호텔 객체 생성
-        Hotel hotel = hotelRepository.findByHotelName(requestDto.getHotelName());
-        //숙박일
-        int days = requestDto.getCheckOutDate().compareTo(requestDto.getCheckInDate());
-        //원가
-        int reservePrice = requestDto.getOneDayPrice()*days;
-        //할인될 값
-        int totalDiscount = discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
-        //결제 값
-        int pay = reservePrice - totalDiscount;
-
-        return new DiscountPriceDto(totalDiscount,totalDiscount,pay,hotel.getDiscountPolicy().toString());
-    }
-
-    //예약
-    @Override
-    public ReservationResponseDto reserve(ReservationRequestDto requestDto, DiscountPriceDto discountPriceDto) {
-
-
-
-        return new ReservationResponseDto(
-                requestDto.getRoomType(),
-                requestDto.getHotelName(),
-                ,
-                requestDto.getCheckInDate(),
-                requestDto.getCheckOutDate()
-        );
     }
 
     @Override
