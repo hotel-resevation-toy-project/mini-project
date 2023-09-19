@@ -40,7 +40,7 @@ public class HostServiceImpl implements HostService {
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getUserId();
         RoomType roomType = priceDto.getRoomType();
-        Room room = roomRepository.findAllByHotel_HotelIdAndRoomType(hotelId, roomType);
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
 
         room.modifyPrice(priceDto.getDiscountPrice());
     }
@@ -49,7 +49,7 @@ public class HostServiceImpl implements HostService {
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = td.currentUser().getUserId();
         RoomType roomType =roomStockDto.getRoomType();
-        Room room = roomRepository.findAllByHotel_HotelIdAndRoomType(hotelId, roomType);
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
 
         room.modifyStock(roomStockDto.getRoomStock());
     }
