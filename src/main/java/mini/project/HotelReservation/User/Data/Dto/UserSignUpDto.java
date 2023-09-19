@@ -23,6 +23,4 @@ public class UserSignUpDto {
     private final String phoneNumber;
 
     private final UserRole role;
-
-
 }

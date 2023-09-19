@@ -7,6 +7,7 @@ import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
+import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
@@ -30,8 +31,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
-    private TokenDecoder td;
+    private final TokenDecoder td;
 
     @Override
     public void join(UserSignUpDto sud) {
@@ -97,7 +99,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void updateInfo(UserInfoDto userInfoDto) {
-        User user = userRepository.findById(td.currentUser().get().getUserId()).orElseThrow(
+        User user = userRepository.findById(td.currentUser().getUserId()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
         user.updateInfo(userInfoDto);
     }
@@ -114,7 +116,7 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public List<UserReservationDto> reservationList(Long userId){
-        List<Reservation> reservationsByUserId = userRepository.findReservationsByUserId(userId);
+        List<Reservation> reservationsByUserId = reservationRepository.findAllByUser_UserId(userId);
         List<UserReservationDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByUserId) {
             reservations.add(new UserReservationDto(reservation.getHotelName(),
