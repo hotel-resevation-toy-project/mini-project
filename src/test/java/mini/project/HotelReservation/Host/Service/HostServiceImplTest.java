@@ -3,7 +3,7 @@ package mini.project.HotelReservation.Host.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
-import mini.project.HotelReservation.Host.Data.Dto.HotelReservationResponseDto;
+import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -25,13 +25,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,9 +93,8 @@ class HostServiceImplTest {
 
         room.foreignHotel(hotel);
         // 호스트에 호텔 주입
-        user.foreignHotel(hotel);
+        hotel.foreignUser(user);
         userRepository.save(user);
-
         // 예약1
         reservation1.foreignHotel(hotel);
         reservation1.foreignUser(user);
@@ -108,6 +107,11 @@ class HostServiceImplTest {
         reservation3.foreignHotel(hotel);
         reservation3.foreignUser(user);
         reservationRepository.save(reservation3);
+
+        // 로그인된 host User를 Security Context에 저장
+        User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
+        td.createToken(String.valueOf(ckUser.getRole()), String.valueOf(ckUser.getUserId()), String.valueOf(ckUser.getHotel().getHotelId()));
+        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
     @AfterEach
     public void reset(){
@@ -118,62 +122,44 @@ class HostServiceImplTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("호스트_정책_변경")
     void change_Policy() {
+        System.out.println("$$$$$$$$$");
+        System.out.println(DiscountPolicy.valueOf("POLICY"));
+        System.out.println("$$$$$$$$$");
         // 저장된 유저에서 연결된 호텔 받아오기
-        User checkUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
-        Hotel checkHotel = checkUser.getHotel();
-        checkHotel.changePolicy(DiscountPolicy.POLICY_ALL);
-
-        assertEquals(checkHotel.getDiscountPolicy(), DiscountPolicy.POLICY_ALL);
+        hostService.changePolicy(DiscountPolicy.POLICY_ALL);
+        assertEquals(td.currentUser().getHotel().getDiscountPolicy(), DiscountPolicy.POLICY_ALL);
     }
-
     @Test
-    @Transactional
     @DisplayName("방가격_변경")
     void modifyRoomPrice() {
         PriceDto priceDto = new PriceDto(RoomType.ROOM_TYPE_A_SINGLE, 500);
-        User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
-        Room ckRoom = roomRepository.findByHotel_HotelIdAndRoomType(ckUser.getHotel().getHotelId(), RoomType.ROOM_TYPE_A_SINGLE);
-
-        ckRoom.modifyPrice(priceDto.getDiscountPrice());
-
+        hostService.modifyRoomPrice(priceDto);
         assertEquals(roomRepository.findById(roomRepository.findAll().get(0).getRoomId()).get().getRoomPrice(), 500);
     }
-
     @Test
-    @Transactional
     @DisplayName("방개수_변경")
     void modifyRoomStock() {
         RoomStockDto stockDto = new RoomStockDto(RoomType.ROOM_TYPE_A_SINGLE, 50);
-        User ckUser = userRepository.findById(
-                userRepository.findAll().get(0).getUserId()
-        ).get();
-        Room ckRoom = roomRepository.findByHotel_HotelIdAndRoomType(ckUser.getHotel().getHotelId(), RoomType.ROOM_TYPE_A_SINGLE);
-
-        ckRoom.modifyStock(stockDto.getRoomStock());
+        hostService.modifyRoomStock(stockDto);
         assertEquals(roomRepository.findById(
                 userRepository.findAll().get(0).getUserId()).get().getRoomStock(), 50);
     }
-
     @Test
     @DisplayName("호텔측_예약리스트_보기")
     void reservationList() {
-
-        List<HotelReservationResponseDto> reservations = hostService.reservationList(
-                userRepository.findById(userRepository.findAll().get(0).getUserId()).get().getHotel().getHotelId()
-        );
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        for(HotelReservationResponseDto reservation : reservations){
-            System.out.println("UserName : " + reservation.getUserName()+
-                    "\t/ PhoneNumber : " + reservation.getUserPhoneNumber());
-        }
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        List<HotelReservationDto> reservations = hostService.reservationList();
         assertEquals(reservations.size(),
                 reservationRepository.findAllByHotel_HotelId(
                         userRepository.findById(userRepository.findAll().get(0).getUserId()).get().getHotel().getHotelId()
                 ).size());
     }
-
 }
+
+//               System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//        for(HotelReservationResponseDto reservation : reservations){
+//                System.out.println("UserName : " + reservation.getUserName()+
+//                "\t/ PhoneNumber : " + reservation.getUserPhoneNumber());
+//                }
+//                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");

@@ -6,13 +6,13 @@ import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 
 @Data
 @RequiredArgsConstructor
-public class HotelReservationResponseDto {
+public class HotelReservationDto {
     private final String reserveNumber;
     private final String userName;
     private final String userPhoneNumber;
 
 
-    public HotelReservationResponseDto(Reservation reservation) {
+    public HotelReservationDto(Reservation reservation) {
         reserveNumber = reservation.getReserveNumber();
         userName = reservation.getUserName();
         userPhoneNumber = reservation.getPhoneNumber();
