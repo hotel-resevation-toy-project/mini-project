@@ -13,6 +13,7 @@ public class ReservationResponseDto {
     private final String userName;
     private final String phoneNumber;
     private final String hotelName;
+    // TODO: 2023-09-20 RoomType -> String check
     private final RoomType roomType;
     private final LocalDateTime checkInDate;
     private final LocalDateTime checkOutDate;

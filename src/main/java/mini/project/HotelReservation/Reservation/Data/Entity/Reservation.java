@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.User.Data.Entity.User;
@@ -56,35 +57,34 @@ public class Reservation extends AuditTime {
     private Hotel hotel;
 
     public Reservation(String reserveNumber, Integer reservePrice, RoomType roomType, String hotelName, String phoneNumber, String userName, LocalDateTime checkInDate, LocalDateTime checkOutDate) {
-        this.userName = userName;
-        this.hotelName = hotelName;
-        this.roomType = roomType;
-        this.phoneNumber = phoneNumber;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
         this.reserveNumber = reserveNumber;
         this.reservePrice = reservePrice;
+        this.roomType = roomType;
+        this.hotelName = hotelName;
+        this.phoneNumber = phoneNumber;
+        this.userName = userName;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
     }
 
     //비즈니스 로직
-    public Reservation createReserve(User user, Hotel hotel, ReservationResponseDto reservationResponseDto) {
-        foreignUser(user);
-        foreignHotel(hotel);
-        this.roomType = reservationResponseDto.getRoomType();
-        this.hotelName = reservationResponseDto.getHotelName();
-        this.reservePrice = reservationResponseDto.getReservePrice();
-        this.checkInDate = reservationResponseDto.getCheckInDate();
-        this.checkOutDate = reservationResponseDto.getCheckOutDate();
+    public static Reservation createReserve(User user, Hotel hotel, ReservationRequestDto reservationRequestDto, Integer reservePrice, String reserveNumber) {
 
-        return new Reservation(getReserveNumber(),
-                getReservePrice(),
-                getRoomType(),
-                getHotelName(),
-                getPhoneNumber(),
-                getUserName(),
-                getCheckInDate(),
-                getCheckOutDate());
+        Reservation reservation = new Reservation(reserveNumber,
+                reservePrice,
+                reservationRequestDto.getRoomType(),
+                hotel.getHotelName(),
+                user.getPhoneNumber(),
+                user.getName(),
+                LocalDateTime.of(reservationRequestDto.getCheckInDate(),hotel.getCheckInTime()),
+                LocalDateTime.of(reservationRequestDto.getCheckOutDate(),hotel.getCheckOutTime())
+                );
+
+        reservation.foreignHotel(hotel);
+        reservation.foreignUser(user);
+        return reservation;
     }
+
     // 연관관계 메서드
     public void foreignUser(User foreignUser){
         this.user = foreignUser;

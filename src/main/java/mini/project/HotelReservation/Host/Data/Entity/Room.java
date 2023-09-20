@@ -46,11 +46,8 @@ public class Room extends AuditTime {
         hotel.getRooms().add(this);
     }
     //비즈니스 로직
-
-    public void reserveSequence(){
-    }
-    public void modifyPrice(Integer price){
-        roomPrice = roomPrice - price;
+    public void modifyPrice(Integer newPrice){
+        roomPrice = newPrice;
     }
 
     public void modifyStock(Integer newStock){

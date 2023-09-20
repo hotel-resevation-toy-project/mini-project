@@ -9,10 +9,12 @@ import java.util.List;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findByHotel_HotelIdAndRoomType(Long hotelId, RoomType roomType);
+    Room findByRoomType(RoomType roomType);
     @Query("SELECT r FROM Room r " +
             "JOIN Hotel h " +
             "WHERE r.hotel.hotelId = h.hotelId " +
             "AND h.hotelName = :hotelName")
     List<Room> findAllByHotelName(String hotelName);
+
 
 }
