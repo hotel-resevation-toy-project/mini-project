@@ -12,6 +12,8 @@ import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,7 +50,7 @@ public class User extends AuditTime {
     private Hotel hotel;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String password,
