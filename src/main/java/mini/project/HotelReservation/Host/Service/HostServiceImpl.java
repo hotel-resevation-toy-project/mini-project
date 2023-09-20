@@ -47,8 +47,8 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public void modifyRoomStock(RoomStockDto roomStockDto) {
-        Long hotelId = td.currentUser().getUserId();
-        RoomType roomType =roomStockDto.getRoomType();
+        Long hotelId = td.currentUser().getHotel().getHotelId();
+        RoomType roomType = roomStockDto.getRoomType();
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
 
         room.modifyStock(roomStockDto.getRoomStock());
