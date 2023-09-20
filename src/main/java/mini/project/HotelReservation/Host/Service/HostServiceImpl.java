@@ -29,14 +29,15 @@ public class HostServiceImpl implements HostService {
     private final TokenDecoder td;
 
     @Override
+    @Transactional
     public void changePolicy(DiscountPolicy policy) {
-        Long hotelId = td.currentUser().getUserId();
+        Long hotelId = td.currentUser().getHotel().getHotelId();
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
         hotel.changePolicy(policy);
-
     }
 
     @Override
+    @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getUserId();
         RoomType roomType = priceDto.getRoomType();
@@ -46,6 +47,7 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
         RoomType roomType = roomStockDto.getRoomType();
@@ -55,7 +57,8 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public List<HotelReservationResponseDto> reservationList(Long hotelId) {
+    public List<HotelReservationResponseDto> reservationList() {
+        Long hotelId = td.currentUser().getHotel().getHotelId();
         List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
         List<HotelReservationResponseDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByHotelId) {

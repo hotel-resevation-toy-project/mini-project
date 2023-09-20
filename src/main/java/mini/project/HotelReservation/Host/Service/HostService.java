@@ -11,4 +11,4 @@ public interface HostService {
     void changePolicy(DiscountPolicy policy);
     void modifyRoomPrice(PriceDto priceDto);
     void modifyRoomStock(RoomStockDto roomStockDto);
-    List<HotelReservationResponseDto> reservationList(Long hotelId);}
+    List<HotelReservationResponseDto> reservationList();}
