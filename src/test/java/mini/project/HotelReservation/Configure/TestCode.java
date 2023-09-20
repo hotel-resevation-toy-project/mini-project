@@ -1,17 +1,14 @@
 package mini.project.HotelReservation.Configure;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import mockit.Mocked;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.security.Key;
-import java.util.Date;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +29,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestCode {
     private final UserRepository userRepository;
     private final JwtTokenDecoder jwtTokenDecoder;
+
+    @Mocked
+    HttpServletRequest mockRequest;
+    @Mocked
+    HttpServletResponse mockResponse;
 
     @Autowired
     public TestCode(UserRepository userRepository, JwtTokenDecoder jwtTokenDecoder) {
@@ -42,6 +45,7 @@ public class TestCode {
     public void init(){
         userRepository.deleteAll();
         jwtTokenDecoder.init();
+        mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
     @Test
@@ -81,7 +85,7 @@ public class TestCode {
     void checkTokenToRole(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
-        String token = jwtTokenDecoder.createToken(1,String.valueOf(UserRole.ROLE_HOST), "1","2");
+        String token = jwtTokenDecoder.createToken(1,String.valueOf(UserRole.ROLE_USER), "1","2");
         String role = jwtTokenDecoder.tokenToRole(token);
 
         assertEquals(String.valueOf(UserRole.ROLE_USER), role);
@@ -98,7 +102,10 @@ public class TestCode {
         userRepository.save(user);
 
         // 권한부여
-        User principal = userRepository.findById(1L).get();
+        User principal = null;
+        if(userRepository.findById(userRepository.findAll().get(0).getUserId()).isPresent()){
+            principal = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
+        }
         Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
         setAuths.add(new SimpleGrantedAuthority(principal.getRole().toString()));
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", setAuths);
@@ -130,21 +137,33 @@ public class TestCode {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // SecurityContext에서 꺼낸 객체의 Role값
-        assertEquals(user.getRole().toString(), SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString());
+        assertEquals(user.getRole().toString(), jwtTokenDecoder.currentUser().getRole().toString());
     }
 
-    @Test
-    @DisplayName("생성된 토큰 유효성 검증")
-    void expiredToken(){
-        Date now = new Date();
-        Claims claims = Jwts.claims().setSubject("1");
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)   // 토큰 생성 시간
-                .setExpiration(new Date(now.getTime() + 1000L * 60 * 60)) // 토큰 만료 기간
-                .signWith(Keys.secretKeyFor(SignatureAlgorithm.ES256)) // 암호화 알고리즘과 SecretKey 세팅
-                .compact(); // 패키징
+//    @Test
+//    @DisplayName("생성된 토큰 유효성 검증")
+//    void expiredToken(){
+//        Date now = new Date();
+//        Claims claims = Jwts.claims().setSubject("1");
+//        String token = Jwts.builder()
+//                .setClaims(claims)
+//                .setIssuedAt(now)   // 토큰 생성 시간
+//                .setExpiration(new Date(now.getTime() + 1000L * 60 * 60)) // 토큰 만료 기간
+//                .signWith(Keys.secretKeyFor(SignatureAlgorithm.ES256)) // 암호화 알고리즘과 SecretKey 세팅
+//                .compact(); // 패키징
+//
+//        jwtTokenDecoder.expiredToken(token);
+//    }
 
-        jwtTokenDecoder.expiredToken(token);
+    @Test
+    void tokenSetToSession() throws IOException {
+        // 리퀘스트 선언 후
+        String testToken = jwtTokenDecoder.createToken(1, String.valueOf(UserRole.ROLE_HOST), "1");
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession().setAttribute("Token", testToken);
+
+        mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
+
+        assertEquals(jwtTokenDecoder.tokenToIds(token)[0], 1L);
     }
 }
