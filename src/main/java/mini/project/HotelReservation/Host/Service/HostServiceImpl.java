@@ -2,7 +2,7 @@ package mini.project.HotelReservation.Host.Service;
 
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
-import mini.project.HotelReservation.Host.Data.Dto.HotelReservationResponseDto;
+import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -57,12 +57,12 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public List<HotelReservationResponseDto> reservationList() {
+    public List<HotelReservationDto> reservationList() {
         Long hotelId = td.currentUser().getHotel().getHotelId();
         List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
-        List<HotelReservationResponseDto> reservations = new ArrayList<>();
+        List<HotelReservationDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByHotelId) {
-            reservations.add(new HotelReservationResponseDto(reservation.getReserveNumber(),
+            reservations.add(new HotelReservationDto(reservation.getReserveNumber(),
                                                              reservation.getUserName(),
                                                                reservation.getPhoneNumber()));
         }

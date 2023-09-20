@@ -3,7 +3,7 @@ package mini.project.HotelReservation.Host.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
-import mini.project.HotelReservation.Host.Data.Dto.HotelReservationResponseDto;
+import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -32,7 +32,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,7 +93,7 @@ class HostServiceImplTest {
 
         room.foreignHotel(hotel);
         // 호스트에 호텔 주입
-        user.foreignHotel(hotel);
+        hotel.foreignUser(user);
         userRepository.save(user);
         // 예약1
         reservation1.foreignHotel(hotel);
@@ -125,6 +124,9 @@ class HostServiceImplTest {
     @Test
     @DisplayName("호스트_정책_변경")
     void change_Policy() {
+        System.out.println("$$$$$$$$$");
+        System.out.println(DiscountPolicy.valueOf("POLICY"));
+        System.out.println("$$$$$$$$$");
         // 저장된 유저에서 연결된 호텔 받아오기
         hostService.changePolicy(DiscountPolicy.POLICY_ALL);
         assertEquals(td.currentUser().getHotel().getDiscountPolicy(), DiscountPolicy.POLICY_ALL);
@@ -147,7 +149,7 @@ class HostServiceImplTest {
     @Test
     @DisplayName("호텔측_예약리스트_보기")
     void reservationList() {
-        List<HotelReservationResponseDto> reservations = hostService.reservationList();
+        List<HotelReservationDto> reservations = hostService.reservationList();
         assertEquals(reservations.size(),
                 reservationRepository.findAllByHotel_HotelId(
                         userRepository.findById(userRepository.findAll().get(0).getUserId()).get().getHotel().getHotelId()
