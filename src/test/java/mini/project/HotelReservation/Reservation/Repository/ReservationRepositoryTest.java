@@ -4,6 +4,7 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
+import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
@@ -23,7 +24,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,16 +66,20 @@ class ReservationRepositoryTest {
                 LocalTime.of(10, 0, 0),
                 LocalDate.now(),
                 LocalDate.now().plusMonths(2));
-        host.foreignHotel(hotel);
+        hotel.foreignUser(host);
+
+        Hotel saveHotel = hotelRepository.save(hotel);
 
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
-        roomA.foreignHotel(hotel);
+        roomA.foreignHotel(saveHotel);
 
         Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 20);
-        roomB.foreignHotel(hotel);
+        roomB.foreignHotel(saveHotel);
 
         Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
-        roomC.foreignHotel(hotel);
+        roomC.foreignHotel(saveHotel);
+
+        roomRepository.saveAll(new ArrayList<>(List.of(roomA,roomB,roomC)));
 
         userRepository.save(new User("오진석",
                 "abc@example.com",
@@ -80,12 +87,18 @@ class ReservationRepositoryTest {
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_USER));
-        userRepository.save(host);
-
-
+        new Reservation("AA1-0920",
+                "",
+                "",
+                "Hotel_A",
+                "",
+                "",
+                "",
+                "");
     }
     @Test
     void 예약_번호로_예약_찾기() {
+
     }
 
     @Test
