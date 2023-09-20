@@ -1,4 +1,4 @@
-package mini.project.HotelReservation.Reservation;
+package mini.project.HotelReservation.Reservation.Service;
 
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy.DaysDiscountPolicy;

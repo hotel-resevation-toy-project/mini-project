@@ -45,7 +45,7 @@ public class User extends AuditTime {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
@@ -66,7 +66,6 @@ public class User extends AuditTime {
     //유저가 호텔인 경우, 호텔 아이디를 조회해서 호텔 가져오기
     public void foreignHotel(Hotel foreignHotel){
             hotel = foreignHotel;
-            hotel.foreignUser(this);
     }
 
     public void updateInfo(UserInfoDto userInfoDto){
