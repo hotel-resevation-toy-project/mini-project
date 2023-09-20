@@ -30,7 +30,7 @@ public class Room extends AuditTime {
     @NotNull
     private Integer roomStock;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
@@ -53,4 +53,5 @@ public class Room extends AuditTime {
     public void modifyStock(Integer newStock){
         roomStock = newStock;
     }
+
 }

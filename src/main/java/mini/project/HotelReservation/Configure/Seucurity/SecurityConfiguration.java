@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 
 @Configuration
@@ -46,13 +45,13 @@ public class SecurityConfiguration{
                         login.loginPage("/user/in")
                                 .loginProcessingUrl("/user/in")
                                 .failureUrl("/user/in")
-//                                .defaultSuccessUrl("")
+//                                .defaultSuccessUrl("/main")
 //                                .successHandler()
 //                                .failureHandler()
                 )
                 .logout((logout) ->
                         logout.logoutUrl("/logout") // 로그아웃 처리 URL, default: /logout, 원칙적으로 post 방식만 지원
-                                .invalidateHttpSession(false)
+                                .invalidateHttpSession(true) // 로그아웃시 세션 밀어버리기
                                 .logoutSuccessUrl("/user/in") // 로그아웃 성공 후 이동페이지 (로그인 화면)
 //                                .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 쿠키 삭제
                 )
@@ -62,10 +61,11 @@ public class SecurityConfiguration{
         return http.build();    // 설정한 http를 생성
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring()
-                .requestMatchers("/ignore1", "/ignore2");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        // Spring Security를 적용하지 않을 리소스 설정
+//        return (web) -> web.ignoring()
+//                .requestMatchers("/ignore1", "/ignore2");
+//    }
+    // 로직을 타지않는 페이지들을 보안 로직에서 권한 검사를 하지않게 하는 시큐리티 메서드
 }
