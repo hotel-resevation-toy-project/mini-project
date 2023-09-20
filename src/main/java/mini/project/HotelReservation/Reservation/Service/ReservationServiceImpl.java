@@ -164,7 +164,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponseDto reserveInfo(String reserveNumber) {
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
 
-        ReservationResponseDto reservationResponseDto = ReservationResponseDto.builder()
+        return ReservationResponseDto.builder()
                 .userName(reservation.getUserName())
                 .phoneNumber(reservation.getPhoneNumber())
                 .hotelName(reservation.getHotelName())
@@ -174,8 +174,6 @@ public class ReservationServiceImpl implements ReservationService {
                 .reservationNumber(reservation.getReserveNumber())
                 .reservePrice(reservation.getReservePrice())
                 .build();
-
-        return reservationResponseDto;
     }
     //예약 취소
     @Override
