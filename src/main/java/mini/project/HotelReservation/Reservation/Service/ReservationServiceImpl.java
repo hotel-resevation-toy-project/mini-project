@@ -123,7 +123,6 @@ public class ReservationServiceImpl implements ReservationService {
         return peakDays;
     }
 
-
     @Override
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
         return null;

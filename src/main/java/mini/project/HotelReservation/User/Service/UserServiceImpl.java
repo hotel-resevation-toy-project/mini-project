@@ -115,11 +115,11 @@ public class UserServiceImpl implements UserService{
         user.deactive();
     }
     @Override
-    public List<UserReservationDto> reservationList(Long userId){
-        List<Reservation> reservationsByUserId = reservationRepository.findAllByUser_UserId(userId);
+    public List<UserReservationDto> reservationList(){
+        List<Reservation> reservationsByUserId = reservationRepository.findAllByUser_UserId(td.currentUser().getUserId());
         List<UserReservationDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByUserId) {
-            reservations.add(new UserReservationDto(reservation.getHotelName(),
+            reservations.add(new UserReservationDto(reservation.getReserveNumber(), reservation.getHotelName(),
                                                             reservation.getCheckInDate(),
                                                             reservation.getCheckOutDate()));
         }

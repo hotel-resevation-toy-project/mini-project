@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments/header :: header">
     <title>방 수량 수정</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
 </head>
 <body>
-
+<h2>Change Room Stock</h2>
+<div class = "oi-container">
+    <div class="form-floating mb-3"> <input type="roomType" class="form-control" id="floatingInput">
+        <label for="floatingInput">RoomType</label> </div>
+    <div class="form-floating mb-3"> <input type="Stock" class="form-control" id="floatingPassword">
+        <label for="floatingPassword">Stock</label> </div>
+</div>
+<div>
+    <button type="submit" class="btn btn-dark btn-large form-control">Save</button>
+</div>
 </body>
 </html>
