@@ -17,33 +17,37 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <div th:replace="fragments/bodyHeader :: bodyHeader" />
-  <ul th:object="${reservation}">
-    <div>Name</div>
-    <div th:text="${reservation.userName}"></div><br>
-    <div>PhoneNumber</div>
-    <div th:text="${reservation.phoneNumber}"></div><br>
-    <div>Hotel name</div>
-    <div th:text="${reservation.hotelName}"></div><br>
-    <div>Room type</div>
-    <div th:text="${reservation.roomType}"></div><br>
-    <div class = "oi-container">
-      <oi>
-        <div class="label">Check-In date</div>
-        <span th:text="${#dates.format(reservation.checkInDate, 'yyyy.MM.dd')}"></span>
-      </oi>
-      <oi>
-        <div class="label">Check-Out date</div>
-          <span th:text="${#dates.format(reservation.checkOutDate, 'yyyy.MM.dd')}"></span>
-      </oi>
+  <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+    <ul th:object="${reservation}">
+      <div class="fw-bolder fs-5">Name</div>
+      <div th:text="${reservation.userName}" class="border border-secondary-subtle rounded fw-bolder fs-5">jinseok oh</div><br>
+      <div class="fw-bolder fs-5">PhoneNumber</div>
+      <div th:text="${reservation.phoneNumber}" class="border border-secondary-subtle rounded fw-bolder fs-5">010-1234-5678</div><br>
+      <div class="fw-bolder fs-5">Hotel name</div>
+      <div th:text="${reservation.hotelName}" class="border border-secondary-subtle rounded fw-bolder fs-5">Hotal_A</div><br>
+      <div class="fw-bolder fs-5">Room type</div>
+      <div th:text="${reservation.roomType}" class="border border-secondary-subtle rounded fw-bolder fs-5">Room_A_SuperSingle</div><br>
+      <div class = "oi-container d-flex gap-2 w-100 justify-content-between">
+        <oi>
+          <div class="label fw-bolder fs-5">Check-In date</div>
+          <span th:text="' '+${#dates.format(reservation.checkInDate, 'yyyy.MM.dd')}+' '" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-23&nbsp;</span>
+        </oi>
+        <oi>
+          <div class="label fw-bolder fs-5">Check-Out date</div>
+          <span th:text="' '+${#dates.format(reservation.checkOutDate, 'yyyy.MM.dd')}+' '" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-30&nbsp;
+          </span>
+        </oi>
+      </div>
+      <br>
+      <div class="fw-bolder fs-5">Reservation Number</div>
+      <div th:text="${reservation.reserveNumber}" class="fw-bolder fs-5 border border-secondary-subtle rounded">AAA1-0523</div><br>
+      <div class="fw-bolder fs-5">Pay</div>
+      <div th:text="${reservation.reservePrice}" class="fw-bolder fs-5 border border-secondary-subtle rounded">700,000</div><br>
+    </ul>
+    <div>
+      <button type="submit" class="btn btn-dark btn-large form-control">Cancel</button>
     </div>
-    <br>
-      <div>Reservation Number</div>
-      <div th:text="${reservation.reserveNumber}"></div><br>
-      <div>Pay</div>
-      <div th:text="${reservation.reservePrice}"></div><br>
-  </ul>
-<div>
-  <button type="submit" class="btn btn-dark btn-large form-control">Cancel</button>
-</div>
+  </div>
+
 </body>
 </html>
