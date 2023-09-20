@@ -32,7 +32,7 @@ public class HostServiceImpl implements HostService {
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = td.currentUser().getUserId();
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
-        hotel.changePolicy((DiscountPolicy) policy);
+        hotel.changePolicy(policy);
 
     }
 
