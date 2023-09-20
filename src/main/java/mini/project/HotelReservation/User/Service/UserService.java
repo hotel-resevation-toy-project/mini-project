@@ -14,7 +14,7 @@ public interface UserService {
     Boolean checkStatus(String email);
     void logIn(UserSignInDto sid);
     void updateInfo(UserInfoDto userInfoDto);
-    List<UserReservationDto> reservationList(Long userId);
+    List<UserReservationDto> reservationList();
     void deactive(String email, UserSignInDto usd);
     User loadUserByUserId(Long id);
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments/header :: header">
+  <title>결제창</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+  <div method="post" th:action="@{/reservation/payment}" th:object="${reservationRequestDto}">
+    <div th:text="${reservationRequestDto.hotelName}">ㅇ</div>
+    <div>
+      <span th:text="${reservationRequestDto.checkInDate}"></span>
+      <span th:text="${reservationRequestDto.checkOutDate}"></span>
+    </div>
+    <div th:text="${reservationRequestDto.roomType}">ㅇ</div>
+  </div>
+  <br>
+  <div method="post" th:action="@{/reservation/payment}" th:object="${disoucntPriceDto}">
+    <div th:text="${disoucntPriceDto.pay}">ㅇ</div><br>
+    <div th:text="${disoucntPriceDto.discount}">ㅇ</div><br>
+    <div th:text="${disoucntPriceDto.totalPrice}">ㅇ</div><br>
+  </div>
+  <div class="button-container">
+    <button type="submit" id="btn_modifyForm">Pay</button>
+  </div>
+</div>
+</body>
+</html>
