@@ -1,6 +1,7 @@
 package mini.project.HotelReservation.User.Service;
 
 
+import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
@@ -37,6 +38,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void join(UserSignUpDto sud) {
+        //중복 회원 가입 방지
+        Optional<User> existUser = userRepository.findByEmail(sud.getEmail());
+
+        if(existUser.isPresent()){
+            throw new DuplicateRequestException("이미 가입한 사용자입니다.");
+        }
+
         //탈퇴한 회원이 재가입하는 경우
         if(!checkStatus(sud.getEmail())){
             Optional<User> user = userRepository.findStatusByEmail(sud.getEmail());

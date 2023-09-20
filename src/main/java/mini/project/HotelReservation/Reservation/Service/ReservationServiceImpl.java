@@ -162,6 +162,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
         reservationRepository.findByReserveNumber(reserveNumber);
+        return null; //todo: 지우기
     }
     //예약 취소
     @Override
