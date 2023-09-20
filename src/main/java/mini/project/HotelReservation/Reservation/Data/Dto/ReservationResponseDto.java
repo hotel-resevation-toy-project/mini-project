@@ -1,5 +1,6 @@
 package mini.project.HotelReservation.Reservation.Data.Dto;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.enumerate.RoomType;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
+@Builder
 public class ReservationResponseDto {
     private final String userName;
     private final String phoneNumber;
