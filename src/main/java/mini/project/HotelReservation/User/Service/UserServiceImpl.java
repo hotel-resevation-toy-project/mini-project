@@ -66,10 +66,7 @@ public class UserServiceImpl implements UserService{
     public Boolean checkStatus(String email) {
         Optional<User> optionalUser = userRepository.findStatusByEmail(email);
 
-        if(optionalUser.isPresent()){
-            return false;
-        }
-        return true;
+        return optionalUser.isEmpty();
     }
 
     @Override

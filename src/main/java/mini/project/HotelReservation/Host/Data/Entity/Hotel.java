@@ -49,11 +49,11 @@ public class Hotel extends AuditTime {
     @NotNull
     private LocalDate endPeakDate;
 
+    @OneToOne(mappedBy ="hotel",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
+
     @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
     private final List<Room> rooms = new ArrayList<>();
-
-    @OneToOne(mappedBy ="hotel",fetch = FetchType.LAZY)
-    private User user;
 
     @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
     private final List<Reservation> reservations = new ArrayList<>();
@@ -72,6 +72,7 @@ public class Hotel extends AuditTime {
     //연관관계 메서드
     public void foreignUser(User foreignUser) {
         user = foreignUser;
+        user.foreignHotel(this);
     }
 
     //비즈니스 로직
