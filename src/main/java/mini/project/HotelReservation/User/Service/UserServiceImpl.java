@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService{
     private final TokenDecoder td;
 
     @Override
+    @Transactional
     public void join(UserSignUpDto sud) {
         //탈퇴한 회원이 재가입하는 경우
         if(!checkStatus(sud.getEmail())){
@@ -95,6 +96,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void updateInfo(UserInfoDto userInfoDto) {
         User user = userRepository.findById(td.currentUser().getUserId()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
@@ -102,6 +104,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void deactive(String email, UserSignInDto usd) {
         User user = userRepository.findStatusByEmail(email).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
@@ -124,6 +127,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    // 유저 정보 수정시 토큰에 mapping되어 있는 유저 객체도 refresh 해줘야함.
     public User loadUserByUserId(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()) {

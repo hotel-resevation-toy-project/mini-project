@@ -125,6 +125,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
         User user = td.currentUser();
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
@@ -145,6 +146,7 @@ public class ReservationServiceImpl implements ReservationService {
                 save.getReserveNumber(),
                 save.getReservePrice());
     }
+    @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
         int roomStock = roomRepository.findByRoomType(reservationReqDto.getRoomType()).getRoomStock();
