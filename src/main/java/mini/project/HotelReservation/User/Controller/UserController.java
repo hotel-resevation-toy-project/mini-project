@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
     private final UserService userService;
 
-//    @GetMapping(value = "/login")
+//    @GetMapping(value = "/in")
 //    public String joinForm(@AuthenticationPrincipal SecurityUser securityUser){
 //        if(securityUser != null && securityUser.getRoleTypes().contains(RoleType.ROLE_VIEW)) {
 //            return "redirect:/v";

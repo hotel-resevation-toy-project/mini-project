@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="header" th:fragment="bodyHeader">
-  <ul class="nav nav-pills pull-right">
-    <li><a href="/">Home</a></li>
-  </ul>
-  <a href="/"><h3 class="text-muted">HOTEL RESERVATION</h3></a>
+  <div class="nav nav-pills pull-right">
+    <p><a href="/main">Home</a></p>
+  </div>
+  <div class="nav nav-pills pull-left">
+    <p><a href="/user/out">Logout</a></p>
+    <p><a href="/host/manage">Manage</a></p>
+  </div>
 </div>

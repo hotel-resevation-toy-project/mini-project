@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
-import mini.project.HotelReservation.User.Service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,8 +26,6 @@ public class JwtTokenDecoder implements TokenDecoder{
 
     private final UserRepository userRepository;
 
-    // JWT 서명에 들어갈 secretKey
-    private final String secretKey ="TheGrandBudapestHotel";
     // secretKey값을 디코딩한 결과를 저장하는 Key
     private Key key;
     // JWT payload에 들어갈 유효기간 (계산용)
@@ -38,8 +35,8 @@ public class JwtTokenDecoder implements TokenDecoder{
     @Override
     @PostConstruct
     public void init() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        key = Keys.hmacShaKeyFor(keyBytes);
+        // HMAC-SHA-256 알고리즘에 적합한 256비트 이상의 키 생성
+        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
     @Override
@@ -128,12 +125,16 @@ public class JwtTokenDecoder implements TokenDecoder{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            System.out.println("@@@@@@@@잘못된 JWT 서명입니다.");
 //            logger.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
+            System.out.println("########만료된 JWT 토큰입니다.");
 //            logger.info("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
+            System.out.println("$$$$$$$$$지원되지 않는 JWT 토큰입니다.");
 //            logger.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
+            System.out.println("%%%%%%%%%%%%JWT 토큰이 잘못되었습니다.");
 //            logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
