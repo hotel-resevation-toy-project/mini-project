@@ -33,16 +33,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 class ReservationRepositoryTest {
-    @Autowired
     UserRepository userRepository;
-    @Autowired
     ReservationRepository reservationRepository;
-    @Autowired
     HotelRepository hotelRepository;
-    @Autowired
     RoomRepository roomRepository;
-    @Autowired
     TokenDecoder td;
+    @Autowired
+    public ReservationRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, TokenDecoder td) {
+        this.userRepository = userRepository;
+        this.reservationRepository = reservationRepository;
+        this.hotelRepository = hotelRepository;
+        this.roomRepository = roomRepository;
+        this.td = td;
+    }
 
     @Mocked
     HttpServletRequest mockRequest;
