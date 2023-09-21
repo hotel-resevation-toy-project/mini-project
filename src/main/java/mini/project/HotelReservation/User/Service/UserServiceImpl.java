@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void join(UserSignUpDto sud) throws DuplicateRequestException {
         Optional<User> optionalUser = userRepository.findByEmail(sud.getEmail());
-
         //처음 가입하는 경우
         if(optionalUser.isEmpty()) {
             User newUser = User.builder()
@@ -51,27 +50,25 @@ public class UserServiceImpl implements UserService{
                     .status(UserStatus.USER_STATUS_ACTIVE)
                     .role(sud.getRole())
                     .build();
-
             //HOST가 가입하는 경우
             if(sud.getRole() == UserRole.ROLE_HOST){
                 Hotel hotel = hotelRepository.findByHotelName(sud.getName());
                 newUser.foreignHotel(hotel);
             }
-                User saveUser = userRepository.save(newUser);
+            User saveUser = userRepository.save(newUser);
         } else {
-                User findUser = optionalUser.get();
-                //재가입 방지
-                if(!checkStatus(findUser)){
-                    throw new DuplicateRequestException("이미 가입한 사용자입니다.");
-                }
-                //탈퇴한 회원이 재가입하는 경우
-                else {
-                    findUser.changeStatus();
-                    User saveUser = userRepository.save(findUser);
-                }
+            User findUser = optionalUser.get();
+            //재가입 방지
+            if(!checkStatus(findUser)){
+                throw new DuplicateRequestException("이미 가입한 사용자입니다.");
+            }
+            //탈퇴한 회원이 재가입하는 경우
+            else {
+                findUser.changeStatus();
+                User saveUser = userRepository.save(findUser);
+            }
         }
     }
-
     @Override
     public Boolean checkStatus(User user) {
         //재가입하는 경우
