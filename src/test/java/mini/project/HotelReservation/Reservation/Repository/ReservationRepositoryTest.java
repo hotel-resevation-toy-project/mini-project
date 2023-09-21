@@ -109,30 +109,24 @@ class ReservationRepositoryTest {
         roomB.foreignHotel(saveHotel);
             // 호텔 B꺼
         Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
-        roomC.foreignHotel(saveHotelB);
+        roomC.foreignHotel(saveHotel);
 
-        roomRepository.saveAll(List.of(roomA,roomB, roomC));
+        roomRepository.saveAll(new ArrayList<>(List.of(roomA,roomB,roomC)));
 
-
-        // 예약 1, 2, 3 생성
-        Reservation reservation1 = new Reservation("AA1-230523",
-                3000000, RoomType.ROOM_TYPE_A_SINGLE, "Hotel_A"
-                ,"010-2222-3333", "Serah",
-                LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        reservation1.foreignUser(user);  reservation1.foreignHotel(hotel);
-
-        Reservation reservation2 = new Reservation("AB1-430525",
-                5400000, RoomType.ROOM_TYPE_B_TWIN, "Hotel_A"
-                ,"010-4444-5555", "Grima",
-                LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        reservation2.foreignUser(host);  reservation2.foreignHotel(hotel);
-
-        Reservation reservation3 = new Reservation("BC1-630528",
-                50034600, RoomType.ROOM_TYPE_C_QUEEN, "Hotel_B"
-                ,"010-6666-7777", "Mosquito",
-                LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
-        reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
+        userRepository.save(new User("오진석",
+                "abc@example.com",
+                "1234",
+                "010-1234-5678",
+                UserStatus.USER_STATUS_ACTIVE,
+                UserRole.ROLE_USER));
+//        new Reservation("AA1-0920",
+//                "",
+//                "",
+//                "Hotel_A",
+//                "",
+//                "",
+//                "",
+//                "");
     }
     @Test
     void 예약_번호로_예약_찾기() {
