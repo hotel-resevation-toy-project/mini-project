@@ -3,8 +3,52 @@
 <head th:replace="fragments/header :: header">
     <meta charset="UTF-8">
     <title>예약하기-방 타입</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body>
+    <div  class="container text-center justify-content-center w-50" >
+        <div class="row g-3" th:with="reservationRequestDto=${ReservationRequestDto}">
+            <div class="col-sm">
+                <span th:text="${reservationRequestDto.hotelName}" class="fw-bolder fs-5" >Hotel_A</span>
+                &nbsp;&nbsp;&nbsp;
+                <span class="fw-bolder fs-5" ></span>
+            </div>
+            <div class="col-sm">
+                <div>
+                    <div>
+                        <span class="fw-bolder fs-5">
+                            Check-In : &nbsp;
+                        </span>
+                        <span class="fw-bolder fs-5" th:text="${reservationRequestDto.checkInDate}">2023-05-23</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="fw-bolder fs-5">
+                        Check-Out : &nbsp;
+                    </span>
+                    <span class="fw-bolder fs-5" th:text="${reservationRequestDto.checkOutDate}">2023-05-30</span>
+                </div>
+            </div>
+        </div>
 
+
+
+        <th:block th:each="roomDto : ${RoomDto}">
+            <br/>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                        <p class="mb-0 fw-bolder fs-5" th:text="${roomDto.roomType}">RoomType_A_SuperSingle</p>
+                        <br/>
+                        <div class="row g-2">
+                            <span class="col-sm-7 mb-0 fw-bolder w-100" th:text="'1Day - '+${roomDto.roomPrice}">1Day - 100,000</span>
+                            <span class="col-sm mb-0 fw-bolder " th:text="'abailable : '+${roomDto.roomStock}">available : 20</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </th:block>
+
+    </div>
 </body>
 </html>

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div class="header" th:fragment="bodyHeader">
-  <div class="nav nav-pills pull-right">
-    <p><a href="/main">Home</a></p>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<div class="header d-flex justify-content-between mb-3" th:fragment="bodyHeader">
+  <div class="nav nav-pills pull-right p-2 bd-highlight">
+    <p><a href="/main" class="btn btn-outline-secondary">Home</a></p>
   </div>
-  <div class="nav nav-pills pull-left">
-    <p><a href="/user/out">Logout</a></p>
-    <p><a href="/host/manage">Manage</a></p>
+  <div class="nav nav-pills pull-left p-2 bd-highlight">
+    <p><a href="/user/out" class="btn btn-outline-secondary">Logout</a></p>
+    <p><a href="/host/manage" class="btn btn-outline-secondary">Manage</a></p>
   </div>
 </div>
