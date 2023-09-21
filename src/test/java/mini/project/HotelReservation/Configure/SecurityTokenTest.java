@@ -129,7 +129,7 @@ public class SecurityTokenTest {
         userRepository.save(user);
 
         // 권한부여
-        User principal = userRepository.findById(1L).get();
+        User principal = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
         Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
         setAuths.add(new SimpleGrantedAuthority(principal.getRole().toString()));
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", setAuths);

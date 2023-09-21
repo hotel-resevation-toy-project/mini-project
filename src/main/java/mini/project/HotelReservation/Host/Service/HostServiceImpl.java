@@ -39,7 +39,7 @@ public class HostServiceImpl implements HostService {
     @Override
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
-        Long hotelId = td.currentUser().getUserId();
+        Long hotelId = td.currentUser().getHotel().getHotelId();
         RoomType roomType = priceDto.getRoomType();
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
 
