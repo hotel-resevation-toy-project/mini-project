@@ -66,11 +66,14 @@ public class ReservationServiceImpl implements ReservationService {
         Hotel hotel = hotelRepository.findByHotelName(requestDto.getHotelName());
         //숙박일
         int days = (int)ChronoUnit.DAYS.between(requestDto.getCheckInDate(), requestDto.getCheckOutDate());
+        
+        
 
         //원가
-        int reservePrice = requestDto.getOneDayPrice() * days;
+        int oneDayPrice = requestDto.getOneDayPrice();
+        int reservePrice = oneDayPrice*days;
         //할인될 값
-        int dicountPrice = 0;
+        int discountPrice = 0;
         // discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
 
         int noPeakDays = CheckPeakDays((int) ChronoUnit.DAYS.between(hotel.getStartPeakDate(),hotel.getEndPeakDate()),
@@ -81,25 +84,26 @@ public class ReservationServiceImpl implements ReservationService {
         switch (hotel.getDiscountPolicy()) {
             case POLICY_PEAK -> {
                 // 성수기 할인이 적용 되야 할 일 수
-                dicountPrice =  peakDiscountPolicy.discount(reservePrice,noPeakDays);
+                discountPrice =  peakDiscountPolicy.discount(oneDayPrice,noPeakDays);
                 return new DiscountPriceDto(reservePrice, // 예약 금액
-                                            dicountPrice, // 할인 금액
-                                            reservePrice - dicountPrice, // 예약 금액 - 할인 금액 = 지불 금액
+                                            discountPrice, // 할인 금액
+                                            reservePrice - discountPrice, // 예약 금액 - 할인 금액 = 지불 금액
                                             hotel.getDiscountPolicy().toString()); // 적용된 할인 타입
+
             }
             case POLICY_DAYS -> {
-                dicountPrice = daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days);
+                discountPrice = daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days);
                 return new DiscountPriceDto(reservePrice,
-                                            dicountPrice,
-                                            reservePrice - dicountPrice,
+                                            discountPrice,
+                                        reservePrice - discountPrice,
                                             hotel.getDiscountPolicy().toString());
             }
             default -> {
-                dicountPrice = Math.max(peakDiscountPolicy.discount(reservePrice,noPeakDays),
+                discountPrice = Math.max(peakDiscountPolicy.discount(oneDayPrice,noPeakDays),
                         daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days));
                 return new DiscountPriceDto(reservePrice,
-                                            dicountPrice,
-                                            reservePrice - dicountPrice,
+                                            discountPrice,
+                                        reservePrice - discountPrice,
                                             "성수기, 연박 두 할인 중 더 큰 할인이 적용 되었습니다.");
             }
         }
@@ -116,11 +120,11 @@ public class ReservationServiceImpl implements ReservationService {
 
         // 성수기 할인을 적용 해야하는 일 수
         int discountDays = 0;
-        for (; checkInDate.isBefore(checkOutDate); checkInDate = checkInDate.plusDays(1)) {
-            if (checkInDate.isAfter(hotelEndPeakDate) && checkInDate.isBefore(hotelStartPeakDate)) {
-                discountDays++;
-            }
+        if(hotelEndPeakDate.isAfter(checkInDate)) {
+            discountDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate,checkOutDate);
         }
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("discountDays = " + discountDays);
         return discountDays;
     }
 
@@ -181,6 +185,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
     //예약 취소
     @Override
+    @Transactional
     public void reserveDelete(String reserveNumber) {
         reservationRepository.deleteByReserveNumber(reserveNumber);
     }
