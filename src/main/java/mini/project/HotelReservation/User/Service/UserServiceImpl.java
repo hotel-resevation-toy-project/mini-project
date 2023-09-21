@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-<<<<<<< HEAD
     public void join(UserSignUpDto sud) throws DuplicateRequestException {
         Optional<User> optionalUser = userRepository.findByEmail(sud.getEmail());
         //처음 가입하는 경우
@@ -68,30 +67,6 @@ public class UserServiceImpl implements UserService{
                 findUser.changeStatus();
                 User saveUser = userRepository.save(findUser);
             }
-=======
-    public void join(UserSignUpDto sud) {
-        //탈퇴한 회원이 재가입하는 경우
-        if(!checkStatus(sud.getEmail())){
-            Optional<User> user = userRepository.findStatusByEmail(sud.getEmail());
-            user.get().changeStatus();
-        }
-
-        //USER가 가입하는 경우
-        User user = User.builder()
-                .name(sud.getName())
-                .email(sud.getEmail())
-                .password(passwordEncoder.encode(sud.getPassword()))
-                // 인코딩 설정 누락 추가
-                .phoneNumber(sud.getPhoneNumber())
-                .status(UserStatus.USER_STATUS_ACTIVE)
-                .role(sud.getRole())
-                .build();
-
-        //HOST가 가입하는 경우
-        if(sud.getRole() == UserRole.ROLE_HOST){
-            Hotel hotel = hotelRepository.findByHotelName(sud.getName());
-            user.foreignHotel(hotel);
->>>>>>> 984938fd068a90377723e182ba606258fb9ba72d
         }
     }
     @Override
