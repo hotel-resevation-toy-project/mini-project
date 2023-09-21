@@ -10,7 +10,7 @@ public class PeakRateDiscountPolicy implements PeakDiscountPolicy{
 
     @Override
     public int discount(int noDiscountPrice, int days) {
-        return (int)(noDiscountPrice * discountRate);
+        return (int)((noDiscountPrice * days) * discountRate);
         // 리턴 = 공제 금액 = 원금의 30%
     }
 }

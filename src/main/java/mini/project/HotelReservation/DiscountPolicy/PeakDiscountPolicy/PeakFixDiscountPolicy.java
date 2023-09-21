@@ -9,7 +9,7 @@ public class PeakFixDiscountPolicy implements PeakDiscountPolicy{
 
     @Override
     public int discount(int noDiscountPrice, int days) {
-        return noDiscountPrice > minPrice ? discountPrice : 0;
+        return noDiscountPrice * days > minPrice ? discountPrice : 0;
         // 원금의 30만이 넘으면 리턴 10만, 아니면 리턴 0
     }
 }

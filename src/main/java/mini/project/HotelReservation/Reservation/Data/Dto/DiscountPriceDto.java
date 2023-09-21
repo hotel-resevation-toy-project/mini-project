@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class DiscountPriceDto {
     private Integer totalPrice;
-    private Integer discount;
+    private Integer discountPrice;
     private Integer pay;
     private String discountPolicy;
 }
