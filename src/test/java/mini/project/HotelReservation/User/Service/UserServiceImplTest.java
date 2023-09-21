@@ -195,4 +195,10 @@ class UserServiceImplTest {
         Assertions.assertThat(user.getPassword().equals("456"));
         Assertions.assertThat(user.getPhoneNumber().equals("010-5607-7854"));
     }
+
+    //todo : 시큐리티에서 자동 로그인 작동 여부 확인 필요 -> 컨트롤러 작성 후
+    @Test
+    void 로그아웃(){
+
+    }
 }
