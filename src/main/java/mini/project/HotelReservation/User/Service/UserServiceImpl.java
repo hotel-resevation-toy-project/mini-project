@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService{
         User user = User.builder()
                 .name(sud.getName())
                 .email(sud.getEmail())
-                .password(sud.getPassword())
+                .password(passwordEncoder.encode(sud.getPassword()))
+                // 인코딩 설정 누락 추가
                 .phoneNumber(sud.getPhoneNumber())
                 .status(UserStatus.USER_STATUS_ACTIVE)
                 .role(sud.getRole())
