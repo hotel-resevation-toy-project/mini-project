@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -45,6 +46,7 @@ class HostServiceImplTest {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final TokenDecoder td;
+    private final PasswordEncoder pe;
 
     @Mocked
     HttpServletRequest mockRequest;
@@ -53,13 +55,14 @@ class HostServiceImplTest {
 
     // 자동 주입
     @Autowired
-    public HostServiceImplTest(HostService hostService, HotelRepository hotelRepository, RoomRepository roomRepository, ReservationRepository reservationRepository, UserRepository userRepository, TokenDecoder td) {
+    public HostServiceImplTest(HostService hostService, HotelRepository hotelRepository, RoomRepository roomRepository, ReservationRepository reservationRepository, UserRepository userRepository, TokenDecoder td, PasswordEncoder pe) {
         this.hostService = hostService;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
         this.td = td;
+        this.pe = pe;
     }
 
     // 초기화
@@ -69,7 +72,7 @@ class HostServiceImplTest {
         mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         // 임의 유저
         User user = new User("Serah","sexy123@play.data",
-                "123", "123-4567-9101", UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_HOST);
+                pe.encode("123"), "123-4567-9101", UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_HOST);
         // 임의 호텔    -> 정책변경할거임
         Hotel hotel = new Hotel("신대방", "그부호",
                 "010-1234-1234", DiscountPolicy.POLICY_DAYS,
@@ -98,15 +101,13 @@ class HostServiceImplTest {
         // 예약1
         reservation1.foreignHotel(hotel);
         reservation1.foreignUser(user);
-        reservationRepository.save(reservation1);
         // 예약2
         reservation2.foreignHotel(hotel);
         reservation2.foreignUser(user);
-        reservationRepository.save(reservation2);
         // 예약3
         reservation3.foreignHotel(hotel);
         reservation3.foreignUser(user);
-        reservationRepository.save(reservation3);
+        reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
 
         // 로그인된 host User를 Security Context에 저장
         User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
@@ -124,9 +125,10 @@ class HostServiceImplTest {
     @Test
     @DisplayName("호스트_정책_변경")
     void change_Policy() {
-        System.out.println("$$$$$$$$$");
-        System.out.println(DiscountPolicy.valueOf("POLICY"));
-        System.out.println("$$$$$$$$$");
+        pe.matches("123",pe.encode("123"));
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println(pe.matches( "123", userRepository.findAll().get(0).getPassword()));
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
         // 저장된 유저에서 연결된 호텔 받아오기
         hostService.changePolicy(DiscountPolicy.POLICY_ALL);
         assertEquals(td.currentUser().getHotel().getDiscountPolicy(), DiscountPolicy.POLICY_ALL);
@@ -156,10 +158,3 @@ class HostServiceImplTest {
                 ).size());
     }
 }
-
-//               System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//        for(HotelReservationResponseDto reservation : reservations){
-//                System.out.println("UserName : " + reservation.getUserName()+
-//                "\t/ PhoneNumber : " + reservation.getUserPhoneNumber());
-//                }
-//                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
