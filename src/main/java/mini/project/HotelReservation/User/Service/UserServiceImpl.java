@@ -1,6 +1,7 @@
 package mini.project.HotelReservation.User.Service;
 
 
+import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
@@ -37,6 +38,37 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
+<<<<<<< HEAD
+    public void join(UserSignUpDto sud) throws DuplicateRequestException {
+        Optional<User> optionalUser = userRepository.findByEmail(sud.getEmail());
+        //처음 가입하는 경우
+        if(optionalUser.isEmpty()) {
+            User newUser = User.builder()
+                    .name(sud.getName())
+                    .email(sud.getEmail())
+                    .password(passwordEncoder.encode(sud.getPassword()))
+                    .phoneNumber(sud.getPhoneNumber())
+                    .status(UserStatus.USER_STATUS_ACTIVE)
+                    .role(sud.getRole())
+                    .build();
+            //HOST가 가입하는 경우
+            if(sud.getRole() == UserRole.ROLE_HOST){
+                Hotel hotel = hotelRepository.findByHotelName(sud.getName());
+                newUser.foreignHotel(hotel);
+            }
+            User saveUser = userRepository.save(newUser);
+        } else {
+            User findUser = optionalUser.get();
+            //재가입 방지
+            if(!checkStatus(findUser)){
+                throw new DuplicateRequestException("이미 가입한 사용자입니다.");
+            }
+            //탈퇴한 회원이 재가입하는 경우
+            else {
+                findUser.changeStatus();
+                User saveUser = userRepository.save(findUser);
+            }
+=======
     public void join(UserSignUpDto sud) {
         //탈퇴한 회원이 재가입하는 경우
         if(!checkStatus(sud.getEmail())){
@@ -48,7 +80,8 @@ public class UserServiceImpl implements UserService{
         User user = User.builder()
                 .name(sud.getName())
                 .email(sud.getEmail())
-                .password(sud.getPassword())
+                .password(passwordEncoder.encode(sud.getPassword()))
+                // 인코딩 설정 누락 추가
                 .phoneNumber(sud.getPhoneNumber())
                 .status(UserStatus.USER_STATUS_ACTIVE)
                 .role(sud.getRole())
@@ -58,28 +91,28 @@ public class UserServiceImpl implements UserService{
         if(sud.getRole() == UserRole.ROLE_HOST){
             Hotel hotel = hotelRepository.findByHotelName(sud.getName());
             user.foreignHotel(hotel);
+>>>>>>> 984938fd068a90377723e182ba606258fb9ba72d
         }
-
-        User saveUser = userRepository.save(user);
     }
-
     @Override
-    public Boolean checkStatus(String email) {
-        Optional<User> optionalUser = userRepository.findStatusByEmail(email);
-
-        return optionalUser.isEmpty();
+    public Boolean checkStatus(User user) {
+        //재가입하는 경우
+        if (user.getStatus() == UserStatus.USER_STATUS_DEACTIVE) {
+            return true;
+        } else {
+            //가입된 경우
+            return false;
+        }
     }
 
     @Override
     public void logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
-
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("회원을 찾을 수 없습니다.");
         }
-
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
 
             if (user.getRole() == UserRole.ROLE_USER) {

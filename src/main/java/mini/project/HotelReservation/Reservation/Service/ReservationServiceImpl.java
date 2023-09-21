@@ -149,8 +149,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
-        int roomStock = roomRepository.findByRoomType(reservationReqDto.getRoomType()).getRoomStock();
-        int reservationCount = reservationRepository.findCountByHotelAndRoom(hotel.getHotelName(),
+        int roomStock = roomRepository.findByHotelNameAndRoomType(reservationReqDto.getHotelName(), reservationReqDto.getRoomType()).getRoomStock();
+        int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
                 reservationReqDto.getRoomType()).intValue();
 
         String hotelName = hotel.getHotelName().split("_")[1];
@@ -164,6 +164,8 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
+
+        reservationRepository.findByReserveNumber(reserveNumber);
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
 
         return ReservationResponseDto.builder()

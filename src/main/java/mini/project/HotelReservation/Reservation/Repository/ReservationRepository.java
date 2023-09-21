@@ -5,6 +5,7 @@ import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,10 +20,8 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     List<Reservation> findAllByHotel_HotelId(Long hotelId);
     // 호텔의 룸 타입별 현재 예약된 방 개수 - 예약 순서 만들기용
     @Query("SELECT count(*) FROM Reservation r " +
-            "join Hotel h " +
-            "where r.hotel.hotelId = h.hotelId " +
-            "and h.hotelName = :hotelName " +
-            "and r.roomType = :roomType")
-    Long findCountByHotelAndRoom(String hotelName, RoomType roomType);
+            "WHERE r.hotel.hotelName = :hotelName " +
+            "AND r.roomType = :roomType")
+    Long findCountByHotelNameAndRoom(@Param("hotelName")String hotelName, @Param("roomType")RoomType roomType);
     void deleteByReserveNumber(String reserveNumber);
 }
