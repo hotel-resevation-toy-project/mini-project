@@ -164,6 +164,8 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
+
+        reservationRepository.findByReserveNumber(reserveNumber);
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
 
         return ReservationResponseDto.builder()

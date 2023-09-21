@@ -1,6 +1,7 @@
 package mini.project.HotelReservation.User.Service;
 
 
+import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
@@ -60,27 +61,27 @@ public class UserServiceImpl implements UserService{
             Hotel hotel = hotelRepository.findByHotelName(sud.getName());
             user.foreignHotel(hotel);
         }
-
-        User saveUser = userRepository.save(user);
     }
 
     @Override
-    public Boolean checkStatus(String email) {
-        Optional<User> optionalUser = userRepository.findStatusByEmail(email);
-
-        return optionalUser.isEmpty();
+    public Boolean checkStatus(User user) {
+        //재가입하는 경우
+        if (user.getStatus() == UserStatus.USER_STATUS_DEACTIVE) {
+            return true;
+        } else {
+            //가입된 경우
+            return false;
+        }
     }
 
     @Override
     public void logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
-
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("회원을 찾을 수 없습니다.");
         }
-
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
 
             if (user.getRole() == UserRole.ROLE_USER) {

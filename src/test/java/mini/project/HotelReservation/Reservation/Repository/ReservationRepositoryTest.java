@@ -87,14 +87,14 @@ class ReservationRepositoryTest {
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_USER));
-        new Reservation("AA1-0920",
-                "",
-                "",
-                "Hotel_A",
-                "",
-                "",
-                "",
-                "");
+//        new Reservation("AA1-0920",
+//                "",
+//                "",
+//                "Hotel_A",
+//                "",
+//                "",
+//                "",
+//                "");
     }
     @Test
     void 예약_번호로_예약_찾기() {
