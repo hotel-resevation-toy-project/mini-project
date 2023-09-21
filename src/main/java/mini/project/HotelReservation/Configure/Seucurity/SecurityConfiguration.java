@@ -33,19 +33,39 @@ public class SecurityConfiguration{
                 // 세션을 유지하여 SessionId를 확인할 필요없이 요청 시에 토큰을 받아서 사용하면 되므로 세션을 유지할 이유가 없다.
                 .authorizeHttpRequests(
                         (authorize) -> authorize
-                                .requestMatchers("/jwt-login/info").permitAll()
-                                .requestMatchers("/jwt-login/admin/**").hasRole("USER")
-                                .anyRequest().authenticated()   // 그 외 인증없이 접근 X
+                                .requestMatchers("/user/in", "/user/new")
+                                        .permitAll()    // 기본적으로 접근이 가능한 경로
+
+                                .requestMatchers("/host", "/host/**").hasRole("HOST")
+
+                                .anyRequest().hasAnyRole("USER", "HOST")   // 그 외의 접근은 HOST, USER를 제외하고는 접근 불가능
+//                                .anyRequest().authenticated()   // 그 외 인증없이 접근 X
+                )
+                .formLogin((login) ->
+                        login.loginPage("/user/in")
+                                .loginProcessingUrl("/user/in")
+                                .failureUrl("/user/in")
+//                                .defaultSuccessUrl("/main")
+//                                .successHandler()
+//                                .failureHandler()
+                )
+                .logout((logout) ->
+                        logout.logoutUrl("/logout") // 로그아웃 처리 URL, default: /logout, 원칙적으로 post 방식만 지원
+                                .invalidateHttpSession(true) // 로그아웃시 세션 밀어버리기
+                                .logoutSuccessUrl("/user/in") // 로그아웃 성공 후 이동페이지 (로그인 화면)
+//                                .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 쿠키 삭제
                 )
                 // 커스텀 필터 추가 : 요청이 시작되기 전에 만들어놓은 JwtTokenFilter를 사용할 필터로 설정
                 .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();    // 설정한 http를 생성
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring()
-                .requestMatchers("/ignore1", "/ignore2");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        // Spring Security를 적용하지 않을 리소스 설정
+//        return (web) -> web.ignoring()
+//                .requestMatchers("/ignore1", "/ignore2");
+//    }
+    // 로직을 타지않는 페이지들을 보안 로직에서 권한 검사를 하지않게 하는 시큐리티 메서드
 }

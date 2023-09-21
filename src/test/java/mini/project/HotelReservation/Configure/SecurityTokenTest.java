@@ -26,7 +26,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class TestCode {
+public class SecurityTokenTest {
     private final UserRepository userRepository;
     private final JwtTokenDecoder jwtTokenDecoder;
 
@@ -36,7 +36,7 @@ public class TestCode {
     HttpServletResponse mockResponse;
 
     @Autowired
-    public TestCode(UserRepository userRepository, JwtTokenDecoder jwtTokenDecoder) {
+    public SecurityTokenTest(UserRepository userRepository, JwtTokenDecoder jwtTokenDecoder) {
         this.userRepository = userRepository;
         this.jwtTokenDecoder = jwtTokenDecoder;
     }
@@ -49,7 +49,7 @@ public class TestCode {
     }
 
     @Test
-    @DisplayName("토큰이 생성됨")
+    @DisplayName("토큰_생성")
     void creatToken(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
@@ -59,7 +59,7 @@ public class TestCode {
     }
 
     @Test
-    @DisplayName("만들어진 토큰에서 Id 추출")
+    @DisplayName("만들어진_토큰에서_Id_추출")
     void checkTokenToId(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
@@ -70,7 +70,7 @@ public class TestCode {
     }
 
     @Test
-    @DisplayName("만들어진 토큰에서 Id, hotelId추출")
+    @DisplayName("만들어진_토큰에서_Id,hotelId추출")
     void checkTokenToIds(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
@@ -81,7 +81,7 @@ public class TestCode {
     }
 
     @Test
-    @DisplayName("만들어진 토큰에서 Role을 추출")
+    @DisplayName("Token에서_Role_추출")
     void checkTokenToRole(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
@@ -92,7 +92,7 @@ public class TestCode {
     }
 
     @Test
-    @DisplayName("성공적으로 SecurityContext에 User객체가 저장되는가")
+    @DisplayName("SecurityContext에_User저장")
     void getUserToSecurityContext(){
         // 유저 생성
         User user = new User(
@@ -119,7 +119,7 @@ public class TestCode {
     }
 
     @Test
-    @DisplayName("성공적으로 SecurityContext에 Role이 저장되는가")
+    @DisplayName("SecurityContext에_Authentication_저장")
     void getRoleToSecurityContext(){
         // 유저 생성
         User user = new User(
@@ -156,6 +156,7 @@ public class TestCode {
 //    }
 
     @Test
+    @DisplayName("Token_Session에_저장후_받기")
     void tokenSetToSession() throws IOException {
         // 리퀘스트 선언 후
         String testToken = jwtTokenDecoder.createToken(1, String.valueOf(UserRole.ROLE_HOST), "1");

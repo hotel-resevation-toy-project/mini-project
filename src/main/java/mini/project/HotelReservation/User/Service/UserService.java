@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserService {
     void join(UserSignUpDto sud);
-    Boolean checkStatus(String email);
+    Boolean checkStatus(User user);
     void logIn(UserSignInDto sid);
     void updateInfo(UserInfoDto userInfoDto);
     List<UserReservationDto> reservationList();

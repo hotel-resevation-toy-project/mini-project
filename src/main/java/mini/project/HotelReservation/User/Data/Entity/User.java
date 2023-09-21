@@ -12,6 +12,8 @@ import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,12 +45,12 @@ public class User extends AuditTime {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String password,
@@ -64,7 +66,6 @@ public class User extends AuditTime {
     //유저가 호텔인 경우, 호텔 아이디를 조회해서 호텔 가져오기
     public void foreignHotel(Hotel foreignHotel){
             hotel = foreignHotel;
-            hotel.foreignUser(this);
     }
 
     public void updateInfo(UserInfoDto userInfoDto){
@@ -81,5 +82,4 @@ public class User extends AuditTime {
     public void deactive(){
         this.status = UserStatus.USER_STATUS_DEACTIVE;
     }
-
 }

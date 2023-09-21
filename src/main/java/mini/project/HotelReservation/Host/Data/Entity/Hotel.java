@@ -12,7 +12,9 @@ import mini.project.HotelReservation.enumerate.DiscountPolicy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,14 +49,14 @@ public class Hotel extends AuditTime {
     @NotNull
     private LocalDate endPeakDate;
 
-    @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
-    private List<Room> rooms;
-
-    @OneToOne(mappedBy = "hotel",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy ="hotel",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
     @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
+    private final List<Room> rooms = new ArrayList<>();
+
+    @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
+    private final List<Reservation> reservations = new ArrayList<>();
 
     public Hotel(String address, String hotelName, String hotelPhoneNumber, DiscountPolicy discountPolicy, LocalTime checkInTime, LocalTime checkOutTime, LocalDate startPeakDate, LocalDate endPeakDate) {
         this.address = address;
@@ -70,6 +72,7 @@ public class Hotel extends AuditTime {
     //연관관계 메서드
     public void foreignUser(User foreignUser) {
         user = foreignUser;
+        user.foreignHotel(this);
     }
 
     //비즈니스 로직

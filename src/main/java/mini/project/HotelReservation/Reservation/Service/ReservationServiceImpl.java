@@ -13,11 +13,13 @@ import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
+import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final RoomRepository roomRepository;
     private final PeakDiscountPolicy peakDiscountPolicy;
     private final DaysDiscountPolicy daysDiscountPolicy;
-
     private final TokenDecoder td;
 
     @Override
@@ -124,6 +125,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
         User user = td.currentUser();
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
@@ -144,6 +146,7 @@ public class ReservationServiceImpl implements ReservationService {
                 save.getReserveNumber(),
                 save.getReservePrice());
     }
+    @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
         int roomStock = roomRepository.findByRoomType(reservationReqDto.getRoomType()).getRoomStock();
@@ -161,8 +164,20 @@ public class ReservationServiceImpl implements ReservationService {
     //예약 상세 정보
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
+
         reservationRepository.findByReserveNumber(reserveNumber);
-        return null; //todo: 지우기
+        Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
+
+        return ReservationResponseDto.builder()
+                .userName(reservation.getUserName())
+                .phoneNumber(reservation.getPhoneNumber())
+                .hotelName(reservation.getHotelName())
+                .roomType(reservation.getRoomType())
+                .checkInDate(reservation.getCheckInDate())
+                .checkOutDate(reservation.getCheckOutDate())
+                .reservationNumber(reservation.getReserveNumber())
+                .reservePrice(reservation.getReservePrice())
+                .build();
     }
     //예약 취소
     @Override

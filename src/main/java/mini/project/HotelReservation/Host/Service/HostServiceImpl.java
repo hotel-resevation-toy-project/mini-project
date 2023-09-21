@@ -2,7 +2,7 @@ package mini.project.HotelReservation.Host.Service;
 
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
-import mini.project.HotelReservation.Host.Data.Dto.HotelReservationResponseDto;
+import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -29,14 +29,15 @@ public class HostServiceImpl implements HostService {
     private final TokenDecoder td;
 
     @Override
+    @Transactional
     public void changePolicy(DiscountPolicy policy) {
-        Long hotelId = td.currentUser().getUserId();
+        Long hotelId = td.currentUser().getHotel().getHotelId();
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
-        hotel.changePolicy((DiscountPolicy) policy);
-
+        hotel.changePolicy(policy);
     }
 
     @Override
+    @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getUserId();
         RoomType roomType = priceDto.getRoomType();
@@ -46,23 +47,26 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
+    @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
-        Long hotelId = td.currentUser().getUserId();
-        RoomType roomType =roomStockDto.getRoomType();
+        Long hotelId = td.currentUser().getHotel().getHotelId();
+        RoomType roomType = roomStockDto.getRoomType();
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
 
         room.modifyStock(roomStockDto.getRoomStock());
     }
 
     @Override
-    public List<HotelReservationResponseDto> reservationList(Long hotelId) {
+    public List<HotelReservationDto> reservationList() {
+        Long hotelId = td.currentUser().getHotel().getHotelId();
         List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
-        List<HotelReservationResponseDto> reservations = new ArrayList<>();
+        List<HotelReservationDto> reservations = new ArrayList<>();
         for (Reservation reservation : reservationsByHotelId) {
-            reservations.add(new HotelReservationResponseDto(reservation.getReserveNumber(),
+            reservations.add(new HotelReservationDto(reservation.getReserveNumber(),
                                                              reservation.getUserName(),
                                                                reservation.getPhoneNumber()));
         }
         return reservations;
     }
+
 }
