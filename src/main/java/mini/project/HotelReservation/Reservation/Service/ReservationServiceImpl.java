@@ -149,7 +149,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
-        int roomStock = roomRepository.findByRoomType(reservationReqDto.getRoomType()).getRoomStock();
+        int roomStock = roomRepository.findByHotelNameAndRoomType(reservationReqDto.getHotelName(), reservationReqDto.getRoomType()).getRoomStock();
         int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
                 reservationReqDto.getRoomType()).intValue();
 

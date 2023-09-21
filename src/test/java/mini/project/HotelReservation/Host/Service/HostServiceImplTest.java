@@ -125,6 +125,7 @@ class HostServiceImplTest {
     @Test
     @DisplayName("호스트_정책_변경")
     void change_Policy() {
+        pe.matches("123",pe.encode("123"));
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println(pe.matches( "123", userRepository.findAll().get(0).getPassword()));
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -157,10 +158,3 @@ class HostServiceImplTest {
                 ).size());
     }
 }
-
-//               System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//        for(HotelReservationResponseDto reservation : reservations){
-//                System.out.println("UserName : " + reservation.getUserName()+
-//                "\t/ PhoneNumber : " + reservation.getUserPhoneNumber());
-//                }
-//                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
