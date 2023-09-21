@@ -150,7 +150,7 @@ public class ReservationServiceImpl implements ReservationService {
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
         int roomStock = roomRepository.findByRoomType(reservationReqDto.getRoomType()).getRoomStock();
-        int reservationCount = reservationRepository.findCountByHotelAndRoom(hotel.getHotelName(),
+        int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
                 reservationReqDto.getRoomType()).intValue();
 
         String hotelName = hotel.getHotelName().split("_")[1];
