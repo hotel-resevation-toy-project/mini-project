@@ -61,23 +61,12 @@ class ReservationRepositoryTest {
     }
     @BeforeEach
     void init(){
-        // 호스트 생성
         User host = new User("Hotel_A",
                 "abc@example.com",
                 "1234",
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_HOST);
-        // 유저 생성
-        User user = new User("오진석",
-                "abc@example.com",
-                "1234",
-                "010-1234-5678",
-                UserStatus.USER_STATUS_ACTIVE,
-                UserRole.ROLE_USER);
-            userRepository.save(user);
-        // 호텔 생성
-                // A
         Hotel hotel = new Hotel("성북구",
                 "Hotel_A",
                 "02-123-4567",
@@ -88,31 +77,13 @@ class ReservationRepositoryTest {
                 LocalDate.now().plusMonths(2));
         hotel.foreignUser(host);
         Hotel saveHotel = hotelRepository.save(hotel);
-                // B
-        Hotel hotelB = new Hotel("신대방",
-                "Hotel_B",
-                "02-123-4567",
-                DiscountPolicy.POLICY_PEAK,
-                LocalTime.of(13, 0, 0),
-                LocalTime.of(18, 0, 0),
-                LocalDate.now(),
-                LocalDate.now().plusMonths(2));
-                // 귀찮아서 얘는 호스트 없음
-        Hotel saveHotelB = hotelRepository.save(hotelB);
-
-        // 객실 생성
-            // 호텔 A꺼
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
         roomA.foreignHotel(saveHotel);
-
         Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 20);
         roomB.foreignHotel(saveHotel);
-            // 호텔 B꺼
         Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
         roomC.foreignHotel(saveHotel);
-
         roomRepository.saveAll(new ArrayList<>(List.of(roomA,roomB,roomC)));
-
         userRepository.save(new User("오진석",
                 "abc@example.com",
                 "1234",

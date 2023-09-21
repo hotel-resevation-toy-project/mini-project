@@ -7,7 +7,6 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
-import mini.project.HotelReservation.Host.Service.HostService;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
@@ -23,7 +22,6 @@ import mockit.Mocked;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,9 +34,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import static java.lang.String.join;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -125,12 +121,20 @@ class UserServiceImplTest {
         userRepository.deleteAll();
     }
     @Test
-    void 회원_가입() {
+    void 회원_가입_USER() {
         //given
         User user1 = new User("Serah","sexy123@play.data", "123", "123-4567-9101", UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_USER);
         //when, then
         Assertions.assertThat(user1.getName().equals("Serah"));
         Assertions.assertThat(user1.getEmail().equals("sexy123@play.data"));
+    }
+    @Test
+    void 회원_가입_HOST() {
+        //given
+        User user1 = new User("Hotel_A","hi_Hotel@play.data", "1234", "123-4560-9101", UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_HOST);
+        //when, then
+        Assertions.assertThat(user1.getName().equals("Hotel_A"));
+        Assertions.assertThat(user1.getEmail().equals("hi_Hotel@play.data"));
     }
     @Test
     void 중복_회원_가입() {
