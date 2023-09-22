@@ -51,92 +51,14 @@ public class ReservationController {
     }
 
 
-    @GetMapping("/{hotelName}")
-    public String selectDate(@PathVariable String hotelName, Model model,
-                             @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-
-        //ReservationRequestDto
-        /**/
-        model.addAttribute("reservationRequestDto",reservationRequestDto);
-
-        return "redirect:reservation/selectDate";
-    }
-
-    //
-    @GetMapping("/{checkInDate}&{checkOutDate}")
-    public String selecteDate(@PathVariable("checkInDate")String cid, @PathVariable("checkOutDate")String cod,
-                              Model model, @RequestParam("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-
-        ReservationRequestDto requestDto = new ReservationRequestDto(
-                reservationRequestDto.getHotelName(),
-                LocalDate.parse(cid),
-                LocalDate.parse(cod),
-                reservationRequestDto.getRoomType(),
-                reservationRequestDto.getOneDayPrice()
-        );
-
-        model.addAttribute("reservationRequestDto", requestDto);
-
-        return "redirect:reservation/selectRoom";
-    }
-
-    @GetMapping("/{roomType}")
-    String selectRoom(@PathVariable("roomType")String roomType,Model model,
-                      @RequestParam("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-
-        RoomType checkRoomType;
-        switch (roomType){
-            case "ROOM_TYPE_A_SINGLE" :
-                checkRoomType = RoomType.ROOM_TYPE_A_SINGLE;
-                break;
-
-            case "ROOM_TYPE_B_TWIN" :
-                checkRoomType = RoomType.ROOM_TYPE_B_TWIN;
-                break;
-
-            case "ROOM_TYPE_C_QUEEN" :
-                checkRoomType = RoomType.ROOM_TYPE_C_QUEEN;
-                break;
-
-            default:
-                checkRoomType = RoomType.ROOM_TYPE_D_KING;
-                break;
-        }
-
-        ReservationRequestDto requestDto = new ReservationRequestDto(
-                reservationRequestDto.getHotelName(),
-                reservationRequestDto.getCheckInDate(),
-                reservationRequestDto.getCheckOutDate(),
-                checkRoomType,
-                reservationRequestDto.getOneDayPrice()
-        );
-
-        model.addAttribute("reservationRequestDto", requestDto);
-
-        return "redirect:reservation/reservationPay";
-    }
-
-
-
-
-
-    @PostMapping("/payment")
-    public String reservePay(Model model){
-
-//        reservationService.reserve(requestDto);
-//        requestDto = null; // 결제가 완료 되면 인스턴스 삭제
-
-//        DiscountPriceDto discountPrice(ReservationRequestDto requestDto);
-
-
-
-        DiscountPriceDto discountPriceDto = reservationService.discountPrice();
-
-
-        return "";
-    }
-
-
+//    @GetMapping("/reservation/{")
+//    public String selectDate(){
+//
+//
+//
+//        return "";
+//    }
+//
 
     /*@GetMapping("/hotels")
     String hotelList(Model model){
