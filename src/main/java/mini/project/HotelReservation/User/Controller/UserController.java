@@ -96,8 +96,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ModelAndView userInfoUpdate(@ModelAttribute("user") UserInfoDto userInfoDto, Model model){
-        userServiceImpl.updateInfo(userInfoDto);
+    public ModelAndView putUserInfo(@RequestParam("user") UserInfoDto user){
+        userServiceImpl.updateInfo(user);
         return new ModelAndView("redirect:/user/userInfo");
     }
 
