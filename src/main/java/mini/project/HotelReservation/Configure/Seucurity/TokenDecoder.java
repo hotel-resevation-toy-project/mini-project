@@ -20,7 +20,4 @@ public interface TokenDecoder {
     boolean expiredToken(String token);
     // 현재 로그인한 사용자 정보 가져오기
     User currentUser();
-
-    // 임시 추가
-    String createToken(int i, String role, String... ids);
 }

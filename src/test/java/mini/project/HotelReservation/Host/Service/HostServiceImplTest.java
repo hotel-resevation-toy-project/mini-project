@@ -50,8 +50,6 @@ class HostServiceImplTest {
 
     @Mocked
     HttpServletRequest mockRequest;
-    @Mocked
-    HttpServletResponse mockResponse;
 
     // 자동 주입
     @Autowired

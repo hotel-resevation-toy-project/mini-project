@@ -196,10 +196,17 @@ class ReservationRepositoryTest {
     @Test
     void 예약_번호로_예약_삭제() {
         Reservation reserve = reservationRepository.findAll().get(0);
-        Long reservationId = reserve.getReserveId();
         String reservationNum = reserve.getReserveNumber();
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println(reservationNum);
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
         reservationRepository.deleteByReserveNumber(reservationNum);
-        assertEquals(false, reservationRepository.findById(reservationId).isPresent());
+
+//        List<Reservation> list = reservationRepository.findAll();
+//        for(Reservation rr : list){
+//            System.out.println("예약 번호: "+rr.getReserveNumber());
+//        }
+        assertNull(reservationRepository.findByReserveNumber(reservationNum));
     }
 }
