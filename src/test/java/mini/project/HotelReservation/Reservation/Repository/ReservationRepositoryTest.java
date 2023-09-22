@@ -1,5 +1,7 @@
 package mini.project.HotelReservation.Reservation.Repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -37,26 +40,29 @@ class ReservationRepositoryTest {
     ReservationRepository reservationRepository;
     HotelRepository hotelRepository;
     RoomRepository roomRepository;
+    @PersistenceContext
+    EntityManager em;
     TokenDecoder td;
     @Autowired
-    public ReservationRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, TokenDecoder td) {
+    public ReservationRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, TokenDecoder td, EntityManager em) {
         this.userRepository = userRepository;
         this.reservationRepository = reservationRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
         this.td = td;
+        this.em = em;
     }
 
     @Mocked
     HttpServletRequest mockRequest;
 
-    @AfterEach
-    void reset(){
-        hotelRepository.deleteAll();
-        roomRepository.deleteAll();
-        userRepository.deleteAll();
-        reservationRepository.deleteAll();
-    }
+//    @AfterEach
+//    void reset(){
+//        hotelRepository.deleteAll();
+//        roomRepository.deleteAll();
+//        userRepository.deleteAll();
+//        reservationRepository.deleteAll();
+//    }
 
     @BeforeEach
     void init(){
@@ -195,11 +201,10 @@ class ReservationRepositoryTest {
 
     @Test
     void 예약_번호로_예약_삭제() {
-        Reservation reserve = reservationRepository.findAll().get(0);
-        Long reservationId = reserve.getReserveId();
-        String reservationNum = reserve.getReserveNumber();
+        Reservation byReserveNumber = reservationRepository.findByReserveNumber("AA1-230523");
+        reservationRepository.deleteByReserveNumber(byReserveNumber.getReserveNumber());
 
-        reservationRepository.deleteByReserveNumber(reservationNum);
-        assertEquals(false, reservationRepository.findById(reservationId).isPresent());
+        List<Reservation> all = reservationRepository.findAll();
+        assertEquals(all.size(),2);
     }
 }

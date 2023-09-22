@@ -4,13 +4,18 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+//@Repository
+
 @Repository
+@Transactional
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     //상세 예약
     Reservation findByReserveNumber(String reserveNumber);

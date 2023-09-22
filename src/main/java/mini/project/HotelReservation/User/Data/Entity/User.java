@@ -49,7 +49,7 @@ public class User extends AuditTime {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Builder
