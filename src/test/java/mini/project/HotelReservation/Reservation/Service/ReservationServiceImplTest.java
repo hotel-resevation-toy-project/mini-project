@@ -24,9 +24,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -44,6 +48,8 @@ class ReservationServiceImplTest {
     HostService hostService;
     TokenDecoder td;
     EntityManager em;
+    @Mocked
+    HttpServletRequest mockRequest;
 
     @Autowired
     public ReservationServiceImplTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, UserService userService, ReservationService reservationService, HostService hostService, TokenDecoder td, EntityManager entityManager) {
@@ -58,8 +64,7 @@ class ReservationServiceImplTest {
         this.em = entityManager;
     }
 
-    @Mocked
-    HttpServletRequest mockRequest;
+
 
     @AfterEach
     void reset(){
@@ -71,6 +76,8 @@ class ReservationServiceImplTest {
 
     @BeforeEach
     void init(){
+        td.init();
+        mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         // 호스트 생성
         User host = new User("Hotel_A",
                 "abc@example.com",
@@ -85,7 +92,7 @@ class ReservationServiceImplTest {
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_USER);
-        userRepository.save(user);
+        User userA = userRepository.save(user);
         // 호텔 생성
         // A
         Hotel hotel = new Hotel("성북구",
@@ -119,7 +126,7 @@ class ReservationServiceImplTest {
 
         // 귀찮아서 얘는 호스트 없음
         Hotel saveHotelB = hotelRepository.save(hotelB);
-        Hotel saveHotelC = hotelRepository.save(hotelC);
+        hotelRepository.save(hotelC);
         // 객실 생성
         // 호텔 A꺼
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
@@ -134,7 +141,8 @@ class ReservationServiceImplTest {
         Reservation reservation1 = new Reservation("AA1-230523",
                 3000000, RoomType.ROOM_TYPE_A_SINGLE, "Hotel_A"
                 ,"010-2222-3333", "Serah",
-                LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
+                LocalDateTime.of(LocalDate.of(2023, 9, 10),LocalTime.of(13, 0, 0)),
+                LocalDateTime.of(LocalDate.of(2023, 9, 20),LocalTime.of(10, 0, 0)));
         reservation1.foreignUser(user);  reservation1.foreignHotel(hotel);
         Reservation reservation2 = new Reservation("AB1-430525",
                 5400000, RoomType.ROOM_TYPE_B_TWIN, "Hotel_A"
@@ -147,6 +155,8 @@ class ReservationServiceImplTest {
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
+        td.createToken(String.valueOf(userA.getRole()), "2");
+        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
 
     @Test
@@ -213,29 +223,29 @@ class ReservationServiceImplTest {
     @Test
     void 예약() {
         ReservationResponseDto reserve = reservationService.reserve(
-                new ReservationRequestDto(
-                        "Hotel_A",
-                        LocalDate.of(2023, 9, 10),
-                        LocalDate.of(2023, 9, 20),
-                        RoomType.ROOM_TYPE_A_SINGLE,
-                        100000),
-                reservationService.discountPrice(
-                        new ReservationRequestDto(
-                                "Hotel_A",
-                                LocalDate.of(2023, 9, 10),
-                                LocalDate.of(2023, 9, 20),
-                                RoomType.ROOM_TYPE_A_SINGLE,
-                                100000))
-        );
-
-//        assertEquals(reserve.getUserName(),);
-//        assertEquals(reserve.getPhoneNumber(),);
-//        assertEquals(reserve.getHotelName(),);
-//        assertEquals(reserve.getRoomType(),);
-//        assertEquals(reserve.getCheckInDate(),);
-//        assertEquals(reserve.getCheckOutDate(),);
-//        assertEquals(reserve.getReservationNumber(),);
-//        assertEquals(reserve.getReservePrice(),);
+                            new ReservationRequestDto(
+                            "Hotel_A",
+                            LocalDate.of(2023, 9, 10),
+                            LocalDate.of(2023, 9, 20),
+                            RoomType.ROOM_TYPE_A_SINGLE,
+                            100000),
+                    reservationService.discountPrice(
+                            new ReservationRequestDto(
+                            "Hotel_A",
+                            LocalDate.of(2023, 9, 10),
+                            LocalDate.of(2023, 9, 20),
+                            RoomType.ROOM_TYPE_A_SINGLE,
+                            100000)));
+        User user = td.currentUser();
+        Hotel hotel = hotelRepository.findByHotelName("Hotel_A");
+        assertEquals(reserve.getUserName(),user.getName());
+        assertEquals(reserve.getPhoneNumber(),user.getPhoneNumber());
+        assertEquals(reserve.getHotelName(),"Hotel_A");
+        assertEquals(reserve.getRoomType(),RoomType.ROOM_TYPE_A_SINGLE);
+        assertEquals(reserve.getCheckInDate(), LocalDateTime.of(LocalDate.of(2023, 9, 10),hotel.getCheckInTime()));
+        assertEquals(reserve.getCheckOutDate(),LocalDateTime.of(LocalDate.of(2023, 9, 20),hotel.getCheckOutTime()));
+        assertEquals(reserve.getReservationNumber(),"AA2-230910");
+        assertEquals(reserve.getReservePrice(),850000);
     }
 
     @Test
@@ -249,15 +259,30 @@ class ReservationServiceImplTest {
         String reserveNumber = reservationService.createReserveNumber(
                 hotelRepository.findByHotelName(hotelA.getHotelName()),
                 hotelA);
-        assertEquals(reserveNumber,"AA4-230910");
-
+        assertEquals(reserveNumber,"AA2-230910");
     }
 
     @Test
     void 예약_정보() {
+        ReservationResponseDto reserve = reservationService.reserveInfo("AA1-230523");
+
+        assertEquals(reserve.getUserName(), "Serah");
+        assertEquals(reserve.getPhoneNumber(), "010-2222-3333");
+        assertEquals(reserve.getHotelName(), "Hotel_A");
+        assertEquals(reserve.getRoomType(), RoomType.ROOM_TYPE_A_SINGLE);
+        assertEquals(reserve.getCheckInDate(), LocalDateTime.of(LocalDate.of(2023, 9, 10),LocalTime.of(13, 0, 0)));
+        assertEquals(reserve.getCheckOutDate(), LocalDateTime.of(LocalDate.of(2023, 9, 20),LocalTime.of(10, 0, 0)));
+        assertEquals(reserve.getReservationNumber(), "AA1-230523");
+        assertEquals(reserve.getReservePrice(), 2100000);
     }
 
     @Test
     void 예약_삭제() {
+        reservationService.reserveDelete("AA1-230523");
+
+        List<Reservation> all = reservationRepository.findAll();
+
+        assertEquals(all.size(),2);
+
     }
 }

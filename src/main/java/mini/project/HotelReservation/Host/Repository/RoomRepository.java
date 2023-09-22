@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findByHotel_HotelIdAndRoomType(Long hotelId, RoomType roomType);
     @Query("SELECT r FROM Room r " +
