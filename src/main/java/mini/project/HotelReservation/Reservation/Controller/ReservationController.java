@@ -2,16 +2,15 @@ package mini.project.HotelReservation.Reservation.Controller;
 
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
-import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.HotelDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,19 +44,10 @@ public class ReservationController {
         model.addAttribute("HotelListDto",hotelDtoList);
         model.addAttribute("roomTypes",roomTypes);
 
-
         return "reservation/selectHotel";
 
     }
 
-//    @GetMapping("/reservation/{")
-//    public String selectDate(){
-//
-//
-//
-//        return "";
-//    }
-//
 
 //    @GetMapping("/reservation/{")
 //    public String selectDate(){
@@ -68,49 +58,35 @@ public class ReservationController {
 //    }
 //
 
-        ReservationRequestDto requestDto = new ReservationRequestDto(
-                reservationRequestDto.getHotelName(),
-                reservationRequestDto.getCheckInDate(),
-                reservationRequestDto.getCheckOutDate(),
-                checkRoomType,
-                reservationRequestDto.getOneDayPrice()
-        );
 
-        model.addAttribute("reservationRequestDto", requestDto);
-
-        return "redirect:reservation/reservationPay";
-    }
-//    @GetMapping("/reservation/{")
-//    public String selectDate(){
-//
-//
-//
-//        return "";
-//    }
-//
-
-//        reservationService.reserve(requestDto);
-//        requestDto = null; // 결제가 완료 되면 인스턴스 삭제
-
-//        DiscountPriceDto discountPrice(ReservationRequestDto requestDto);
-
-
-
-        DiscountPriceDto discountPriceDto = reservationService.discountPrice();
-
-
-        return "";
-    }
-
-
+    //     임의 주석
+//    private ReservationRequestDto requestDto = new ReservationRequestDto();
 
     /*@GetMapping("/hotels")
     String hotelList(Model model){
 
     }
+    @GetMapping("/{hotelName}")
+    String selecteHotel(@PathVariable("hotelName")String hotelName, Model model){
 
+    }
 
+    @GetMapping("/{checkInDate}&{checkOutDate}")
+    String selecteDate(@PathVariable("checkInDate")String cid, @PathVariable("checkOutDate")String cod, Model model){
 
+    }
+
+    @GetMapping("/{roomType}")
+    String seleteRoom(@PathVariable("roomType")String roomType,Model model){
+
+    }
+
+    @PostMapping("/payment")
+    String reservePay(Model model){
+
+//        reservationService.reserve(requestDto);
+        requestDto = null; // 결제가 완료 되면 인스턴스 삭제
+    }
     String reserveCancel(){
 
     }*/
