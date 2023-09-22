@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.rmi.server.UID;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -94,9 +95,9 @@ public class UserController {
         return new ModelAndView("user/userInfo");
     }
 
-    //todo : 안에 어떻게 채워야할지?
     @PutMapping
-    public ModelAndView userInfoUpdate(UserInfoDto user){
+    public ModelAndView userInfoUpdate(@ModelAttribute("user") UserInfoDto userInfoDto, Model model){
+        userServiceImpl.updateInfo(userInfoDto);
         return new ModelAndView("redirect:/user/userInfo");
     }
 
