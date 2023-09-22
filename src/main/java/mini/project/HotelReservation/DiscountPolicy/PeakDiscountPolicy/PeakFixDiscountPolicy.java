@@ -1,8 +1,10 @@
 package mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
+//@Primary
 public class PeakFixDiscountPolicy implements PeakDiscountPolicy{
     int discountPrice = 100000;
     int minPrice = 300000;

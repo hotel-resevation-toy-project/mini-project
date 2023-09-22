@@ -8,10 +8,7 @@ import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.Host.Service.HostService;
-import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.HotelDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.RoomDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
@@ -206,7 +203,7 @@ class ReservationServiceImplTest {
         assertEquals(daysDiscountPriceDto.getPay(),857375);
         assertEquals(daysDiscountPriceDto.getDiscountPrice(),142625);
 
-        //All
+//        All
         assertEquals(String.valueOf(allDiscountPriceDto.getDiscountPolicy()), "성수기, 연박 두 할인 중 더 큰 할인이 적용 되었습니다.");
         assertEquals(allDiscountPriceDto.getTotalPrice(),10*100000);
         assertEquals(allDiscountPriceDto.getPay(),850000);
@@ -215,10 +212,45 @@ class ReservationServiceImplTest {
 
     @Test
     void 예약() {
+        ReservationResponseDto reserve = reservationService.reserve(
+                new ReservationRequestDto(
+                        "Hotel_A",
+                        LocalDate.of(2023, 9, 10),
+                        LocalDate.of(2023, 9, 20),
+                        RoomType.ROOM_TYPE_A_SINGLE,
+                        100000),
+                reservationService.discountPrice(
+                        new ReservationRequestDto(
+                                "Hotel_A",
+                                LocalDate.of(2023, 9, 10),
+                                LocalDate.of(2023, 9, 20),
+                                RoomType.ROOM_TYPE_A_SINGLE,
+                                100000))
+        );
+
+//        assertEquals(reserve.getUserName(),);
+//        assertEquals(reserve.getPhoneNumber(),);
+//        assertEquals(reserve.getHotelName(),);
+//        assertEquals(reserve.getRoomType(),);
+//        assertEquals(reserve.getCheckInDate(),);
+//        assertEquals(reserve.getCheckOutDate(),);
+//        assertEquals(reserve.getReservationNumber(),);
+//        assertEquals(reserve.getReservePrice(),);
     }
 
     @Test
     void 예약_번호_만들기() {
+        ReservationRequestDto hotelA = new ReservationRequestDto(
+                "Hotel_A",
+                LocalDate.of(2023, 9, 10),
+                LocalDate.of(2023, 9, 20),
+                RoomType.ROOM_TYPE_A_SINGLE,
+                100000);
+        String reserveNumber = reservationService.createReserveNumber(
+                hotelRepository.findByHotelName(hotelA.getHotelName()),
+                hotelA);
+        assertEquals(reserveNumber,"AA4-230910");
+
     }
 
     @Test
