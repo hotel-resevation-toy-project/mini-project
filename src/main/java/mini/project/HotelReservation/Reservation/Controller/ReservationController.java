@@ -50,17 +50,14 @@ public class ReservationController {
 
     }
 
-
-    @GetMapping("/{hotelName}")
-    public String selectDate(@PathVariable String hotelName, Model model,
-                             @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-
-        //ReservationRequestDto
-        /**/
-        model.addAttribute("reservationRequestDto",reservationRequestDto);
-
-        return "redirect:reservation/selectDate";
-    }
+//    @GetMapping("/reservation/{")
+//    public String selectDate(){
+//
+//
+//
+//        return "";
+//    }
+//
 
     //
     @GetMapping("/{checkInDate}&{checkOutDate}")
