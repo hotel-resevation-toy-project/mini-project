@@ -95,4 +95,9 @@ public class Reservation extends AuditTime {
         this.hotel = foreignHotel;
         hotel.getReservations().add(this);
     }
+    // 예약 삭제시 연관관계 제거 메서드
+    public void deleteReservation() {
+        this.getHotel().getReservations().remove(this);
+        this.getUser().getReservations().remove(this);
+    }
 }

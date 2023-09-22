@@ -187,6 +187,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void reserveDelete(String reserveNumber) {
-        reservationRepository.deleteByReserveNumber(reserveNumber);
+        Reservation deleteToReserve = reservationRepository.findByReserveNumber(reserveNumber);
+        deleteToReserve.deleteReservation();
+        List<Reservation> all = reservationRepository.findAll();
     }
 }
