@@ -1,7 +1,6 @@
 package mini.project.HotelReservation.Configure;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.JwtTokenDecoder;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
@@ -11,17 +10,11 @@ import mockit.Mocked;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,8 +25,6 @@ public class SecurityTokenTest {
 
     @Mocked
     HttpServletRequest mockRequest;
-    @Mocked
-    HttpServletResponse mockResponse;
 
     @Autowired
     public SecurityTokenTest(UserRepository userRepository, JwtTokenDecoder jwtTokenDecoder) {
@@ -45,7 +36,18 @@ public class SecurityTokenTest {
     public void init(){
         userRepository.deleteAll();
         jwtTokenDecoder.init();
+        // 유저 생성
+        User user = new User(
+                "user", "user@play.data", "1234", "010-1111-2222",
+                UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_USER
+        );
+        userRepository.save(user);
         mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    }
+
+    @AfterEach
+    public void reset(){
+        userRepository.deleteAll();
     }
 
     @Test
@@ -53,8 +55,8 @@ public class SecurityTokenTest {
     void creatToken(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
-        String token = jwtTokenDecoder.createToken(1,String.valueOf(UserRole.ROLE_HOST), "1","2");
-
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), "1");
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
         assertNotEquals(token, null);
     }
 
@@ -63,7 +65,8 @@ public class SecurityTokenTest {
     void checkTokenToId(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
-        String token = jwtTokenDecoder.createToken(1,String.valueOf(UserRole.ROLE_HOST), "1");
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), "1");
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
         Long[] id = jwtTokenDecoder.tokenToIds(token);
 
         assertArrayEquals(new Long[] {1L, }, id);
@@ -74,10 +77,11 @@ public class SecurityTokenTest {
     void checkTokenToIds(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
-        String token = jwtTokenDecoder.createToken(1,String.valueOf(UserRole.ROLE_HOST), "1","2");
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), "1");
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
         Long[] id = jwtTokenDecoder.tokenToIds(token);
 
-        assertArrayEquals(new Long[] {1L, 2L}, id);
+        assertArrayEquals(new Long[] {1L, }, id);
     }
 
     @Test
@@ -85,7 +89,8 @@ public class SecurityTokenTest {
     void checkTokenToRole(){
         // Controller에 Mock객체로 받아서 사용할 것
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
-        String token = jwtTokenDecoder.createToken(1,String.valueOf(UserRole.ROLE_USER), "1","2");
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), "1");
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
         String role = jwtTokenDecoder.tokenToRole(token);
 
         assertEquals(String.valueOf(UserRole.ROLE_USER), role);
@@ -94,50 +99,28 @@ public class SecurityTokenTest {
     @Test
     @DisplayName("SecurityContext에_User저장")
     void getUserToSecurityContext(){
-        // 유저 생성
-        User user = new User(
-                "user", "user@play.data", "1234", "010-1111-2222",
-                UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_USER
-        );
-        userRepository.save(user);
-
-        // 권한부여
-        User principal = null;
-        if(userRepository.findById(userRepository.findAll().get(0).getUserId()).isPresent()){
-            principal = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
-        }
-        Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-        setAuths.add(new SimpleGrantedAuthority(principal.getRole().toString()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", setAuths);
-            // SecurityContext에 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), String.valueOf(userRepository.findAll().get(0).getUserId()));
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
+        // SecurityContext에 저장
+        SecurityContextHolder.getContext().setAuthentication(jwtTokenDecoder.getAuthentication(token));
 
         // SecurityContext에서 꺼내 현재 User 객체와 비교하기
         User checkUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        assertEquals(user.getUserId(), checkUser.getUserId());
+        assertEquals(jwtTokenDecoder.currentUser().getUserId(), checkUser.getUserId());
     }
 
     @Test
     @DisplayName("SecurityContext에_Authentication_저장")
     void getRoleToSecurityContext(){
-        // 유저 생성
-        User user = new User(
-                "user", "user@play.data", "1234", "010-1111-2222",
-                UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_USER
-        );
-        userRepository.save(user);
-
         // 권한부여
-        User principal = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
-        Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-        setAuths.add(new SimpleGrantedAuthority(principal.getRole().toString()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", setAuths);
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), String.valueOf(userRepository.findAll().get(0).getUserId()));
+        String token = jwtTokenDecoder.resolveToken(mockRequest);
         // SecurityContext에 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(jwtTokenDecoder.getAuthentication(token));
 
         // SecurityContext에서 꺼낸 객체의 Role값
-        assertEquals(user.getRole().toString(), jwtTokenDecoder.currentUser().getRole().toString());
+        assertEquals(userRepository.findAll().get(0).getRole().toString(), jwtTokenDecoder.currentUser().getRole().toString());
     }
 
 //    @Test
@@ -159,12 +142,9 @@ public class SecurityTokenTest {
     @DisplayName("Token_Session에_저장후_받기")
     void tokenSetToSession() throws IOException {
         // 리퀘스트 선언 후
-        String testToken = jwtTokenDecoder.createToken(1, String.valueOf(UserRole.ROLE_HOST), "1");
-        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession().setAttribute("Token", testToken);
-
-        mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_HOST), String.valueOf(userRepository.findAll().get(0).getUserId()));
         String token = jwtTokenDecoder.resolveToken(mockRequest);
 
-        assertEquals(jwtTokenDecoder.tokenToIds(token)[0], 1L);
+        assertEquals(jwtTokenDecoder.tokenToIds(token)[0], userRepository.findAll().get(0).getUserId());
     }
 }

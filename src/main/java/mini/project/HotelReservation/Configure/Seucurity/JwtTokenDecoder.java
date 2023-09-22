@@ -159,31 +159,4 @@ public class JwtTokenDecoder implements TokenDecoder{
             throw new NullPointerException("로그인 먼저 시도해주세요.");
         }
     }
-
-    // Test용 임시 추가
-    @Override
-    public String createToken(int i, String role, String... ids) {
-        Claims claims = Jwts.claims();
-        // 호텔 ID가 포함된 ids라면 Host 계정이므로 hotelID도 저장한다
-        if(ids.length > 1){
-            claims.setSubject(ids[0]+"/"+ids[1]);
-        } else{ // HOST가 아니라면 유저ID만 저장한다.
-            claims.setSubject(ids[0]);
-        }
-        // Audience(대상) 값에 role 등록
-        claims.setAudience(role);
-        // 유효기간 계산할 현재 시간 저장
-        Date now = new Date();
-
-        String token =Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)   // 토큰 생성 시간
-                .setExpiration(new Date(now.getTime() + tokenValidMillisecond)) // 토큰 만료 기간
-                .signWith(key) // 암호화 알고리즘과 SecretKey 세팅
-                .compact(); // 패키징
-
-        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        req.getSession().setAttribute("Token", token);
-        return token;
-    }
 }

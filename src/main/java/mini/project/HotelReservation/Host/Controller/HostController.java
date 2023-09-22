@@ -6,8 +6,6 @@ import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
 import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Service.HostService;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -28,7 +25,8 @@ public class HostController {
     @GetMapping("")
     String manage(Model model){
         // TODO: 호스트의 메인 페이지 로직을 구현 (호텔 관련 정보를 모델에 담아서 반환)
-        return "host/manage";
+        model.addAttribute("asd");
+        return "redirect:/host/manage";
     }
     @PatchMapping("/policy")
     String discountPolicy(String policy){
@@ -56,7 +54,7 @@ public class HostController {
         // TODO: 호스트의 예약 목록 페이지 로직 구현 (예약 목록을 모델에 담아서 반환)
         List<HotelReservationDto> reservations = hostService.reservationList();
         model.addAttribute("reservations", reservations);
-        return "host/reservations";
+        return "redirect:/host/reservations";
     }
 
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
