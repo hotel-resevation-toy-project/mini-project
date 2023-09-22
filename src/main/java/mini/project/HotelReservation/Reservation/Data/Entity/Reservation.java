@@ -15,6 +15,7 @@ import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.User.Data.Entity.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -52,7 +53,7 @@ public class Reservation extends AuditTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 

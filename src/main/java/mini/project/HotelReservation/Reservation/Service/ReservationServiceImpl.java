@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,17 +153,16 @@ public class ReservationServiceImpl implements ReservationService {
     }
     @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
         int roomStock = roomRepository.findByHotelNameAndRoomType(reservationReqDto.getHotelName(), reservationReqDto.getRoomType()).getRoomStock();
         int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
                 reservationReqDto.getRoomType()).intValue();
 
         String hotelName = hotel.getHotelName().split("_")[1];
         String roomType = reservationReqDto.getRoomType().toString().split("_")[2];
-        String reserveSequence = String.valueOf(roomStock - (reservationCount + 1));
-        String format = dateFormat.format(reservationReqDto.getCheckInDate());
+        String reserveSequence = String.valueOf(reservationCount + 1);
+        String format = reservationReqDto.getCheckInDate().format(DateTimeFormatter.ofPattern("yyMMdd"));
 
-        return hotelName + roomType + reserveSequence + format;
+        return hotelName + roomType + reserveSequence +"-"+ format;
     }
 
     //예약 상세 정보

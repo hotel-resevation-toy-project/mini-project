@@ -55,7 +55,7 @@ public class Hotel extends AuditTime {
     @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
     private final List<Room> rooms = new ArrayList<>();
 
-    @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="hotel",cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Reservation> reservations = new ArrayList<>();
 
     public Hotel(String address, String hotelName, String hotelPhoneNumber, DiscountPolicy discountPolicy, LocalTime checkInTime, LocalTime checkOutTime, LocalDate startPeakDate, LocalDate endPeakDate) {
