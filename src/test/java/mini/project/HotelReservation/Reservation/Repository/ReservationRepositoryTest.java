@@ -40,17 +40,14 @@ class ReservationRepositoryTest {
     ReservationRepository reservationRepository;
     HotelRepository hotelRepository;
     RoomRepository roomRepository;
-    @PersistenceContext
-    EntityManager em;
     TokenDecoder td;
     @Autowired
-    public ReservationRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, TokenDecoder td, EntityManager em) {
+    public ReservationRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, TokenDecoder td) {
         this.userRepository = userRepository;
         this.reservationRepository = reservationRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
         this.td = td;
-        this.em = em;
     }
 
     @Mocked
@@ -200,9 +197,11 @@ class ReservationRepositoryTest {
     }
 
     @Test
+    @Rollback(value = false)
     void 예약_번호로_예약_삭제() {
-        Reservation byReserveNumber = reservationRepository.findByReserveNumber("AA1-230523");
-        reservationRepository.deleteByReserveNumber(byReserveNumber.getReserveNumber());
+        Reservation deleteToReserve = reservationRepository.findByReserveNumber("AA1-230523");
+        deleteToReserve.deleteReservation();
+//        reservationRepository.deleteByReserveNumber(deleteToReserve.getReserveNumber());
 
         List<Reservation> all = reservationRepository.findAll();
         assertEquals(all.size(),2);

@@ -49,14 +49,14 @@ public class ReservationController {
     }
 
 
-    @GetMapping("/reservation/{")
-    public String selectDate(){
-
-
-
-        return "";
-    }
-
+//    @GetMapping("/reservation/{")
+//    public String selectDate(){
+//
+//
+//
+//        return "";
+//    }
+//
 
 
     //     임의 주석
