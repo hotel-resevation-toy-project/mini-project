@@ -7,7 +7,8 @@
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body>
-    <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+    <p>selectHotel</p>
+    <div class="d-flex  flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
 
         <th:block th:each="hotel : ${HotelListDto}">
             <div class="list-group border border-white rounded">
@@ -20,7 +21,7 @@
                             <span class="fw-bolder fs-5">
                                 RoomType&nbsp;:&nbsp;[
                             </span>
-                            <th:block th:each="roomType : ${HotelDto.roomType}">
+                            <th:block th:each="roomType : ${roomTypes}">
                                 <span th:if="${roomType} == 'ROOM_TYPE_A_SINGLE'" class="fw-bolder fs-5">
                                     A,&nbsp;
                                     </span>
@@ -42,7 +43,7 @@
                                     <p class="mb-0 fw-bolder fs-5">
                                         check-in
                                     </p>
-                                    <p th:text="|check-in ${hotel.checkInTime}|" class="mb-0 fw-bolder fs-5">
+                                    <p th:text="${hotel.checkInTime}" class="mb-0 fw-bolder fs-5">
                                         13:00
                                     </p>
                                 </div>
@@ -51,7 +52,7 @@
                                     <p class="mb-0 fw-bolder fs-5">
                                         check-out
                                     </p>
-                                    <p th:text="|check-out ${hotel.checkOutTime}|" class="mb-0 fw-bolder fs-5">
+                                    <p th:text="${hotel.checkOutTime}" class="mb-0 fw-bolder fs-5">
                                         09:00
                                     </p>
                                 </div>

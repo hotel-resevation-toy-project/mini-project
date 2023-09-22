@@ -8,10 +8,7 @@ import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.Host.Service.HostService;
-import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.HotelDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.RoomDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
@@ -226,6 +223,25 @@ class ReservationServiceImplTest2 {
 
     @Test
     void 예약() {
+
+        User user = td.currentUser();
+        Hotel hotel = hotelRepository.findByHotelName("Hotel_A");
+
+        Reservation reservation = Reservation.createReserve(user, hotel,
+                reservationReqDto,
+                discountPriceDto.getPay(),/* 결제 금액 */
+                createReserveNumber(hotel, reservationReqDto)/* 예약 번호 */);
+        Reservation save = reservationRepository.save(reservation);
+
+        new ReservationResponseDto(
+                save.getUserName(),
+                save.getPhoneNumber(),
+                save.getHotelName(),
+                save.getRoomType(),
+                save.getCheckInDate(),
+                save.getCheckOutDate(),
+                save.getReserveNumber(),
+                save.getReservePrice());
 
     }
 
