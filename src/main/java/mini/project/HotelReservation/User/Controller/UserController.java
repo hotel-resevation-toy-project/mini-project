@@ -2,6 +2,7 @@ package mini.project.HotelReservation.User.Controller;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
@@ -22,31 +23,9 @@ import java.util.NoSuchElementException;
 public class UserController {
     private final UserServiceImpl userServiceImpl;
 
-    //로그인 화면(시작)
-    @GetMapping(value = "/in")
-    public ModelAndView logInForm(UserSignInDto dto, Model model){
-        ModelAndView modelAndLoginView = new ModelAndView("user/login");
-        model.addAttribute(dto);
-        return modelAndLoginView;
-    }
-
-    //로그인
-    @PostMapping(value = "/in")
-    public ModelAndView logInForm(UserSignInDto sid, RedirectAttributes redirectAttributes){
-        ModelAndView modelAndMainView = new ModelAndView("reservation/main");
-
-        try{
-            userServiceImpl.logIn(sid);
-            return modelAndMainView;
-        } catch (NoSuchElementException e){
-            redirectAttributes.addFlashAttribute("error","로그인에 실패하였습니다.");
-            return new ModelAndView("redirect:/user/login.html");
-        }
-    }
-
     //회원가입 화면
     @GetMapping(value = "/new")
-    public ModelAndView join(Model model, UserSignUpDto dto){
+    public ModelAndView getJoin(Model model,@RequestParam("dto") UserSignUpDto dto){
         ModelAndView modelAndJoinView = new ModelAndView("user/join");
         model.addAttribute(dto);
 
@@ -55,7 +34,7 @@ public class UserController {
 
     //회원가입
     @PostMapping(value = "/new")
-    public ModelAndView join(UserSignUpDto dto, RedirectAttributes redirectAttributes){
+    public ModelAndView postJoin(@RequestParam("dto") UserSignUpDto dto, RedirectAttributes redirectAttributes){
         ModelAndView modelAndLoginView = new ModelAndView("user/login");
 
         try{
@@ -67,41 +46,64 @@ public class UserController {
         }
     }
 
+    //로그인 화면(시작)
+    @GetMapping(value = "/in")
+    public ModelAndView getLogIn(UserSignInDto dto, Model model){
+        ModelAndView modelAndLoginView = new ModelAndView("user/login");
+        model.addAttribute(dto);
+        return modelAndLoginView;
+    }
+
+    //로그인
+    @PostMapping(value = "/in")
+    public ModelAndView postLogIn(UserSignInDto sid, RedirectAttributes redirectAttributes){
+        ModelAndView modelAndMainView = new ModelAndView("reservation/main");
+
+        try{
+            userServiceImpl.logIn(sid);
+            return modelAndMainView;
+        } catch (NoSuchElementException e){
+            redirectAttributes.addFlashAttribute("error","로그인에 실패하였습니다.");
+            return new ModelAndView("redirect:/user/login.html");
+        }
+    }
+
     @GetMapping(value = "/out")
-    public String logOut(){
+    public String getLogOut(){
         return "/logout";
     }
 
     @GetMapping(value = "/reservations")
-    public ModelAndView userReservationList(Model model, List<UserReservationDto> dto){
+    public ModelAndView getUserReservationList(Model model){
         ModelAndView modelAndView = new ModelAndView("user/userReservationList");
         List<UserReservationDto> dtoList = userServiceImpl.reservationList();
-
-        model.addAttribute(dtoList);
+        model.addAttribute("dtoList",dtoList);
 
         return modelAndView;
     }
+
     //todo:{rN}? & html에 값 잘 들어가는지?
     @GetMapping(value = "/reservation/{reserveNumber}")
-    public ModelAndView userDetailReservation(Model model, UserReservationDto reservation){
-        model.addAttribute(reservation);
+    public ModelAndView getUserReservation(Model model, @RequestParam("reservationResponseDto") ReservationResponseDto reservationResponseDto) {
+
+        model.addAttribute("reservationResponseDto", reservationResponseDto);
         return new ModelAndView("user/reservationInfo");
     }
 
     @GetMapping
-    public ModelAndView userInfo(Model model, UserInfoDto user){
-        model.addAttribute(user);
+    public ModelAndView getUserInfo(Model model, @RequestParam("user") UserInfoDto user){
+        model.addAttribute("user", user);
         return new ModelAndView("user/userInfo");
     }
 
-    //todo : 안에 어떻게 채워야할지?
     @PutMapping
-    public ModelAndView userInfoUpdate(UserInfoDto user){
+    public ModelAndView putUserInfo(@RequestParam("user") UserInfoDto user){
+        userServiceImpl.updateInfo(user);
         return new ModelAndView("redirect:/user/userInfo");
     }
 
     @PatchMapping
-    public ModelAndView quit(Model model, String password, RedirectAttributes redirectAttributes){
+    public ModelAndView quit(Model model, RedirectAttributes redirectAttributes){
         try {
             userServiceImpl.deactive((String) model.getAttribute("password"));
             return new ModelAndView("user/login");
