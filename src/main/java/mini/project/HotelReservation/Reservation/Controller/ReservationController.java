@@ -80,13 +80,14 @@ public class ReservationController {
 
         return "redirect:reservation/reservationPay";
     }
-
-
-
-
-
-    @PostMapping("/payment")
-    public String reservePay(Model model){
+//    @GetMapping("/reservation/{")
+//    public String selectDate(){
+//
+//
+//
+//        return "";
+//    }
+//
 
 //        reservationService.reserve(requestDto);
 //        requestDto = null; // 결제가 완료 되면 인스턴스 삭제
