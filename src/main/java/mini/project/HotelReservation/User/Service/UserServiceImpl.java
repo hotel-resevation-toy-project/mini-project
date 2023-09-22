@@ -2,7 +2,6 @@ package mini.project.HotelReservation.User.Service;
 
 
 import com.sun.jdi.request.DuplicateRequestException;
-import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
@@ -36,6 +35,7 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final TokenDecoder td;
 
+    //회원가입
     @Override
     @Transactional
     public void join(UserSignUpDto sud) throws DuplicateRequestException {
@@ -69,6 +69,8 @@ public class UserServiceImpl implements UserService{
             }
         }
     }
+
+    //유저 상태 확인
     @Override
     public Boolean checkStatus(User user) {
         //재가입하는 경우
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    //로그인
     @Override
     public void logIn(UserSignInDto sid) {
         User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
@@ -103,6 +106,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    //유저 정보 업데이트
     @Override
     @Transactional
     public void updateInfo(UserInfoDto userInfoDto) {
@@ -111,14 +115,15 @@ public class UserServiceImpl implements UserService{
         user.updateInfo(userInfoDto);
     }
 
+    //비밀번호 입력 받은 후 회원 탈퇴
     @Override
     @Transactional
-    public void deactive(String email, UserSignInDto usd) {
-        User user = userRepository.findStatusByEmail(email).orElseThrow(
+    public void deactive(String password) {
+        User user = userRepository.findStatusByEmail(td.currentUser().getEmail()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
         );
-        if(passwordEncoder.matches(usd.getPassword(), user.getPassword())){
-            throw new NoResultException("비밀번호를 정확히 입력해주세요.");
+        if(passwordEncoder.matches(password, user.getPassword())){
+            throw new NoSuchElementException("비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();
     }

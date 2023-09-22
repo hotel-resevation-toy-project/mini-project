@@ -15,6 +15,6 @@ public interface UserService {
     void logIn(UserSignInDto sid);
     void updateInfo(UserInfoDto userInfoDto);
     List<UserReservationDto> reservationList();
-    void deactive(String email, UserSignInDto usd);
+    void deactive(String password);
     User loadUserByUserId(Long id);
 }
