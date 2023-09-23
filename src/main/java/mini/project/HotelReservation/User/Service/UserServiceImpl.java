@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService{
     //회원가입
     @Override
     @Transactional
-    public void join(UserSignUpDto sud) throws DuplicateRequestException {
+    public void join(UserSignUpDto sud) {
         Optional<User> optionalUser = userRepository.findByEmail(sud.getEmail());
         //처음 가입하는 경우
         if(optionalUser.isEmpty()) {
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService{
                     .role(sud.getRole())
                     .build();
             //HOST가 가입하는 경우
-            if(sud.getRole() == UserRole.ROLE_HOST){
+            if(sud.getRole() == UserRole.ROLE_HOST) {
                 Hotel hotel = hotelRepository.findByHotelName(sud.getName());
                 newUser.foreignHotel(hotel);
             }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService{
             //탈퇴한 회원이 재가입하는 경우
             else {
                 findUser.changeStatus();
-                User saveUser = userRepository.save(findUser);
+                userRepository.save(findUser);
             }
         }
     }
@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService{
     //유저 상태 확인
     @Override
     public Boolean checkStatus(User user) {
-        //재가입하는 경우
         if (user.getStatus() == UserStatus.USER_STATUS_DEACTIVE) {
+            //재가입하는 경우
             return true;
         } else {
             //가입된 경우
@@ -119,10 +119,8 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deactive(String password) {
-        User user = userRepository.findByEmail(td.currentUser().getEmail()).orElseThrow(
-                () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
-        );
-        if(passwordEncoder.matches(password, user.getPassword())){
+        User user = td.currentUser();
+        if(!(passwordEncoder.matches(password, user.getPassword()))){
             throw new NoSuchElementException("비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();
