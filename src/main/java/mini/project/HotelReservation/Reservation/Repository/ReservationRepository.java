@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//@Repository
-
 @Repository
 @Transactional
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {

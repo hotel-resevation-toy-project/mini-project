@@ -1,20 +1,20 @@
 package mini.project.HotelReservation.Reservation.Data.Dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import mini.project.HotelReservation.enumerate.RoomType;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReservationRequestDto {
-    private final String hotelName;
-    private final LocalDate checkInDate;
-    private final LocalDate checkOutDate;
-    private final RoomType roomType;
-    private final Integer oneDayPrice;
+    private String hotelName;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
+    private RoomType roomType;
+    private Integer oneDayPrice;
+
 }

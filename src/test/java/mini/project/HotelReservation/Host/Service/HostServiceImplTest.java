@@ -1,7 +1,6 @@
 package mini.project.HotelReservation.Host.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -40,93 +39,103 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 class HostServiceImplTest {
-    private final HostService hostService;
-    private final HotelRepository hotelRepository;
-    private final RoomRepository roomRepository;
-    private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
-    private final TokenDecoder td;
-    private final PasswordEncoder pe;
+    @Autowired
+    private HostService hostService;
+    @Autowired
+    private HotelRepository hotelRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenDecoder td;
 
     @Mocked
     HttpServletRequest mockRequest;
 
-    // 자동 주입
-    @Autowired
-    public HostServiceImplTest(HostService hostService, HotelRepository hotelRepository, RoomRepository roomRepository, ReservationRepository reservationRepository, UserRepository userRepository, TokenDecoder td, PasswordEncoder pe) {
-        this.hostService = hostService;
-        this.hotelRepository = hotelRepository;
-        this.roomRepository = roomRepository;
-        this.reservationRepository = reservationRepository;
-        this.userRepository = userRepository;
-        this.td = td;
-        this.pe = pe;
-    }
-
     // 초기화
     @BeforeEach
-    public void init(){
+    void init(){
+        // 토큰 초기화 및 더미 요청 생성
         td.init();
         mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        // 임의 유저
-        User user = new User("Serah","sexy123@play.data",
-                pe.encode("123"), "123-4567-9101", UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_HOST);
-        // 임의 호텔    -> 정책변경할거임
-        Hotel hotel = new Hotel("신대방", "그부호",
-                "010-1234-1234", DiscountPolicy.POLICY_DAYS,
-                LocalTime.NOON, LocalTime.MIDNIGHT,
-                LocalDate.now(), LocalDate.now().plusMonths(2));
-        // 임의 객실    -> 가격변경할거임
-        Room room = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000,20);
-        // 임의 예약
+
+        // 호스트 생성
+        User host = new User("Hotel_A",
+                "abc@example.com",
+                "1234",
+                "010-1234-5678",
+                UserStatus.USER_STATUS_ACTIVE,
+                UserRole.ROLE_HOST);
+        // 호텔 생성
+        // A
+        Hotel hotel = new Hotel("성북구",
+                "Hotel_A",
+                "02-123-4567",
+                DiscountPolicy.POLICY_PEAK,
+                LocalTime.of(13, 0, 0),
+                LocalTime.of(10, 0, 0),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(2));
+        hotel.foreignUser(host);
+        Hotel saveHotel = hotelRepository.save(hotel);
+        // B
+        Hotel hotelB = new Hotel("신대방",
+                "Hotel_B",
+                "02-123-4567",
+                DiscountPolicy.POLICY_PEAK,
+                LocalTime.of(13, 0, 0),
+                LocalTime.of(18, 0, 0),
+                LocalDate.now(),
+                LocalDate.now().plusMonths(2));
+        // 귀찮아서 얘는 호스트 없음
+        Hotel saveHotelB = hotelRepository.save(hotelB);
+
+        // 객실 생성
+            // 호텔 A꺼
+        Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
+        roomA.foreignHotel(saveHotel);
+        Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 20);
+        roomB.foreignHotel(saveHotel);
+            // 호텔 B꺼
+        Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
+        roomC.foreignHotel(saveHotelB);
+        roomRepository.saveAll(List.of(roomA,roomB, roomC));
+        // 예약 1, 2, 3 생성
         Reservation reservation1 = new Reservation("AA1-230523",
-                5000000, RoomType.ROOM_TYPE_A_SINGLE, "그부호"
-        ,"010-2222-3333", "Serah",
+                3000000, RoomType.ROOM_TYPE_A_SINGLE, "Hotel_A"
+                ,"010-2222-3333", "Serah",
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        Reservation reservation2 = new Reservation("AA1-430525",
-                5000000, RoomType.ROOM_TYPE_A_SINGLE, "그부호"
+        reservation1.foreignUser(host);  reservation1.foreignHotel(hotel);
+        Reservation reservation2 = new Reservation("AB1-430525",
+                5400000, RoomType.ROOM_TYPE_B_TWIN, "Hotel_A"
                 ,"010-4444-5555", "Grima",
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        Reservation reservation3 = new Reservation("AA1-630528",
-                5000000, RoomType.ROOM_TYPE_A_SINGLE, "그부호"
+        reservation2.foreignUser(host);  reservation2.foreignHotel(hotel);
+        Reservation reservation3 = new Reservation("BC1-630528",
+                50034600, RoomType.ROOM_TYPE_C_QUEEN, "Hotel_B"
                 ,"010-6666-7777", "Mosquito",
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-
-        room.foreignHotel(hotel);
-        // 호스트에 호텔 주입
-        hotel.foreignUser(user);
-        userRepository.save(user);
-        // 예약1
-        reservation1.foreignHotel(hotel);
-        reservation1.foreignUser(user);
-        // 예약2
-        reservation2.foreignHotel(hotel);
-        reservation2.foreignUser(user);
-        // 예약3
-        reservation3.foreignHotel(hotel);
-        reservation3.foreignUser(user);
+        reservation3.foreignUser(host);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
 
-        // 로그인된 host User를 Security Context에 저장
         User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
         td.createToken(String.valueOf(ckUser.getRole()), String.valueOf(ckUser.getUserId()), String.valueOf(ckUser.getHotel().getHotelId()));
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
     @AfterEach
-    public void reset(){
-        hotelRepository.deleteAll();
-        roomRepository.deleteAll();
+    void reset(){
         reservationRepository.deleteAll();
+        roomRepository.deleteAll();
         userRepository.deleteAll();
+        hotelRepository.deleteAll();
     }
 
     @Test
     @DisplayName("호스트_정책_변경")
     void change_Policy() {
-        pe.matches("123",pe.encode("123"));
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println(pe.matches( "123", userRepository.findAll().get(0).getPassword()));
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
         // 저장된 유저에서 연결된 호텔 받아오기
         hostService.changePolicy(DiscountPolicy.POLICY_ALL);
         assertEquals(td.currentUser().getHotel().getDiscountPolicy(), DiscountPolicy.POLICY_ALL);
@@ -143,8 +152,7 @@ class HostServiceImplTest {
     void modifyRoomStock() {
         RoomStockDto stockDto = new RoomStockDto(RoomType.ROOM_TYPE_A_SINGLE, 50);
         hostService.modifyRoomStock(stockDto);
-        assertEquals(roomRepository.findById(
-                userRepository.findAll().get(0).getUserId()).get().getRoomStock(), 50);
+        assertEquals(roomRepository.findByHotelNameAndRoomType(td.currentUser().getName(), RoomType.ROOM_TYPE_A_SINGLE).getRoomStock(), 50);
     }
     @Test
     @DisplayName("호텔측_예약리스트_보기")
