@@ -15,23 +15,27 @@
         </div>
         <div class="row">
             <div class="form-floating mb-3 col-sm">
-                <a th:href="@{hotels}" class="w-100">
+                <a th:href="@{/reservation/hotels}" th:method="get" class="w-100">
                     <button class="btn btn-outline-secondary fw-bolder fs-5 w-100" type="submit">
                         Reserve
                     </button>
                 </a>
             </div>
             <div class="form-floating mb-3 col-sm">
-                <button class="fw-bolder fs-5 btn btn-outline-secondary w-100" type="submit">
-                    Mypage
-                </button>
+                <a th:href="@{/user}" th:method="get" class="w-100">
+                    <button class="fw-bolder fs-5 btn btn-outline-secondary w-100" type="submit">
+                        Mypage
+                    </button>
+                </a>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <button class="fw-bolder fs-5 btn btn-outline-secondary w-100" type="submit">
-                    MyReservation
-                </button>
+                <a th:href="@{/reservations}" th:method="get" class="w-100">
+                    <button class="fw-bolder fs-5 btn btn-outline-secondary w-100" type="submit">
+                        MyReservation
+                    </button>
+                </a>
             </div>
         </div>
     </div>
