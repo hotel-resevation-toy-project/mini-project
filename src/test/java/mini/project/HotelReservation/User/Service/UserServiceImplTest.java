@@ -88,8 +88,8 @@ class UserServiceImplTest {
                 UserRole.ROLE_HOST);
         // 유저 생성
         User user = new User("오진석",
-                "abc@example.com",
-                "1234",
+                "abc2@example.com",
+                passwordEncoder.encode("1234"),
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_USER);
@@ -145,50 +145,86 @@ class UserServiceImplTest {
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
 
-        User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
-        td.createToken(String.valueOf(ckUser.getRole()), String.valueOf(ckUser.getUserId()), String.valueOf(ckUser.getHotel().getHotelId()));
+        Optional<User> ckUser = userRepository.findByEmail("abc2@example.com");
+        td.createToken(String.valueOf(ckUser.get().getRole()), String.valueOf(ckUser.get().getUserId()));
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
-
-
     @Test
     void 회원_가입_USER() {
         //given
-        User user1 = new User("Serah","sexy123@play.data", "123", "123-4567-9101", UserStatus.USER_STATUS_ACTIVE, UserRole.ROLE_USER);
-        //when, then
-        assertThat(user1.getName().equals("Serah"));
-        assertThat(user1.getEmail().equals("sexy123@play.data"));
+        UserSignUpDto sud = new UserSignUpDto("Serah",
+                "sexy123@play.data",
+                "123",
+                "123-4567-9101",
+                UserRole.ROLE_USER);
+        userService.join(sud);
+
+        //when
+        Optional<User> user = userRepository.findByEmail("sexy123@play.data");
+        User findUser = user.get();
+
+        //then
+        assertThat(findUser.getName().equals("Serah"));
+        assertThat(findUser.getEmail().equals("sexy123@play.data"));
     }
     @Test
     void 회원_가입_HOST() {
         //given
-        UserSignUpDto hostA= new UserSignUpDto("Hotel_A", "hi_Hotel@play.data", "1234", "123-4560-9101", UserRole.ROLE_HOST);
+        UserSignUpDto sud = new UserSignUpDto("Hotel_B",
+                "hotelB@hotel.com",
+                "1234",
+                "123-4567-9101",
+                UserRole.ROLE_HOST);
+        userService.join(sud);
         //when
-        userService.join(hostA);
-        Optional<User> user = userRepository.findByEmail("hi_Hotel@play.data");
+        Optional<User> user = userRepository.findByEmail("hotelB@hotel.com");
+        User findHost = user.get();
         //then
-        assertThat(user.get().getName().equals("Hotel_A"));
-        assertThat(user.get().getRole().equals(UserRole.ROLE_HOST));
+        assertThat(findHost.getName().equals("Hotel_B"));
+        assertThat(findHost.getRole().equals(UserRole.ROLE_HOST));
     }
     @Test
     void 중복_회원_가입() {
         //given
-        UserSignUpDto sud = new UserSignUpDto("Serah","sexy123@play.data", "123", "123-4567-9101", UserRole.ROLE_USER);
+        UserSignUpDto sud1 = new UserSignUpDto("Serah",
+                "sexy123@play.data",
+                "123",
+                "123-4567-9101",
+                UserRole.ROLE_USER);
+
+        UserSignUpDto sud2 = new UserSignUpDto("Serah",
+                "sexy123@play.data",
+                "123",
+                "123-4567-9101",
+                UserRole.ROLE_USER);
+        userService.join(sud1);
         //when, then
-        DuplicateRequestException exception = assertThrows(DuplicateRequestException.class, ()-> userService.join(sud));
-        String message = exception.getMessage();
-        assertEquals("이미 가입한 사용자입니다.", message);
+        assertThrows(DuplicateRequestException.class,() -> userService.join(sud2));
     }
 
     @Test
-    void 탈퇴한_회원_재가입() {
+    void 탈퇴_후_재가입() {
+        //when
+        userService.deactive("1234");
+        User user = td.currentUser();
+
+        //then
+        assertThat(user.getStatus().equals(UserStatus.USER_STATUS_DEACTIVE));
+
         //given
-        User user = userRepository.findByEmail("sexy123@play.data").get();
-        user.deactive();
-        UserSignUpDto sud = new UserSignUpDto("Serah","sexy123@play.data", "123", "123-4567-9101", UserRole.ROLE_USER);
+        UserSignUpDto sud = new UserSignUpDto("Serah",
+                "abc2@example.com",
+                passwordEncoder.encode("1234"),
+                "123-4567-9101",
+                UserRole.ROLE_USER);
         userService.join(sud);
-        //when, then
-        assertThat(user.getStatus().equals(UserStatus.USER_STATUS_ACTIVE));
+
+        //when
+        User findUser = userRepository.findByEmail("abc2@example.com").get();
+
+        //then
+        assertEquals(findUser.getStatus(),UserStatus.USER_STATUS_ACTIVE);
+
     }
 
     @Test
