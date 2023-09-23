@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService{
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
-            throw new NoSuchElementException("회원을 찾을 수 없습니다.");
+            throw new NoSuchElementException("탈퇴한 회원 입니다.");
         }
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
 
@@ -101,7 +101,6 @@ public class UserServiceImpl implements UserService{
                                 String.valueOf(user.getUserId()),
                                 String.valueOf(user.getHotel().getHotelId()));
             }
-            new UserInfoDto(user);
         }else {
             throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
         }
