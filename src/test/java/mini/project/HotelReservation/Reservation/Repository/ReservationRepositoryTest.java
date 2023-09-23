@@ -53,13 +53,13 @@ class ReservationRepositoryTest {
     @Mocked
     HttpServletRequest mockRequest;
 
-//    @AfterEach
-//    void reset(){
-//        hotelRepository.deleteAll();
-//        roomRepository.deleteAll();
-//        userRepository.deleteAll();
-//        reservationRepository.deleteAll();
-//    }
+    @AfterEach
+    void reset(){
+        reservationRepository.deleteAll();
+        roomRepository.deleteAll();
+        userRepository.deleteAll();
+        hotelRepository.deleteAll();
+    }
 
     @BeforeEach
     void init(){

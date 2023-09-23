@@ -67,13 +67,14 @@ class ReservationServiceImplTest {
 
 
 
-//    @AfterEach
-//    void reset(){
-//        hotelRepository.deleteAll();
-//        roomRepository.deleteAll();
-//        userRepository.deleteAll();
-//        reservationRepository.deleteAll();
-//    }
+    @AfterEach
+    public void reset(){
+        reservationRepository.deleteAll();
+        roomRepository.deleteAll();
+        userRepository.deleteAll();
+        hotelRepository.deleteAll();
+        SecurityContextHolder.clearContext();
+    }
 
     @BeforeEach
     void init(){
@@ -156,7 +157,7 @@ class ReservationServiceImplTest {
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
-        td.createToken(String.valueOf(userA.getRole()), "2");
+        td.createToken(String.valueOf(userA.getRole()), String.valueOf(userA.getUserId()));
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
 
