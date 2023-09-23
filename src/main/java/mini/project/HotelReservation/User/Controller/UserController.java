@@ -8,7 +8,6 @@ import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
-import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,28 +58,10 @@ public class UserController {
         return "redirect:/logout";
     }
 
-    @GetMapping
-    public String getUserInfo(Model model, @RequestParam("user") UserInfoDto user){
-        return "user/join";
-    }
-
-    @PutMapping
-    public String putUserInfo(@RequestParam("user") UserInfoDto user){
-
-        return "user/join";
-    }
-
-    @PatchMapping
-    public String quit(UserSignInDto dto, User user){
-        userService.deactive(dto.getPassword());
-        System.out.println(userService.checkStatus(user));
-        return "user/join";
-    }
-
     // 유저측 예약리스트 조회
     @GetMapping(value = "/reservations")
     public String getUserReservationList(Model model){
-        model.addAttribute("dtoList", userService.reservationList());
+        model.addAttribute("userReservationDtoList", userService.reservationList());
         return "user/userReservationList";
     }
 
@@ -90,4 +71,20 @@ public class UserController {
         return "user/join";
     }
 
+    @GetMapping("")
+    public String getUserInfo(Model model){
+        model.addAttribute("userInfoDto", new UserInfoDto("","","",""));
+        return "user/userInfo";
+    }
+
+    @PutMapping
+    public String putUserInfo(@RequestParam("user") UserInfoDto user){
+
+        return "user/join";
+    }
+
+    @PatchMapping
+    public String quit(Model model, RedirectAttributes redirectAttributes){
+        return "user/join";
+    }
 }

@@ -6,19 +6,21 @@
   .button-container{
     display: flex; /*버튼 나란하게 정렬*/
   }
+
 </style>
 <body>
+<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 <div class="container w-50">
   <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
-      <form th:action id="UserInfoForm" name="user" method="put"><br/><br/>
+      <form th:object="${userInfoDto}" id="UserInfoForm" name="user" method="put"><br/><br/>
         <div>
-        <input th:type="text" th:name="email" th:value="${user.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
+        <input th:type="text" th:name="email" th:value="${userInfoDto.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
       <br>
-        <input th:value="${user.password}" type="text" name="password" class="form-control" placeholder="비밀번호" autocomplete="off" required/>
+        <input th:value="${userInfoDto.password}" type="text" name="password" class="form-control" placeholder="비밀번호" autocomplete="off" required/>
       <br>
-        <input th:value="${user.name}" type="text" name="name" class="form-control" placeholder="이름" autocomplete="off" required/>
+        <input th:value="${userInfoDto.name}" type="text" name="name" class="form-control" placeholder="이름" autocomplete="off" required/>
       <br>
-        <input th:value="${user.phoneNumber}" type="text" name="phoneNumber" class="form-control" placeholder="휴대폰 번호" autocomplete="off" required/>
+        <input th:value="${userInfoDto.phoneNumber}" type="text" name="phoneNumber" class="form-control" placeholder="휴대폰 번호" autocomplete="off" required/>
       </div>
       <br>
       <div class="button-container">

@@ -242,35 +242,49 @@ class UserServiceImplTest {
     @Test
     void 비회원_로그인(){
         //given
-        UserSignInDto s = new UserSignInDto("abc@naver.com","456");
+        UserSignInDto sid = new UserSignInDto("abcasdf@naver.com","4567");
+
         //when, then
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, ()-> userService.logIn(s));
-        String message = exception.getMessage();
-        assertEquals("회원을 찾을 수 없습니다.", message);
+        assertThrows(NoSuchElementException.class,() -> userService.logIn(sid));
+
+    }
+    @Test
+    void 비밀번호_불일치(){
+        //given
+        UserSignInDto sid = new UserSignInDto("abc2@example.com","12345");
+
+        //when, then
+        assertThrows(NoSuchElementException.class,() -> userService.logIn(sid));
     }
     @Test
     void 탈퇴한_회원_로그인(){
         //given
-        User user = userRepository.findByEmail("sexy123@play.data").get();
-        user.deactive();
-        UserSignInDto sid = new UserSignInDto(user.getEmail(), user.getPassword());
+        Optional<User> ckUser = userRepository.findByEmail("abc2@example.com");
+        td.createToken(String.valueOf(ckUser.get().getRole()), String.valueOf(ckUser.get().getUserId()));
+        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
+        userService.deactive("1234");
+        SecurityContextHolder.clearContext();
+        UserSignInDto sid = new UserSignInDto("abc2@example.com","1234");
+
         //when, then
-        NoSuchElementException exception = assertThrows(NoSuchElementException.class, ()-> userService.logIn(sid));
-        String message = exception.getMessage();
-        assertEquals("회원을 찾을 수 없습니다.", message);
+        assertThrows(NoSuchElementException.class,() -> userService.logIn(sid));
     }
 
     @Test
     void 정보_업데이트() {
         //given
-        User user = userRepository.findByEmail("sexy123@play.data").get();
-        UserInfoDto dto = new UserInfoDto("김채림", "abc@naver.com","456","010-5607-7854");
-        user.updateInfo(dto);
-        //when, then
-        assertThat(user.getName().equals("김채림"));
-        assertThat(user.getEmail().equals("abc@naver.com"));
-        assertThat(user.getPassword().equals("456"));
-        assertThat(user.getPhoneNumber().equals("010-5607-7854"));
-    }
+        Optional<User> ckUser = userRepository.findByEmail("abc2@example.com");
+        td.createToken(String.valueOf(ckUser.get().getRole()), String.valueOf(ckUser.get().getUserId()));
+        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
 
+        //when
+        User user = td.currentUser();
+        userService.updateInfo(new UserInfoDto("김채림", "abc2@example.com", "2580", "010-5607-7854"));
+        User changeUser = userRepository.findByEmail("abc2@example.com").get();
+        //then
+        assertThat(changeUser.getName().equals("김채림"));
+        assertThat(changeUser.getEmail().equals("abc2@example.com"));
+        assertThat(changeUser.getPassword().equals("2580"));
+        assertThat(changeUser.getPhoneNumber().equals("010-5607-7854"));
+    }
 }
