@@ -1,7 +1,5 @@
 package mini.project.HotelReservation.Host.Repository;
 
-import jakarta.servlet.http.HttpServletRequest;
-import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
@@ -12,16 +10,12 @@ import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
-import mockit.Mocked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,18 +34,12 @@ class RoomRepositoryTest {
     HotelRepository hotelRepository;
     @Autowired
     RoomRepository roomRepository;
-    @Autowired
-    TokenDecoder td;
-//
-//    @Mocked
-//    HttpServletRequest mockRequest;
-
     @AfterEach
     void reset(){
-        hotelRepository.deleteAll();
+        reservationRepository.deleteAll();
         roomRepository.deleteAll();
         userRepository.deleteAll();
-        reservationRepository.deleteAll();
+        hotelRepository.deleteAll();
     }
     @BeforeEach
     void init(){

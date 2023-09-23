@@ -1,7 +1,6 @@
 package mini.project.HotelReservation.Host.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -40,28 +39,21 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 class HostServiceImplTest {
-    private final HostService hostService;
-    private final HotelRepository hotelRepository;
-    private final RoomRepository roomRepository;
-    private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
-    private final TokenDecoder td;
-    private final PasswordEncoder pe;
+    @Autowired
+    private HostService hostService;
+    @Autowired
+    private HotelRepository hotelRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenDecoder td;
 
     @Mocked
     HttpServletRequest mockRequest;
-
-    // 자동 주입
-    @Autowired
-    public HostServiceImplTest(HostService hostService, HotelRepository hotelRepository, RoomRepository roomRepository, ReservationRepository reservationRepository, UserRepository userRepository, TokenDecoder td, PasswordEncoder pe) {
-        this.hostService = hostService;
-        this.hotelRepository = hotelRepository;
-        this.roomRepository = roomRepository;
-        this.reservationRepository = reservationRepository;
-        this.userRepository = userRepository;
-        this.td = td;
-        this.pe = pe;
-    }
 
     // 초기화
     @BeforeEach
@@ -77,14 +69,6 @@ class HostServiceImplTest {
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
                 UserRole.ROLE_HOST);
-        // 유저 생성
-        User user = new User("오진석",
-                "abc@example.com",
-                "1234",
-                "010-1234-5678",
-                UserStatus.USER_STATUS_ACTIVE,
-                UserRole.ROLE_USER);
-        userRepository.save(user);
         // 호텔 생성
         // A
         Hotel hotel = new Hotel("성북구",
@@ -108,13 +92,14 @@ class HostServiceImplTest {
                 LocalDate.now().plusMonths(2));
         // 귀찮아서 얘는 호스트 없음
         Hotel saveHotelB = hotelRepository.save(hotelB);
+
         // 객실 생성
-        // 호텔 A꺼
+            // 호텔 A꺼
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
         roomA.foreignHotel(saveHotel);
         Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 20);
         roomB.foreignHotel(saveHotel);
-        // 호텔 B꺼
+            // 호텔 B꺼
         Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
         roomC.foreignHotel(saveHotelB);
         roomRepository.saveAll(List.of(roomA,roomB, roomC));
@@ -123,7 +108,7 @@ class HostServiceImplTest {
                 3000000, RoomType.ROOM_TYPE_A_SINGLE, "Hotel_A"
                 ,"010-2222-3333", "Serah",
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        reservation1.foreignUser(user);  reservation1.foreignHotel(hotel);
+        reservation1.foreignUser(host);  reservation1.foreignHotel(hotel);
         Reservation reservation2 = new Reservation("AB1-430525",
                 5400000, RoomType.ROOM_TYPE_B_TWIN, "Hotel_A"
                 ,"010-4444-5555", "Grima",
@@ -133,7 +118,7 @@ class HostServiceImplTest {
                 50034600, RoomType.ROOM_TYPE_C_QUEEN, "Hotel_B"
                 ,"010-6666-7777", "Mosquito",
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
-        reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
+        reservation3.foreignUser(host);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
 
         User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
@@ -141,20 +126,16 @@ class HostServiceImplTest {
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
     @AfterEach
-    public void reset(){
-        hotelRepository.deleteAll();
-        roomRepository.deleteAll();
+    void reset(){
         reservationRepository.deleteAll();
+        roomRepository.deleteAll();
         userRepository.deleteAll();
+        hotelRepository.deleteAll();
     }
 
     @Test
     @DisplayName("호스트_정책_변경")
     void change_Policy() {
-        pe.matches("123",pe.encode("123"));
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println(pe.matches( "123", userRepository.findAll().get(0).getPassword()));
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@");
         // 저장된 유저에서 연결된 호텔 받아오기
         hostService.changePolicy(DiscountPolicy.POLICY_ALL);
         assertEquals(td.currentUser().getHotel().getDiscountPolicy(), DiscountPolicy.POLICY_ALL);
@@ -171,8 +152,7 @@ class HostServiceImplTest {
     void modifyRoomStock() {
         RoomStockDto stockDto = new RoomStockDto(RoomType.ROOM_TYPE_A_SINGLE, 50);
         hostService.modifyRoomStock(stockDto);
-        assertEquals(roomRepository.findById(
-                userRepository.findAll().get(0).getUserId()).get().getRoomStock(), 50);
+        assertEquals(roomRepository.findByHotelNameAndRoomType(td.currentUser().getName(), RoomType.ROOM_TYPE_A_SINGLE).getRoomStock(), 50);
     }
     @Test
     @DisplayName("호텔측_예약리스트_보기")

@@ -1,23 +1,22 @@
 package mini.project.HotelReservation.User.Controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
+import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.User.Service.UserService;
-import mini.project.HotelReservation.User.Service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.rmi.server.UID;
 import java.util.List;
-import java.util.NoSuchElementException;
+
 
 @Controller
 @RequestMapping("/user")
@@ -53,14 +52,17 @@ public class UserController {
         return "user/login";
     }
 
+    // 로그아웃
     @GetMapping(value = "/out")
     public String getLogOut(){
         return "redirect:/logout";
     }
 
+    // 유저측 예약리스트 조회
     @GetMapping(value = "/reservations")
     public String getUserReservationList(Model model){
-        return "user/join";
+        model.addAttribute("userReservationDtoList", userService.reservationList());
+        return "user/userReservationList";
     }
 
     //todo:{rN}? & html에 값 잘 들어가는지?
@@ -85,4 +87,3 @@ public class UserController {
         return "user/join";
     }
 }
-
