@@ -25,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,10 +145,6 @@ class UserServiceImplTest {
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
-
-        Optional<User> ckUser = userRepository.findByEmail("abc2@example.com");
-        td.createToken(String.valueOf(ckUser.get().getRole()), String.valueOf(ckUser.get().getUserId()));
-        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
     @Test
     void 회원_가입_USER() {
@@ -204,6 +201,11 @@ class UserServiceImplTest {
 
     @Test
     void 탈퇴_후_재가입() {
+        //given
+        Optional<User> ckUser = userRepository.findByEmail("abc2@example.com");
+        td.createToken(String.valueOf(ckUser.get().getRole()), String.valueOf(ckUser.get().getUserId()));
+        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
+
         //when
         userService.deactive("1234");
         User user = td.currentUser();
@@ -224,17 +226,18 @@ class UserServiceImplTest {
 
         //then
         assertEquals(findUser.getStatus(),UserStatus.USER_STATUS_ACTIVE);
-
     }
 
     @Test
     void 로그인() {
         //given
-        User user = userRepository.findByEmail("sexy123@play.data").get();
-        UserSignInDto sid = new UserSignInDto(user.getEmail(),"123");
+        UserSignInDto sid = new UserSignInDto("abc2@example.com","1234");
         userService.logIn(sid);
-        //when, then
-        assertThat(sid.getEmail().equals("sexy123@play.data"));
+        //when
+        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
+        String email = td.currentUser().getEmail();
+        //then
+        assertEquals(email,"abc2@example.com");
     }
     @Test
     void 비회원_로그인(){
