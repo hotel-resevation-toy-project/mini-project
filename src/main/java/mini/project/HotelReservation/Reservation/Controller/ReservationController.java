@@ -93,9 +93,7 @@ public class ReservationController {
         );
 
         model.addAttribute("reservationRequestDto", requestDto);
-
         return "redirect:reservation/reservationPay";
-
     }
     @PostMapping("/payment")
     String reservePay(Model model){
