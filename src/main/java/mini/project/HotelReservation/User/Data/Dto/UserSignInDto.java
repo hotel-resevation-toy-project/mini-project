@@ -2,6 +2,7 @@ package mini.project.HotelReservation.User.Data.Dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
