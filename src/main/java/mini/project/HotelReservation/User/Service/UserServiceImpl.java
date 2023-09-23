@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService{
     //로그인
     @Override
     public void logIn(UserSignInDto sid) {
-        User user = userRepository.findStatusByEmail(sid.getEmail()).orElseThrow(
+        User user = userRepository.findByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
         //계정 정보 확인
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deactive(String password) {
-        User user = userRepository.findStatusByEmail(td.currentUser().getEmail()).orElseThrow(
+        User user = userRepository.findByEmail(td.currentUser().getEmail()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다.")
         );
         if(passwordEncoder.matches(password, user.getPassword())){
