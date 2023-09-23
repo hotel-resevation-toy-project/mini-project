@@ -38,13 +38,12 @@ public class HotelRepositoryTest {
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
     }
-
     @AfterEach
     void reset(){
-        hotelRepository.deleteAll();
+        reservationRepository.deleteAll();
         roomRepository.deleteAll();
         userRepository.deleteAll();
-        reservationRepository.deleteAll();
+        hotelRepository.deleteAll();
     }
     @BeforeEach
     void init(){

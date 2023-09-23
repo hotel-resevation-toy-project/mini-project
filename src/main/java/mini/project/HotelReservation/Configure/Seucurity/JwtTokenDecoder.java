@@ -125,7 +125,7 @@ public class JwtTokenDecoder implements TokenDecoder{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            System.out.println("@@@@@@@@잘못된 JWT 서명입니다.");
+            System.out.println("로그인 먼저 해주세요.");
 //            logger.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             System.out.println("########만료된 JWT 토큰입니다.");

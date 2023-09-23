@@ -34,7 +34,6 @@ class RoomRepositoryTest {
     HotelRepository hotelRepository;
     @Autowired
     RoomRepository roomRepository;
-
     @AfterEach
     void reset(){
         reservationRepository.deleteAll();

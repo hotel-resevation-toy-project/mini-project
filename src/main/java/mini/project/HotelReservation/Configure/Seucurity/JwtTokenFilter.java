@@ -20,6 +20,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         // 세션에서 토큰값 가져오기
+        System.out.println("@@@@@@@@@@@@@@ 필터 시작");
         String token = td.resolveToken(request);
         // token이 Null이 아니고, 유효기간이 넘지 않았을 때
         // SecurityContextHolder에 저장
@@ -27,6 +28,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             Authentication authentication = td.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        System.out.println("#########"+request.getRequestURI());
         filterChain.doFilter(request, response);
     }
 }

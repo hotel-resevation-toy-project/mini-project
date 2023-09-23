@@ -19,11 +19,11 @@ public class SecurityConfiguration {
     private final JwtTokenDecoder td;
 
     // 로직을 타지않는 페이지들을 보안 로직에서 권한 검사를 하지않게 하는 시큐리티 메서드
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        // Spring Security를 적용하지 않을 리소스 설정
-//        return (web) -> web.ignoring().requestMatchers("/user/**");
-//    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        // Spring Security를 적용하지 않을 리소스 설정
+        return (web) -> web.ignoring().requestMatchers("/" ,"/user/in", "/user/new", "/favicon.ico");
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,8 +38,6 @@ public class SecurityConfiguration {
                 // 세션을 유지하여 SessionId를 확인할 필요없이 요청 시에 토큰을 받아서 사용하면 되므로 세션을 유지할 이유가 없다.
                 .authorizeHttpRequests(
                         (authorize) -> authorize
-                                .requestMatchers("/" ,"/user/in", "/user/new")
-                                .permitAll()    // 기본적으로 접근이 가능한 경로
                                 .requestMatchers("/host", "/host/**")
                                 .hasRole("HOST")
                                 .requestMatchers("/user/in", "/user/new")
