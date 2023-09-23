@@ -21,17 +21,17 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @GetMapping(value = "/hotels")
-    public String selectHotel(Model model){
+    public String selectHotel(Model model) {
 
         List<HotelDto> hotelDtoList =
                 reservationService.findByHotelList();
 
         List<String> roomTypes = new ArrayList<>(hotelDtoList.size());
         StringBuilder temp = new StringBuilder();
-        for(int i =0;i<hotelDtoList.size() ; i++){
+        for (int i = 0; i < hotelDtoList.size(); i++) {
             System.out.println("------------------");
             temp = new StringBuilder();
-            for(int j = 0; j<hotelDtoList.get(i).getRoomTypes().size(); j++){
+            for (int j = 0; j < hotelDtoList.get(i).getRoomTypes().size(); j++) {
                 temp.append(hotelDtoList.get(i).getRoomTypes().get(j).toString());
             }
 
@@ -41,23 +41,22 @@ public class ReservationController {
 
         }
 
-        model.addAttribute("HotelListDto",hotelDtoList);
-        model.addAttribute("roomTypes",roomTypes);
+        model.addAttribute("HotelListDto", hotelDtoList);
+        model.addAttribute("roomTypes", roomTypes);
 
         return "reservation/selectHotel";
 
     }
 
 
-    @GetMapping("/reservation/{")
-    public String selectDate(){
-
+    @GetMapping("/reservation")
+    public String selectDate() {
 
 
         return "";
     }
 
-
+}
 
     //     임의 주석
 //    private ReservationRequestDto requestDto = new ReservationRequestDto();
@@ -90,4 +89,4 @@ public class ReservationController {
     String reserveCancel(){
 
     }*/
-}
+
