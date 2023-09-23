@@ -1,7 +1,6 @@
 package mini.project.HotelReservation.Host.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -108,13 +107,14 @@ class HostServiceImplTest {
                 LocalDate.now().plusMonths(2));
         // 귀찮아서 얘는 호스트 없음
         Hotel saveHotelB = hotelRepository.save(hotelB);
+
         // 객실 생성
-        // 호텔 A꺼
+            // 호텔 A꺼
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
         roomA.foreignHotel(saveHotel);
         Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 20);
         roomB.foreignHotel(saveHotel);
-        // 호텔 B꺼
+            // 호텔 B꺼
         Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
         roomC.foreignHotel(saveHotelB);
         roomRepository.saveAll(List.of(roomA,roomB, roomC));
@@ -135,6 +135,7 @@ class HostServiceImplTest {
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
+
 
         User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
         td.createToken(String.valueOf(ckUser.getRole()), String.valueOf(ckUser.getUserId()), String.valueOf(ckUser.getHotel().getHotelId()));

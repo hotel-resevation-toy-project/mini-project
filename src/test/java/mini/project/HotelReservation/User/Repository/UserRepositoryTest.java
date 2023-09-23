@@ -17,7 +17,9 @@ import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
 import mockit.Mocked;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
@@ -59,7 +64,7 @@ public class UserRepositoryTest {
     void init(){
         // 호스트 생성
         User host = new User("Hotel_A",
-                "abc@example.com",
+                "abcdfd@example.com",
                 "1234",
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
@@ -122,5 +127,10 @@ public class UserRepositoryTest {
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
+    }
+    @Test
+    void 이름으로_유저_조회(){
+        Optional<User> user = userRepository.findByEmail("abc@example.com");
+        assertEquals(user.get().getEmail(),"abc@example.com");
     }
 }

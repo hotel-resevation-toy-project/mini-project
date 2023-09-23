@@ -1,7 +1,5 @@
 package mini.project.HotelReservation.Host.Repository;
 
-import jakarta.servlet.http.HttpServletRequest;
-import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
@@ -12,16 +10,12 @@ import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
-import mockit.Mocked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,24 +26,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 public class HotelRepositoryTest {
-
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
-    private final TokenDecoder td;
 
     @Autowired
-    public HotelRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository, TokenDecoder td) {
+    public HotelRepositoryTest(UserRepository userRepository, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomRepository roomRepository) {
         this.userRepository = userRepository;
         this.reservationRepository = reservationRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
-        this.td = td;
     }
-
-    @Mocked
-    HttpServletRequest mockRequest;
 
     @AfterEach
     void reset(){
@@ -60,10 +48,6 @@ public class HotelRepositoryTest {
     }
     @BeforeEach
     void init(){
-        // 토큰 초기화 및 더미 요청 생성
-        td.init();
-        mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-
         // 호스트 생성
         User host = new User("Hotel_A",
                 "abc@example.com",
@@ -129,10 +113,6 @@ public class HotelRepositoryTest {
                 LocalDate.now().atStartOfDay(), LocalDate.now().plusDays(5).atStartOfDay());
         reservation3.foreignUser(user);  reservation3.foreignHotel(hotelB);
         reservationRepository.saveAll(List.of(reservation1, reservation2, reservation3));
-
-        User ckUser = userRepository.findById(userRepository.findAll().get(0).getUserId()).get();
-        td.createToken(String.valueOf(ckUser.getRole()), String.valueOf(ckUser.getUserId()), String.valueOf(ckUser.getHotel().getHotelId()));
-        SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
     }
     @Test
     void 호텔_이름으로_호텔_찾기(){
