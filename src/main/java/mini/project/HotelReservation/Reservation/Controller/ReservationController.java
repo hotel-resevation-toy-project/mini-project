@@ -57,8 +57,6 @@ public class ReservationController {
 //        return "";
 //    }
 
-
-
     //     임의 주석
 //    private ReservationRequestDto requestDto = new ReservationRequestDto();
 

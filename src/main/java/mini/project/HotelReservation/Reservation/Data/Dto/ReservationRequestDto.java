@@ -3,6 +3,7 @@ package mini.project.HotelReservation.Reservation.Data.Dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import mini.project.HotelReservation.enumerate.RoomType;
 
 import java.time.LocalDate;
@@ -16,4 +17,5 @@ public class ReservationRequestDto {
     private final LocalDate checkOutDate;
     private final RoomType roomType;
     private final Integer oneDayPrice;
+
 }
