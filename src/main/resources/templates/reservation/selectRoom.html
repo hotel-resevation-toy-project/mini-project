@@ -36,7 +36,7 @@
         <th:block th:each="roomDto : ${RoomDto}">
             <br/>
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                <a th:href="@{}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
                     <div class="d-flex w-100 justify-content-between">
                         <p class="mb-0 fw-bolder fs-5" th:text="${roomDto.roomType}">RoomType_A_SuperSingle</p>
                         <br/>
