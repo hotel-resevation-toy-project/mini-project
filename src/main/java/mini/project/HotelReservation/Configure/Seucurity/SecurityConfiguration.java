@@ -44,6 +44,8 @@ public class SecurityConfiguration {
                                 .hasRole("HOST")
                                 .requestMatchers("/user/in", "/user/new")
                                 .permitAll()    // 기본적으로 접근이 가능한 경로
+                                .requestMatchers("/host", "/host/**")
+                                .hasRole("HOST")
 
 //                                .anyRequest().hasAnyRole("USER", "HOST")   // 그 외의 접근은 HOST, USER를 제외하고는 접근 불가능
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
@@ -53,8 +55,8 @@ public class SecurityConfiguration {
                                         .loginProcessingUrl("/user/in")
                                         .failureUrl("/user/in")
 //                                .defaultSuccessUrl("/main")
-//                                .successHandler()
 //                                .failureHandler()
+//                                .successHandler()
                 )
                 .logout((logout) ->
                                 logout.logoutUrl("/logout") // 로그아웃 처리 URL, default: /logout, 원칙적으로 post 방식만 지원
@@ -67,11 +69,4 @@ public class SecurityConfiguration {
         return http.build();    // 설정한 http를 생성
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring()
-                .requestMatchers("/reservation/**");
-    }
-    // 로직을 타지않는 페이지들을 보안 로직에서 권한 검사를 하지않게 하는 시큐리티 메서드
 }
