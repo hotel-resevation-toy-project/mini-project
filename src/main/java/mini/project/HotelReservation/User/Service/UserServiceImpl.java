@@ -94,7 +94,8 @@ public class UserServiceImpl implements UserService{
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
 
             if (user.getRole() == UserRole.ROLE_USER) {
-                td.createToken(String.valueOf(user.getRole()),String.valueOf(user.getUserId()));
+                td.createToken(String.valueOf(user.getRole()),
+                        String.valueOf(user.getUserId()));
             } else {
                 td.createToken(String.valueOf(user.getRole()),
                                 String.valueOf(user.getUserId()),
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService{
             }
             new UserInfoDto(user);
         }else {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
         }
     }
 
