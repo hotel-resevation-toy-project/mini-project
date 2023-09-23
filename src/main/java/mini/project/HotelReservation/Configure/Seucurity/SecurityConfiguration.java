@@ -22,7 +22,7 @@ public class SecurityConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring().requestMatchers("/" ,"/user/in", "/user/new", "/favicon.ico");
+        return (web) -> web.ignoring().requestMatchers("/", "/user/in", "/user/new", "/favicon.ico");
     }
 
     @Bean
@@ -44,7 +44,6 @@ public class SecurityConfiguration {
                                 .permitAll()    // 기본적으로 접근이 가능한 경로
                                 .requestMatchers("/host", "/host/**")
                                 .hasRole("HOST")
-
 //                                .anyRequest().hasAnyRole("USER", "HOST")   // 그 외의 접근은 HOST, USER를 제외하고는 접근 불가능
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
                 )
@@ -66,5 +65,4 @@ public class SecurityConfiguration {
                 .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class);
         return http.build();    // 설정한 http를 생성
     }
-
 }
