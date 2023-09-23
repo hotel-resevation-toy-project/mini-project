@@ -82,7 +82,7 @@ class ReservationServiceImplTest {
         mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         // 호스트 생성
         User host = new User("Hotel_A",
-                "abc@example.com",
+                "abcd@example.com",
                 "1234",
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
@@ -164,7 +164,7 @@ class ReservationServiceImplTest {
     @Test
     void 예약시_호텔_목록() {
         List<HotelDto> result = reservationService.findByHotelList();
-        assertEquals(result.size(),2);
+        assertEquals(result.size(),3);
     }
 
     @Test
@@ -267,15 +267,16 @@ class ReservationServiceImplTest {
     @Test
     void 예약_정보() {
         ReservationResponseDto reserve = reservationService.reserveInfo("AA1-230523");
-
         assertEquals(reserve.getUserName(), "Serah");
         assertEquals(reserve.getPhoneNumber(), "010-2222-3333");
         assertEquals(reserve.getHotelName(), "Hotel_A");
         assertEquals(reserve.getRoomType(), RoomType.ROOM_TYPE_A_SINGLE);
-        assertEquals(reserve.getCheckInDate(), LocalDateTime.of(LocalDate.of(2023, 9, 10),LocalTime.of(13, 0, 0)));
-        assertEquals(reserve.getCheckOutDate(), LocalDateTime.of(LocalDate.of(2023, 9, 20),LocalTime.of(10, 0, 0)));
+        assertEquals(reserve.getCheckInDate(), LocalDateTime.of(LocalDate.of(2023, 9, 10),
+                LocalTime.of(13, 0, 0)));
+        assertEquals(reserve.getCheckOutDate(), LocalDateTime.of(LocalDate.of(2023, 9, 20),
+                LocalTime.of(10, 0, 0)));
         assertEquals(reserve.getReservationNumber(), "AA1-230523");
-        assertEquals(reserve.getReservePrice(), 2100000);
+        assertEquals(reserve.getReservePrice(), 3000000);
     }
 
     @Test
