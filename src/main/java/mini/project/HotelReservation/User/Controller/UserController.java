@@ -8,6 +8,7 @@ import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
+import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,19 +59,6 @@ public class UserController {
         return "redirect:/logout";
     }
 
-    // 유저측 예약리스트 조회
-    @GetMapping(value = "/reservations")
-    public String getUserReservationList(Model model){
-        model.addAttribute("userReservationDtoList", userService.reservationList());
-        return "user/userReservationList";
-    }
-
-    //todo:{rN}? & html에 값 잘 들어가는지?
-    @GetMapping(value = "/reservation/{reserveNumber}")
-    public String getUserReservation(Model model, @RequestParam("reservationResponseDto") ReservationResponseDto reservationResponseDto) {
-        return "user/join";
-    }
-
     @GetMapping
     public String getUserInfo(Model model, @RequestParam("user") UserInfoDto user){
         return "user/join";
@@ -83,7 +71,23 @@ public class UserController {
     }
 
     @PatchMapping
-    public String quit(Model model, RedirectAttributes redirectAttributes){
+    public String quit(UserSignInDto dto, User user){
+        userService.deactive(dto.getPassword());
+        System.out.println(userService.checkStatus(user));
         return "user/join";
     }
+
+    // 유저측 예약리스트 조회
+    @GetMapping(value = "/reservations")
+    public String getUserReservationList(Model model){
+        model.addAttribute("dtoList", userService.reservationList());
+        return "user/userReservationList";
+    }
+
+    //todo:{rN}? & html에 값 잘 들어가는지?
+    @GetMapping(value = "/reservation/{reserveNumber}")
+    public String getUserReservation(Model model, @RequestParam("reservationResponseDto") ReservationResponseDto reservationResponseDto) {
+        return "user/join";
+    }
+
 }

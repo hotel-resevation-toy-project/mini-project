@@ -3,10 +3,8 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
-<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-  <form th:action="@{/user/reservation/reservationResponseDto.reservationNumber}">
-    <th:block th:each="reservationResponseDto: ${dtoList}">
+    <th:block th:action th:each="reservationResponseDto: ${dtoList}">
       <div class="list-group">
         <a th:href="@{#}" class="list-group-item list-group-item-action d-flex gap-3 py-3 d-flex flex-column" aria-current="true">
           <div>

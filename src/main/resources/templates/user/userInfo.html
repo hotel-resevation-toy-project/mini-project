@@ -6,13 +6,11 @@
   .button-container{
     display: flex; /*버튼 나란하게 정렬*/
   }
-
 </style>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 <div class="container w-50">
   <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
-      <form id="UserInfoForm" name="user" method="put"><br/><br/>
+      <form th:action id="UserInfoForm" name="user" method="put"><br/><br/>
         <div>
         <input th:type="text" th:name="email" th:value="${user.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
       <br>
