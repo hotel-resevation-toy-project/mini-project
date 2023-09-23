@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -66,13 +67,13 @@ class ReservationServiceImplTest {
 
 
 
-    @AfterEach
-    void reset(){
-        hotelRepository.deleteAll();
-        roomRepository.deleteAll();
-        userRepository.deleteAll();
-        reservationRepository.deleteAll();
-    }
+//    @AfterEach
+//    void reset(){
+//        hotelRepository.deleteAll();
+//        roomRepository.deleteAll();
+//        userRepository.deleteAll();
+//        reservationRepository.deleteAll();
+//    }
 
     @BeforeEach
     void init(){
@@ -277,12 +278,14 @@ class ReservationServiceImplTest {
     }
 
     @Test
+    @Rollback(value = false)
     void 예약_삭제() {
         reservationService.reserveDelete("AA1-230523");
-
         List<Reservation> all = reservationRepository.findAll();
-
         assertEquals(all.size(),2);
-
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@222");
+        for (Reservation reservation : all) {
+            System.out.println("reservation = " + reservation.getReserveNumber());
+        }
     }
 }
