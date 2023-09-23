@@ -29,6 +29,11 @@ public class HostServiceImpl implements HostService {
     private final TokenDecoder td;
 
     @Override
+    public String referenceHotel(){
+        String hotelName = td.currentUser().getHotel().getHotelName();
+        return hotelName;
+    }
+    @Override
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
