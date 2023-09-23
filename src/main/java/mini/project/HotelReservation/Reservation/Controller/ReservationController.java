@@ -21,6 +21,11 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
 
+    @GetMapping("/main")
+    String mainPage(Model model){
+        return "reservation/main";
+    }
+
     @GetMapping("/hotels")
     String hotelList(Model model){
         //hotel리스트 뿌리기

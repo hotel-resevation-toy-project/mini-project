@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-  <title>회원가입</title>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
 <style>
   /*가운데 정렬*/
   .radio-container {
@@ -14,11 +13,8 @@
     margin-right: 100px; /* 각 라디오 버튼 간의 간격 설정 */
   }
 </style>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
   <div class="container w-50">
   <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
     <form th:action th:object="${userSignUpDto}" method="post">

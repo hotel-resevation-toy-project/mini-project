@@ -71,9 +71,10 @@ public class UserController {
         return "user/join";
     }
 
-    @GetMapping
-    public String getUserInfo(Model model, @RequestParam("user") UserInfoDto user){
-        return "user/join";
+    @GetMapping("")
+    public String getUserInfo(Model model){
+        model.addAttribute("userInfoDto", new UserInfoDto("","","",""));
+        return "user/userInfo";
     }
 
     @PutMapping
