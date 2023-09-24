@@ -67,6 +67,7 @@ public class UserController {
         model.addAttribute("userReservationDtoList", userService.reservationList());
         return "user/userReservationList";
     }
+
     @GetMapping(value = "/{reserveNumber}")
     public String getUserReservation(@PathVariable("reserveNumber") String reserveNumber, Model model) {
 
