@@ -79,14 +79,14 @@ public class UserController {
 
     @GetMapping("")
     public String getUserInfo(Model model){
-        model.addAttribute("userInfoDto", new UserInfoDto("","","",""));
+        model.addAttribute("userInfoDto", new UserInfoDto());
         return "user/userInfo";
     }
 
-    @PutMapping
-    public String putUserInfo(@RequestParam("user") UserInfoDto user){
-
-        return "user/join";
+    @PutMapping("")
+    public String putUserInfo(@ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
+        userService.updateInfo(userInfoDto);
+        return "redirect:/user/userInfo";
     }
 
     @PatchMapping
