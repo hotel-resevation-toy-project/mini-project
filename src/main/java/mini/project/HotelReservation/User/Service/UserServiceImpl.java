@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deactive(String password) {
-        User user = td.currentUser();
+        User user = userRepository.findById(td.currentUser().getUserId()).get();
         if(!(passwordEncoder.matches(password, user.getPassword()))){
             throw new NoSuchElementException("비밀번호를 정확히 입력해주세요.");
         }

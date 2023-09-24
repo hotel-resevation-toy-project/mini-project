@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
 <div class="container w-50">
   <div class="login_wrapper" style="margin: calc(50vh - 320px) auto;">
-    <form method="post" th:action="@{/quit}">
+    <form method="post" th:action="@{/user/quit}">
       <br/>
       <br/>
       <div>
@@ -29,7 +29,7 @@
         <a th:href="@{/user/in}" th:method="get"></a>
           <button type="submit" class="btn btn-outline-secondary btn-large form-control"
                 id="btn_modifyForm">Yes</button>
-        </a>
+
         <button type="submit" class="btn btn-outline-secondary btn-large form-control"
                 id="btn_withdrawForm">No</button>
       </div>
