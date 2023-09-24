@@ -69,7 +69,7 @@ public class UserController {
     }
 
     //todo:{rN}? & html에 값 잘 들어가는지?
-    @GetMapping(value = "/reservation/{reserveNumber}")
+    @GetMapping(value = "/{reserveNumber}")
     public String getUserReservation(@PathVariable("reserveNumber") String reserveNumber, Model model) {
 
         model.addAttribute("reservationDto",reservationRepository.findByReserveNumber(reserveNumber));
