@@ -68,12 +68,10 @@ public class UserController {
         return "user/userReservationList";
     }
 
-    //todo:{rN}? & html에 값 잘 들어가는지?
     @GetMapping(value = "/{reserveNumber}")
     public String getUserReservation(@PathVariable("reserveNumber") String reserveNumber, Model model) {
-
-        model.addAttribute("reservationDto",reservationRepository.findByReserveNumber(reserveNumber));
-
+        model.addAttribute("reservationDto",
+                reservationRepository.findByReserveNumber(reserveNumber));
         return "user/reservationInfo";
     }
 
@@ -91,7 +89,7 @@ public class UserController {
 
     @PatchMapping
     public String quit(Model model){
-        model.addAttribute("password",userService.deactive());
+//        model.addAttribute("password",userService.deactive());
         return "redirect:/user/login";
     }
 }
