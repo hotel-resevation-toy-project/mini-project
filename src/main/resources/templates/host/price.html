@@ -4,22 +4,33 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+<div class="container w-50">
     <div class="position-relative d-flex flex-column align-items-center justify-content-center">
-        <p class="fw-bolder fs-5 text-center">Change Room Price</p>
-        <br/>
-        <div class = "row">
-            <div class="form-floating mb-3 col-sm">
-                <input type="roomType" class=" form-control w-100" id="floatingInput">
-                <label for="floatingInput">RoomType</label> </div>
-            <div class="form-floating mb-3 col-sm">
-                <input type="Stock" class="form-control w-100" id="floatingPassword">
-                <label for="floatingPassword">Price</label> </div>
+        <div class ="row g-2 w-50">
+            <span class="col-sm fw-bolder fs-5 text-center" th:text="${hotelName}">Hotel</span>
+            <br />
+            <span class="col-sm fw-bolder fs-5 text-center">Change Room Price</span>
+            <br/>
         </div>
         <br/>
-        <div>
-            <button type="submit" class="btn btn-outline-secondary form-control">Save</button>
-        </div>
+        <br/>
+        <form th:action="@{/host/price}" th:object="${priceDto}" method="post">
+            <div class = "row">
+                <div class="form-floating mb-3 col-sm">
+                    <input name="roomType" th:field="*{roomType}" type="text" class=" form-control w-100" id="floatingInput">
+                    <label for="floatingInput">RoomType</label> </div>
+                <div class="form-floating mb-3 col-sm">
+                    <input name="price" th:field="*{discountPrice}" type="text" class="form-control w-100" id="floatingPassword">
+                    <label for="floatingPassword">Price</label> </div>
+            </div>
+            <br />
+            <div>
+                <button type="submit" class="btn btn-outline-secondary form-control">Save</button>
+            </div>
+        </form>
+        <hr class="separator"/>
     </div>
-
+<div th:replace="~{fragments/footer :: footer}"></div>
+</div>
 </body>
 </html>

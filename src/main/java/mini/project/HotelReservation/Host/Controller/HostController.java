@@ -1,5 +1,6 @@
 package mini.project.HotelReservation.Host.Controller;
 
+import groovyjarjarantlr4.v4.codegen.model.ModelElement;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -8,10 +9,7 @@ import mini.project.HotelReservation.Host.Service.HostService;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -33,38 +31,45 @@ public class HostController {
         model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/policy";
     }
-    @PatchMapping("/policy")
-    String discountPolicy(String policy){
+    @PostMapping("/policy")
+    String discountPolicy(@RequestParam("policy") String policy){
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println(policy);
         // TODO: 할인 정책 변경 로직 구현
         hostService.changePolicy(DiscountPolicy.valueOf(policy));
         // Exception 처리할 것 (IllegalArgumentException)
-        return "host/policy";
+        return "host/manage";
     }
 
     // 가격 변경 페이지
     @GetMapping("/price")
-    String pricePage(Model model){
+    String pricePage(Model model)
+    {
+        model.addAttribute("priceDto", new PriceDto());
+        model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/price";
     }
-    @PatchMapping("/price")
-    String roomPrice(PriceDto priceDto){
+    @PostMapping("/price")
+    String roomPrice(@ModelAttribute("priceDto") PriceDto priceDto){
         // TODO: 객실 가격 변경 로직 구현
         hostService.modifyRoomPrice(priceDto);
         // Exception 처리할 것 (IllegalArgumentException)
-        return "host/price";
+        return "host/manage";
     }
 
     // 재고 변경 페이지
     @GetMapping("/stock")
     String stockPage(Model model){
+        model.addAttribute("roomStockDto", new RoomStockDto());
+        model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/stock";
     }
-    @PatchMapping("/stock")
-    String roomStock(RoomStockDto roomStockDto){
+    @PostMapping("/stock")
+    String roomStock(@ModelAttribute("roomStockDto") RoomStockDto roomStockDto){
         // TODO: 객실 재고 변경 로직 구현
         hostService.modifyRoomStock(roomStockDto);
             // Exception 처리할 것 (IllegalArgumentException)
-        return "host/stock";
+        return "host/manage";
     }
 
     @GetMapping("/reservations")
