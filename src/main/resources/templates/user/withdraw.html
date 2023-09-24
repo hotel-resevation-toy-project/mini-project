@@ -11,7 +11,7 @@
 <div th:replace="fragments/bodyHeader :: bodyHeader"></div>
 <div class="container w-50">
   <div class="login_wrapper" style="margin: calc(50vh - 320px) auto;">
-    <form method="delete" th:action th:object="${userSignInDto} ">
+    <form method="delete" th:action>
       <br/>
       <br/>
       <div>
@@ -22,7 +22,7 @@
         </a>
         <br>
       </div>
-      <div class="form-floating mb-3"><input type="password" th:field="*{password}" class="form-control" id="floatingPassword" placeholder="Password">
+      <div class="form-floating mb-3"><input type="password" th:value="*{password}" class="form-control" id="floatingPassword" placeholder="Password">
         <label for="floatingPassword">Password</label></div>
       <br>
       <div class="button-container">

@@ -90,8 +90,8 @@ public class UserController {
     }
 
     @PatchMapping
-    public String quit(Model model){
-        model.addAttribute("password",userService.deactive());
+    public String quit(Model model,@ModelAttribute("password") String password){
+        model.addAttribute("password",userService.deactive(password));
         return "redirect:/user/login";
     }
 }
