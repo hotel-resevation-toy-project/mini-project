@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class AccessDeniedHandlerImpl implements AccessDeniedHandler{
+public class CustomAccessDeniedHandler implements AccessDeniedHandler{
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         System.out.println("잘못오셨어요");
-        request.getRequestDispatcher("/").forward(request,response);
+        response.sendRedirect("/reservation/main");
     }
 }
