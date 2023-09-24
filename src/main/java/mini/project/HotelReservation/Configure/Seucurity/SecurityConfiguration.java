@@ -22,7 +22,7 @@ public class SecurityConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring().requestMatchers("/", "/user/in", "/user/new", "/favicon.ico");
+        return (web) -> web.ignoring().requestMatchers("/user/in", "/user/new", "/favicon.ico");
     }
 
     @Bean
@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                                 login.loginPage("/user/in")
                                         .loginProcessingUrl("/user/in")
                                         .failureUrl("/user/in")
-//                                .defaultSuccessUrl("/main")
+                                        .defaultSuccessUrl("/reservation/main")
 //                                .failureHandler()
 //                                .successHandler()
                 )

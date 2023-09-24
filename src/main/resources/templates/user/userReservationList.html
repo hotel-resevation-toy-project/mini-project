@@ -3,6 +3,7 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
+<<<<<<< HEAD
 <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
     <th:block th:action th:each="reservationResponseDto: ${dtoList}">
       <div class="list-group">
@@ -19,15 +20,35 @@
             </span>
               <span th:text="${reservationResponseDto.checkInDate}" class="fw-bolder fs-5">23-05-23</span>
               &nbsp;&nbsp;&nbsp;&nbsp;
+=======
+  <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+    <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+      <th:block th:each="reservationResponseDto: ${userReservationDtoList}">
+        <form th:action="@{'/user/reservation/'+${reservationResponseDto.reserveNumber}}">
+        <div class="list-group">
+          <a th:href="@{${reservationResponseDto.reserveNumber}}" class="list-group-item list-group-item-action d-flex gap-3 py-3 d-flex flex-column" aria-current="true">
+            <div>
+>>>>>>> 6f571d7af7e6f02b91e2cc5e9874d0b1082b2d88
               <span class="fw-bolder fs-5">
-              Check-Out :&nbsp;
+                Hotel Name :&nbsp;
               </span>
-              <span th:text="${reservationResponseDto.checkOutDate}" class="fw-bolder fs-5">23-05-30</span>
-          </div>
-        </a>
-      </div>
-    </th:block>
-  </form>
-</div>
+              <span th:text="${reservationResponseDto.hotelName}" class="fw-bolder fs-5">Hotel_A</span>
+            </div>
+            <div>
+              <span class="fw-bolder fs-5">
+                Check-In :&nbsp;
+              </span>
+                <span th:text="${reservationResponseDto.checkInDate}" class="fw-bolder fs-5">23-05-23</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="fw-bolder fs-5">
+                Check-Out :&nbsp;
+                </span>
+                <span th:text="${reservationResponseDto.checkOutDate}" class="fw-bolder fs-5">23-05-30</span>
+            </div>
+          </a>
+        </div>
+    </form>
+      </th:block>
+  </div>
 </body>
 </html>

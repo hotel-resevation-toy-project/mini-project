@@ -29,6 +29,11 @@ public class HostServiceImpl implements HostService {
     private final TokenDecoder td;
 
     @Override
+    public String referenceHotel(){
+        String hotelName = td.currentUser().getHotel().getHotelName();
+        return hotelName;
+    }
+    @Override
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
@@ -40,9 +45,14 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        RoomType roomType = priceDto.getRoomType();
+        RoomType roomType = switch (priceDto.getRoomType()) {
+            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
+            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
+            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
+            case "D" -> RoomType.ROOM_TYPE_D_KING;
+            default -> null;
+        };
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
-
         room.modifyPrice(priceDto.getDiscountPrice());
     }
 
@@ -50,9 +60,14 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        RoomType roomType = roomStockDto.getRoomType();
+        RoomType roomType = switch (roomStockDto.getRoomType()) {
+            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
+            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
+            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
+            case "D" -> RoomType.ROOM_TYPE_D_KING;
+            default -> null;
+        };
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
-
         room.modifyStock(roomStockDto.getRoomStock());
     }
 

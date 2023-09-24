@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HotelDto {
     private final String hotelName;
-    private final List<RoomType> roomTypes;
+    private final List<String> roomTypes;
     private final LocalTime checkInTime;
     private final LocalTime checkOutTime;
 }

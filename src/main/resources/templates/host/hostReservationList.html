@@ -5,45 +5,44 @@
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
   <ul th:each="reservation : ${reservations}">
-    <oi>
+    <li>
       <div th:text="${reservation.reserveNumber}"></div>
       <div>
         <span th:text="${reservation.userName}"></span>
-        <span th:text="${reservation.phoneNumber}"></span>
+        <span th:text="${reservation.userPhoneNumber}"></span>
       </div>
-    </oi>
+    </li>
   </ul>
-<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-  <th:block th:each="hotelReservationDto : ${HotelReservationDto}">
-    <div class="list-group border border-white rounded">
-      <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
-        <div class="d-flex flex-column mb-3 gap-2 w-100 justify-content-between">
-          <div>
-            <span class="fw-bolder fs-5">ReserveNumber :&nbsp;</span>
-            <span th:text="${hotelReservationDto.reserveNumber}" class="mb-0 fw-bolder fs-5">
-            AA1_230523
-          </span>
-          </div>
-          <div class="d-flex flex-row">
-            <div>
-              <p th:text="${hotelReservationDto.userName}" class="mb-0 fw-bolder fs-5">
-                Jinseok oh
-              </p>
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div>
-              <p th:text="${hotelReservationDto.userPhoneNumber}" class="mb-0 fw-bolder fs-5">
-                010-1234-1234
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </th:block>
-</div>
-</div>
+<!--<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">-->
+<!--  <th:block th:each="hotelReservationDto : ${HotelReservationDto}">-->
+<!--    <div class="list-group border border-white rounded">-->
+<!--      <div class="list-group-item list-group-item-action d-flex gap-3 py-3">-->
+<!--        <div class="d-flex flex-column mb-3 gap-2 w-100 justify-content-between">-->
+<!--          <div>-->
+<!--            <span class="fw-bolder fs-5">ReserveNumber :&nbsp;</span>-->
+<!--            <span th:text="${hotelReservationDto.reserveNumber}" class="mb-0 fw-bolder fs-5">-->
+<!--            AA1_230523-->
+<!--          </span>-->
+<!--          </div>-->
+<!--          <div class="d-flex flex-row">-->
+<!--            <div>-->
+<!--              <p th:text="${hotelReservationDto.userName}" class="mb-0 fw-bolder fs-5">-->
+<!--                Jinseok oh-->
+<!--              </p>-->
+<!--            </div>-->
+<!--            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--            <div>-->
+<!--              <p th:text="${hotelReservationDto.userPhoneNumber}" class="mb-0 fw-bolder fs-5">-->
+<!--                010-1234-1234-->
+<!--              </p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </th:block>-->
+<!--</div>-->
 </body>
 </html>

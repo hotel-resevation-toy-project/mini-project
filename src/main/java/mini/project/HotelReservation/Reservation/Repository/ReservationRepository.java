@@ -25,6 +25,6 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     @Query("SELECT count(*) FROM Reservation r " +
             "WHERE r.hotel.hotelName = :hotelName " +
             "AND r.roomType = :roomType")
-    Long findCountByHotelNameAndRoom(@Param("hotelName")String hotelName, @Param("roomType")RoomType roomType);
-    void deleteByReserveNumber(String reserveNumber);
+    Long findCountByHotelNameAndRoom(@Param("hotelName")String hotelName,
+                                     @Param("roomType")RoomType roomType);
 }

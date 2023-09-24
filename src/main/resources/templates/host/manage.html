@@ -3,22 +3,20 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}" >
-
+<div th:replace="~{fragments/header :: header}" ></div>
         <div class="position-relative d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
             <div class="position-absolute top-50 start-50 translate-middle-x d-grid gap-2 col-6 mx-auto">
                 <p class="btn_size fw-bolder fs-5 text-center">HostPage</p>
                 <br/>
                 <div>
-                    <button type="submit" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button></div>
+                    <button th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button></div>
                 <div>
-                    <button type="submit" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Price</button></div>
+                    <button th:onclick="|location.href='@{/host/price}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Price</button></div>
                 <div>
-                    <button type="submit" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Stock</button></div>
+                    <button th:onclick="|location.href='@{/host/stock}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Stock</button></div>
                 <div>
-                    <button type="submit" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Reserve List</button></div>
+                    <button th:onclick="|location.href='@{/host/reservations}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Reserve List</button></div>
             </div>
         </div>
-    </div>
 </body>
 </html>
