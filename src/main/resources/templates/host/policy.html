@@ -12,7 +12,7 @@
         <br/>
         <br/>
         <div class="list-group w-25">
-            <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100 ">
+            <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100 " for="listGroupRadios1">
                 <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios1" value="" checked>
                 <span class="fw-bolder fs-5 text-center">
                     &nbsp;&nbsp;&nbsp;PeakDiscountPolicy
@@ -33,6 +33,7 @@
                 </span>
             </label>
         </div>
+        <button th:method="post" th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button><
     </div>
 </body>
 </html>
