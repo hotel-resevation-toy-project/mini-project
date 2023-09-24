@@ -30,11 +30,11 @@ public class ReservationController {
     }
 
     @GetMapping("/{hotelName}")
-    String selectHotel(@PathVariable("hotelName")String hotelName, Model model,
-                       @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-        model.addAttribute("hotelName", hotelName);
-        model.addAttribute("reservationRequestDto",reservationRequestDto);
-        return "redirect:reservation/selectDate";
+    String selectHotel(@PathVariable("hotelName")String hotelName, Model model){
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
+        reservationRequestDto.setHotelName(hotelName);
+        model.addAttribute("reservationRequestDto");
+        return "reservation/selectDate";
     }
     @GetMapping("/{checkInDate}&{checkOutDate}")
     String selectDate(@PathVariable("checkInDate")String cid, @PathVariable("checkOutDate")String cod, Model model,

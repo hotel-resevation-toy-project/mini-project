@@ -18,10 +18,13 @@ public class UserInfoDto {
     private final String email;
 
     @NotBlank
-    private final String password;
-
-    @NotBlank
     @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$")
     private final String phoneNumber;
+
+    public UserInfoDto(User user){
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.phoneNumber = user.getPhoneNumber();
+    }
 
 }

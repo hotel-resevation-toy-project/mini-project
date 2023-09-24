@@ -69,7 +69,7 @@ public class UserController {
     }
 
     //todo:{rN}? & html에 값 잘 들어가는지?
-    @GetMapping(value = "/reservation/{reserveNumber}")
+    @GetMapping(value = "/{reserveNumber}")
     public String getUserReservation(@PathVariable("reserveNumber") String reserveNumber, Model model) {
 
         model.addAttribute("reservationDto",reservationRepository.findByReserveNumber(reserveNumber));
@@ -79,18 +79,19 @@ public class UserController {
 
     @GetMapping("")
     public String getUserInfo(Model model){
-        model.addAttribute("userInfoDto", new UserInfoDto("","","",""));
+        model.addAttribute("userInfoDto", userService.getUserInfo());
         return "user/userInfo";
     }
 
-    @PutMapping
-    public String putUserInfo(@RequestParam("user") UserInfoDto user){
-
-        return "user/join";
+    @PutMapping("")
+    public String putUserInfo(@ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
+        userService.updateInfo(userInfoDto);
+        return "redirect:/user/userInfo";
     }
 
     @PatchMapping
-    public String quit(Model model, RedirectAttributes redirectAttributes){
-        return "user/join";
+    public String quit(Model model){
+        model.addAttribute("password",userService.deactive());
+        return "redirect:/user/login";
     }
 }
