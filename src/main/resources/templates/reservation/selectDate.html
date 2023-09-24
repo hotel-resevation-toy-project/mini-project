@@ -18,8 +18,9 @@
         </div>
         <br/>
         <br/>
-        <form th:object="${reservationRequestDto}">
+        <form th:method="post" th:action="@{/reservation/date}"th:object="${reservationRequestDto}">
             <div class="row g-3">
+                <input th:field="${reservationRequestDto.hotelName}" type="hidden">
                 <input th:field="${reservationRequestDto.checkInDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_in_date"
                        name="trip-start" value="2023-09-21"
                        min="2023-01-01" max="2025-12-31">
@@ -31,12 +32,7 @@
             <br/><br/><br/><br/><br/><br/>
             <br/><br/><br/><br/><br/><br/>
             <div>
-                <a th:href="@{/reservation/(checkInDate = ${reservationRequestDto.checkInDate},checkInDate = ${reservationRequestDto.checkOutDate})}"  aria-current="true">
-                    @{/board?id=${board.id}}
-                    <button type="submit"
-                            id="btn_modifyForm" class="btn btn-outline-secondary ">
-                        &nbsp;&nbsp;Next&nbsp;&nbsp;</button>
-                </a>
+                <button type="submit" id="btn_modifyForm" class="btn btn-outline-secondary ">&nbsp;&nbsp;Next&nbsp;&nbsp;</button>
             </div>
         </form>
     </div>

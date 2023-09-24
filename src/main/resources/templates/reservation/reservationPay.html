@@ -12,7 +12,7 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
   <div class="container text-center justify-content-center w-50" >
     <div method="post"  th:action="@{/reservation/payment}" th:object="${reservationRequestDto}">
-      <div class="row g-3" th:with="reservationRequestDto=${ReservationRequestDto}">
+      <div class="row g-3">
         <div class="col-sm">
           <span th:text="${reservationRequestDto.hotelName}" class="fw-bolder fs-5" >Hotel_A</span>
           &nbsp;&nbsp;&nbsp;
@@ -38,9 +38,9 @@
     </div>
 
     <br>
-    <div  class="div_pay" th:with="disoucntPriceDto=${DisoucntPriceDto}">
+    <div class="div_pay" th:object="${discountPriceDto}">
       <p class="div_pay fw-bolder fs-5">TotalPrice</p>
-      <div th:text="${disoucntPriceDto.pay}" class="fw-bolder fs-5 div_pay rounded border border-secondary-subtle">
+      <div th:text="${discountPriceDto.pay}" class="fw-bolder fs-5 div_pay rounded border border-secondary-subtle">
         100,000
       </div>
       <br>
@@ -49,13 +49,13 @@
         <span class="col-sm fw-bolder fs-5" th:text="${discountPriceDto.discountPolicy}">
           PeakDiscount
         </span>
-        <span class="col-sm fw-bolder fs-5"  th:text="${disoucntPriceDto.discount}">
+        <span class="col-sm fw-bolder fs-5"  th:text="${discountPriceDto.discountPrice}">
           30,000
         </span>
       </div>
       <br>
       <p class="div_pay fw-bolder fs-5" >Pay</p>
-      <div th:text="${disoucntPriceDto.totalPrice}" class="div_pay fw-bolder fs-5 rounded border border-secondary-subtle">
+      <div th:text="${discountPriceDto.totalPrice}" class="div_pay fw-bolder fs-5 rounded border border-secondary-subtle">
           70,000
       </div>
       <br>

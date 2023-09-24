@@ -7,7 +7,7 @@ import mini.project.HotelReservation.enumerate.RoomType;
 @Data
 @RequiredArgsConstructor
 public class RoomDto {
-    private final RoomType roomType;
+    private final String roomType;
     private final Integer roomPrice;
     private final Integer roomStock;
 }
