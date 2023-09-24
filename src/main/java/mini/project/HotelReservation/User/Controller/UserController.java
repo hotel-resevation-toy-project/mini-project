@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
+import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
 import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
@@ -23,6 +24,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final ReservationRepository reservationRepository;
+
     // 로그인 화면(시작)
     @GetMapping("/in")
     public String getLogIn(Model model){
@@ -67,8 +70,11 @@ public class UserController {
 
     //todo:{rN}? & html에 값 잘 들어가는지?
     @GetMapping(value = "/reservation/{reserveNumber}")
-    public String getUserReservation(Model model, @RequestParam("reservationResponseDto") ReservationResponseDto reservationResponseDto) {
-        return "user/join";
+    public String getUserReservation(@PathVariable("reserveNumber") String reserveNumber, Model model) {
+
+        model.addAttribute("reservationDto",reservationRepository.findByReserveNumber(reserveNumber));
+
+        return "user/reservationInfo";
     }
 
     @GetMapping("")
