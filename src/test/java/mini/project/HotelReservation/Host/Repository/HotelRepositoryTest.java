@@ -56,7 +56,7 @@ public class HotelRepositoryTest {
                 UserRole.ROLE_HOST);
         // 유저 생성
         User user = new User("오진석",
-                "abc@example.com",
+                "def@example.com",
                 "1234",
                 "010-1234-5678",
                 UserStatus.USER_STATUS_ACTIVE,
@@ -120,7 +120,16 @@ public class HotelRepositoryTest {
     }
     @Test
     void 호텔_아이디로_호텔_찾기(){
-        assertEquals(hotelRepository.findByHotelId(hotelRepository.findAll().get(0).getHotelId()),
-                hotelRepository.findByHotelId(hotelRepository.findAll().get(0).getHotelId()));
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        for(User use1: userRepository.findAll()){
+            System.out.println(use1.getName());
+        }
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        User host = userRepository.findByEmail("abc@example.com").get();
+        Long hotelId = host.getHotel().getHotelId();
+        assertEquals(
+                host.getHotel().getHotelName(),
+                hotelRepository.findByHotelId(hotelId).getHotelName());
     }
 }

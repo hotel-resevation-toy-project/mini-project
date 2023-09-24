@@ -1,12 +1,15 @@
 package mini.project.HotelReservation.Host.Data.Dto;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import mini.project.HotelReservation.enumerate.RoomType;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceDto {
-    private final RoomType roomType;
-    private final Integer discountPrice;
+    @NotBlank(message = "객실 타입을 지정해주세요.")
+    private String roomType;
+    @NotBlank(message = "변경할 가격을 지정해주세요.")
+    private Integer discountPrice;
 }

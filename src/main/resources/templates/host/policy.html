@@ -7,33 +7,40 @@
     <div class="position-relative d-flex flex-column align-items-center justify-content-center">
         <div class="row g-2 w-50">
             <span class="col-sm fw-bolder fs-5 text-center" th:text="${hotelName}">Hotel</span>
+            <br />
             <span class="col-sm fw-bolder fs-5 text-center">ChangeDiscount Policy</span>
         </div>
         <br/>
         <br/>
         <div class="list-group w-25">
-            <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100 " for="listGroupRadios1">
-                <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios1" value="" checked>
-                <span class="fw-bolder fs-5 text-center">
-                    &nbsp;&nbsp;&nbsp;PeakDiscountPolicy
-                </span>
-            </label>
-            <br/>
-            <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100">
-                <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios2" value="">
-                <span class="fw-bolder fs-5 text-center">
-                    &nbsp;&nbsp;&nbsp;DaysDiscountPolicy
-                </span>
-            </label>
-            <br/>
-            <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100">
-                <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="listGroupRadios3" value="">
-                <span class="fw-bolder fs-5 text-center">
-                    &nbsp;&nbsp;&nbsp;AllDiscountPolicy
-                </span>
-            </label>
+            <form th:action="@{/host/policy}" method="post">
+                <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100 " for="listGroupRadios1">
+                    <input name="policy" class="form-check-input flex-shrink-0" type="radio" id="listGroupRadios1" value="POLICY_PEAK" checked>
+                    <span class="fw-bolder fs-5 text-center">
+                        &nbsp;&nbsp;&nbsp;PeakDiscountPolicy
+                    </span>
+                </label>
+                <br/>
+                <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100" for="listGroupRadios2">
+                    <input name="policy" class="form-check-input flex-shrink-0" type="radio" id="listGroupRadios2" value="POLICY_DAYS">
+                    <span class="fw-bolder fs-5 text-center">
+                        &nbsp;&nbsp;&nbsp;DaysDiscountPolicy
+                    </span>
+                </label>
+                <br/>
+                <label class="rounded border border-secondary-subtle list-group-item d-flex gap-2 w-100" for="listGroupRadios3">
+                    <input name="policy" class="form-check-input flex-shrink-0" type="radio" id="listGroupRadios3" value="POLICY_ALL">
+                    <span class="fw-bolder fs-5 text-center">
+                        &nbsp;&nbsp;&nbsp;AllDiscountPolicy
+                    </span>
+                </label>
+                <br />
+                <br />
+                <button type="submit" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button>
+            </form>
         </div>
-        <button th:method="post" th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button><
     </div>
+<hr class="separator"/>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
