@@ -26,11 +26,11 @@
       <div class = "oi-container d-flex gap-2 w-100 justify-content-between">
         <oi>
           <div class="label fw-bolder fs-5">Check-In date</div>
-          <span th:text="' '+${#dates.format(reservationDto.checkInDate, 'yyyy.MM.dd')}+' '" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-23&nbsp;</span>
+          <span th:text="${reservationDto.checkInDate}" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-23&nbsp;</span>
         </oi>
         <oi>
           <div class="label fw-bolder fs-5">Check-Out date</div>
-          <span th:text="' '+${#dates.format(reservationDto.checkOutDate, 'yyyy.MM.dd')}+' '" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-30&nbsp;
+          <span th:text="${reservationDto.checkOutDate}" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-30&nbsp;
           </span>
         </oi>
       </div><br>
