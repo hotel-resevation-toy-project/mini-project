@@ -33,8 +33,6 @@ public class HostController {
     }
     @PostMapping("/policy")
     String discountPolicy(@RequestParam("policy") String policy){
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println(policy);
         // TODO: 할인 정책 변경 로직 구현
         hostService.changePolicy(DiscountPolicy.valueOf(policy));
         // Exception 처리할 것 (IllegalArgumentException)
@@ -43,8 +41,7 @@ public class HostController {
 
     // 가격 변경 페이지
     @GetMapping("/price")
-    String pricePage(Model model)
-    {
+    String pricePage(Model model)  {
         model.addAttribute("priceDto", new PriceDto());
         model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/price";

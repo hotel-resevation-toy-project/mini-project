@@ -40,11 +40,8 @@ public class SecurityConfiguration {
                         (authorize) -> authorize
                                 .requestMatchers("/host", "/host/**")
                                 .hasRole("HOST")
-                                .requestMatchers("/user/in", "/user/new")
-                                .permitAll()    // 기본적으로 접근이 가능한 경로
-                                .requestMatchers("/host", "/host/**")
-                                .hasRole("HOST")
-//                                .anyRequest().hasAnyRole("USER", "HOST")   // 그 외의 접근은 HOST, USER를 제외하고는 접근 불가능
+                                .requestMatchers("/user", "/user/**", "/reservation/**")
+                                .hasAnyRole("HOST", "USER")
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
                 )
                 .formLogin((login) ->
