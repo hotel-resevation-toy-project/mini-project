@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity  // 스프링 시큐리티 필터가 스프링 체인필터에 등록
 public class SecurityConfiguration {
     private final JwtTokenDecoder td;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     // 로직을 타지않는 페이지들을 보안 로직에서 권한 검사를 하지않게 하는 시큐리티 메서드
     @Bean
@@ -28,11 +30,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                // 토큰을 활용할 예정이니 csrf(Cross Site Request Forgery Attack : 사이트 간 요청 위조) 설정을 꺼놓기로 함
-                // JWT에는 사용자 인증 정보가 이미 포함되어 있으므로 별도의 CSRF 토큰을 사용하지 않아도 보안이 유지가 가능하고
-                // 충돌의 우려가 있음.
-                .httpBasic(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable).exceptionHandling(AbstractHttpConfigurer::disable)
                 //  Spring Security를 사용하는 경우, HTTP 기본 인증을 비활성화하고 다른 인증 메커니즘을 사용하기 위해서
                 // http 기본 인증을 꺼놓음.
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -45,9 +43,9 @@ public class SecurityConfiguration {
                                 .hasAnyRole("HOST", "USER")
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
                 )
-//                .exceptionHandling(
-//                        (exception)->exception.accessDeniedHandler(accessDeniedHandler)
-//                )
+                .exceptionHandling(
+                        (exception)->exception.accessDeniedHandler(accessDeniedHandler)
+                )
                 .formLogin((login) ->
                                 login.loginPage("/user/in")
                                         .loginProcessingUrl("/user/in")
