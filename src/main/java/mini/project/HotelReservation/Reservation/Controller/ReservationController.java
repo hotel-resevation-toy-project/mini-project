@@ -33,7 +33,7 @@ public class ReservationController {
     String selectHotel(@PathVariable("hotelName")String hotelName, Model model){
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
         reservationRequestDto.setHotelName(hotelName);
-        model.addAttribute("reservationRequestDto")
+        model.addAttribute("reservationRequestDto");
         return "reservation/selectDate";
     }
     @GetMapping("/{checkInDate}&{checkOutDate}")

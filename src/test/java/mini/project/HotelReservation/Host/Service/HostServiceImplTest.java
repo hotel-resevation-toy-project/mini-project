@@ -143,14 +143,14 @@ class HostServiceImplTest {
     @Test
     @DisplayName("방가격_변경")
     void modifyRoomPrice() {
-        PriceDto priceDto = new PriceDto(RoomType.ROOM_TYPE_A_SINGLE, 500);
+        PriceDto priceDto = new PriceDto(String.valueOf(RoomType.ROOM_TYPE_A_SINGLE), 500);
         hostService.modifyRoomPrice(priceDto);
         assertEquals(roomRepository.findById(roomRepository.findAll().get(0).getRoomId()).get().getRoomPrice(), 500);
     }
     @Test
     @DisplayName("방개수_변경")
     void modifyRoomStock() {
-        RoomStockDto stockDto = new RoomStockDto(RoomType.ROOM_TYPE_A_SINGLE, 50);
+        RoomStockDto stockDto = new RoomStockDto(String.valueOf(RoomType.ROOM_TYPE_A_SINGLE), 50);
         hostService.modifyRoomStock(stockDto);
         assertEquals(roomRepository.findByHotelNameAndRoomType(td.currentUser().getName(), RoomType.ROOM_TYPE_A_SINGLE).getRoomStock(), 50);
     }
