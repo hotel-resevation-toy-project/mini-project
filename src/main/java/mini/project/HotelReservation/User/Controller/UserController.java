@@ -81,10 +81,10 @@ public class UserController {
         return "user/userInfo";
     }
 
-    @PutMapping("")
-    public String putUserInfo(@ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
-        userService.updateInfo(userInfoDto);
-        return "redirect:/user/userInfo";
+    @PutMapping
+    public String putUserInfo(@RequestParam("user") UserInfoDto user){
+
+        return "user/join";
     }
 
     @PatchMapping
