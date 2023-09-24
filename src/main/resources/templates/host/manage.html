@@ -2,12 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <div th:replace="~{fragments/header :: header}" ></div>
-        <div class="position-relative d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-            <div class="position-absolute top-50 start-50 translate-middle-x d-grid gap-2 col-6 mx-auto">
-                <div class ="col g-2 w-50 text-md-center">
-                    <span class="col-sm align-self-center fw-bolder fs-5">HostPage</span></div>
+        <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+            <div class="position-absolute top-20 start-50 translate-middle-x d-grid gap-2 col-6 mx-auto">
+                <span class="text-center col-sm align-self-center fw-bolder fs-5">HostPage</span>
                 <br/>
                 <div>
                     <button th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button></div>
@@ -19,5 +18,6 @@
                     <button th:onclick="|location.href='@{/host/reservations}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Reserve List</button></div>
             </div>
         </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -18,24 +18,27 @@
         </div>
         <br/>
         <br/>
-        <div class="row g-3">
-            <input class="col-sm rounded border border-secondary-subtle" type="date" id="check_in_date"
-                   name="trip-start" value="2023-09-21"
-                   min="2023-01-01" max="2025-12-31" />
-            <span class="col-sm"></span>
-            <input class="col-sm rounded border border-secondary-subtle" type="date" id="check_out_date"
-                   name="trip-start" value="2018-09-21"
-                   min="2023-01-01" max="2025-12-31" />
-        </div>
-        <br/><br/><br/><br/><br/><br/>
-        <br/><br/><br/><br/><br/><br/>
-        <div>
-            <a th:href="@{}"  aria-current="true">
-                <button type="submit"
-                        id="btn_modifyForm" class="btn btn-outline-secondary ">
-                    &nbsp;&nbsp;Next&nbsp;&nbsp;</button>
-            </a>
-        </div>
+        <form th:object="${reservationRequestDto}">
+            <div class="row g-3">
+                <input th:field="${reservationRequestDto.checkInDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_in_date"
+                       name="trip-start" value="2023-09-21"
+                       min="2023-01-01" max="2025-12-31">
+                <span class="col-sm"></span>
+                <input th:field="${reservationRequestDto.checkOutDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_out_date"
+                       name="trip-start" value="2018-09-21"
+                       min="2023-01-01" max="2025-12-31">
+            </div>
+            <br/><br/><br/><br/><br/><br/>
+            <br/><br/><br/><br/><br/><br/>
+            <div>
+                <a th:href="@{/reservation/(checkInDate = ${reservationRequestDto.checkInDate},checkInDate = ${reservationRequestDto.checkOutDate})}"  aria-current="true">
+                    @{/board?id=${board.id}}
+                    <button type="submit"
+                            id="btn_modifyForm" class="btn btn-outline-secondary ">
+                        &nbsp;&nbsp;Next&nbsp;&nbsp;</button>
+                </a>
+            </div>
+        </form>
     </div>
 </body>
 </html>

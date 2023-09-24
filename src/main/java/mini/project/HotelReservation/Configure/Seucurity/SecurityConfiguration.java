@@ -44,7 +44,9 @@ public class SecurityConfiguration {
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
                 )
                 .exceptionHandling(
-                        (exception)->exception.accessDeniedHandler(accessDeniedHandler)
+                        (exception)->exception
+                                .accessDeniedPage("/reservation/main")
+                                .accessDeniedHandler(accessDeniedHandler)
                 )
                 .formLogin((login) ->
                                 login.loginPage("/user/in")
