@@ -71,7 +71,6 @@ public class User extends AuditTime {
     public void updateInfo(UserInfoDto userInfoDto){
         name = userInfoDto.getName();
         email = userInfoDto.getEmail();
-        password = userInfoDto.getPassword();
         phoneNumber = userInfoDto.getPhoneNumber();
     }
 

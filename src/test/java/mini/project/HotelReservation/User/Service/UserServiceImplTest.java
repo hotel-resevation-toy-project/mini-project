@@ -279,12 +279,11 @@ class UserServiceImplTest {
 
         //when
         User user = td.currentUser();
-        userService.updateInfo(new UserInfoDto("김채림", "abc2@example.com", "2580", "010-5607-7854"));
+        userService.updateInfo(new UserInfoDto("김채림", "abc2@example.com", "010-5607-7854"));
         User changeUser = userRepository.findByEmail("abc2@example.com").get();
         //then
         assertThat(changeUser.getName().equals("김채림"));
         assertThat(changeUser.getEmail().equals("abc2@example.com"));
-        assertThat(changeUser.getPassword().equals("2580"));
         assertThat(changeUser.getPhoneNumber().equals("010-5607-7854"));
     }
 }
