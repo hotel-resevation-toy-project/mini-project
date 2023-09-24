@@ -79,7 +79,7 @@ public class UserController {
 
     @GetMapping("")
     public String getUserInfo(Model model){
-        model.addAttribute("userInfoDto", new UserInfoDto());
+//        model.addAttribute("userInfoDto", new UserInfoDto());
         return "user/userInfo";
     }
 
