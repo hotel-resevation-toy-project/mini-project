@@ -28,6 +28,7 @@ public class ReservationController {
 
     @GetMapping("/hotels")
     String hotelList(Model model){
+        model.addAttribute("hotelListDto",reservationService.findByHotelList());
         return "reservation/selectHotel";
     }
     @GetMapping("/{hotelName}")

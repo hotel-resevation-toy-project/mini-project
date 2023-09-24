@@ -19,4 +19,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             "JOIN r.hotel h " +
             "WHERE h.hotelName = :hotelName")
     List<Room> findAllByHotelName(@Param("hotelName")String hotelName);
+
 }
