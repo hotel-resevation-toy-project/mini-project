@@ -89,9 +89,9 @@ public class UserController {
         return "redirect:/user/userInfo";
     }
 
-    @PostMapping("")
-    public String quit(@RequestParam("password") String password){
-        userService.deactive(password);
+    @PatchMapping
+    public String quit(Model model){
+//        model.addAttribute("password",userService.deactive());
         return "redirect:/user/login";
     }
 }
