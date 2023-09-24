@@ -11,25 +11,24 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
     <div class="container w-50">
         <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
-            <form th:object="${userInfoDto}" id="UserInfoForm" name="user" method="put"><br/><br/>
+            <form th:action th:object="${userInfoDto}"  id="UserInfoForm" name="user" method="post"><br/><br/>
                 <div>
+<!--                    <input type="hidden" name="_method" value="put">-->
                     <input th:type="text" th:name="email" th:value="${userInfoDto.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
                     <br>
                     <input th:value="${userInfoDto.name}" type="text" name="name" class="form-control" placeholder="이름" autocomplete="off" required/>
                     <br>
                     <input th:value="${userInfoDto.phoneNumber}" type="text" name="phoneNumber" class="form-control" placeholder="휴대폰 번호" autocomplete="off" required/>
                 </div><br>
-                <div class="button-container">
-                    <a th:href="@{/user}" th:method="put" class="w-70">
+                <div class="button-container w-70">
                         <button type="submit" class="btn btn-outline-secondary m-0 btn-large form-control w-70">
                             Modify
                         </button>
-                    </a>
                 </div>
             </form>
             <hr class="separator"/>
         </div>
-        <a th:href="@{/user}" th:method="post" class="w-70">
+        <a th:href="@{/user/withdraw}" th:method="get" class="w-70">
             <button type="submit" class="btn btn-outline-secondary m-0 btn-large form-control w-70">
                 Withdraw
             </button>

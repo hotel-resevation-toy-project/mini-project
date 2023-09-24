@@ -79,6 +79,6 @@ public class User extends AuditTime {
     }
 
     public void deactive(){
-        this.status = UserStatus.USER_STATUS_DEACTIVE;
+        status = UserStatus.USER_STATUS_DEACTIVE;
     }
 }

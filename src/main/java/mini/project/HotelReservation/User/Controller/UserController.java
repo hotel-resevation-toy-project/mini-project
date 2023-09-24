@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.Socket;
 import java.util.List;
 
 
@@ -23,8 +24,12 @@ import java.util.List;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+
+
     private final UserService userService;
+
     private final ReservationRepository reservationRepository;
+
 
     // 로그인 화면(시작)
     @GetMapping("/in")
@@ -75,21 +80,34 @@ public class UserController {
         return "user/reservationInfo";
     }
 
-    @GetMapping("")
+    @GetMapping()
     public String getUserInfo(Model model){
         model.addAttribute("userInfoDto", userService.getUserInfo());
         return "user/userInfo";
     }
 
-    @PutMapping
-    public String putUserInfo(@RequestParam("user") UserInfoDto user){
+/*    @PostMapping()
+    public String putUserInfo(@ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
 
-        return "user/join";
+        *//*System.out.println("----------------putUserInfo");
+        System.out.println(userInfoDto.getName());
+        System.out.println(userInfoDto.getPhoneNumber());
+        System.out.println(userInfoDto.getEmail());
+        System.out.println("---------------------------");*//*
+
+        userService.updateInfo(userInfoDto);
+
+        return "redirect:/user/join";
+    }*/
+
+    @GetMapping("/withdraw")
+    public String withDraw(){
+        return "/user/withdraw";
     }
 
-    @PatchMapping
-    public String quit(Model model){
-//        model.addAttribute("password",userService.deactive());
-        return "redirect:/user/login";
+    @PostMapping("/quit")
+    public String quit(@RequestParam("password") String password){
+        userService.deactive(password);
+        return "redirect:/logout";
     }
 }
