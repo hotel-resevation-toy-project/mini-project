@@ -1,8 +1,6 @@
 package mini.project.HotelReservation.Reservation.Controller;
 
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.Host.Data.Entity.Hotel;
-import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.HotelDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
@@ -10,15 +8,14 @@ import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/reservation")
 public class ReservationController {
+
     private final ReservationService reservationService;
 
     @GetMapping("/main")
@@ -30,6 +27,7 @@ public class ReservationController {
     String hotelList(Model model){
         return "reservation/selectHotel";
     }
+
     @GetMapping("/{hotelName}")
     String selectHotel(@PathVariable("hotelName")String hotelName, Model model,
                        @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
