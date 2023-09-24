@@ -10,7 +10,7 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
-  <div  class="container text-center justify-content-center w-50" >
+  <div class="container text-center justify-content-center w-50" >
     <div method="post"  th:action="@{/reservation/payment}" th:object="${reservationRequestDto}">
       <div class="row g-3" th:with="reservationRequestDto=${ReservationRequestDto}">
         <div class="col-sm">

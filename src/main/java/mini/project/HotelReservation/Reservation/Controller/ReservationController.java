@@ -49,6 +49,7 @@ public class ReservationController {
     @GetMapping("/{hotelName}")
     String selectHotel(@PathVariable("hotelName")String hotelName, Model model,
                        @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
+        model.addAttribute("hotelName", hotelName);
         model.addAttribute("reservationRequestDto",reservationRequestDto);
         return "redirect:reservation/selectDate";
     }
@@ -96,7 +97,6 @@ public class ReservationController {
                 checkRoomType,
                 reservationRequestDto.getOneDayPrice()
         );
-
         model.addAttribute("reservationRequestDto", requestDto);
         return "redirect:reservation/reservationPay";
     }
@@ -114,4 +114,7 @@ public class ReservationController {
     String reserveCancel(){
         return null;
     }
+
+
+
 }
