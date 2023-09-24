@@ -37,7 +37,8 @@ public class ReservationController {
         System.out.println("hotelName = " + hotelName);
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
         reservationRequestDto.setHotelName(hotelName);
-        model.addAttribute("reservationRequestDto",reservationRequestDto);
+        model.addAttribute("reservationRequestDto");
+
         return "reservation/selectDate";
     }
     @GetMapping("/date/{checkInDate}&{checkOutDate}")

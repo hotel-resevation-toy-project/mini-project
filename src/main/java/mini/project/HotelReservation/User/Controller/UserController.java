@@ -79,7 +79,7 @@ public class UserController {
 
     @GetMapping("")
     public String getUserInfo(Model model){
-        model.addAttribute("userInfoDto", new UserInfoDto("","","",""));
+        model.addAttribute("userInfoDto", userService.getUserInfo());
         return "user/userInfo";
     }
 
@@ -90,7 +90,8 @@ public class UserController {
     }
 
     @PatchMapping
-    public String quit(Model model, RedirectAttributes redirectAttributes){
-        return "user/join";
+    public String quit(Model model){
+        model.addAttribute("password",userService.deactive());
+        return "redirect:/user/login";
     }
 }
