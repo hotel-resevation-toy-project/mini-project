@@ -23,38 +23,56 @@ public class HostController {
     private final HostService hostService;
 
     @GetMapping("")
-    String manage(Model model){
+    String manage(){
         // TODO: 호스트의 메인 페이지 로직을 구현 (호텔 관련 정보를 모델에 담아서 반환)
-        model.addAttribute("asd");
-        return "redirect:/host/manage";
+        return "host/manage";
+    }
+    // 정책 변경 페이지
+    @GetMapping("/policy")
+    String policyPage(Model model){
+        model.addAttribute("hotelName", hostService.referenceHotel());
+        return "host/policy";
     }
     @PatchMapping("/policy")
     String discountPolicy(String policy){
         // TODO: 할인 정책 변경 로직 구현
         hostService.changePolicy(DiscountPolicy.valueOf(policy));
-            // Exception 처리할 것 (IllegalArgumentException)
-        return "redirect:/host";
+        // Exception 처리할 것 (IllegalArgumentException)
+        return "host/policy";
+    }
+
+    // 가격 변경 페이지
+    @GetMapping("/price")
+    String pricePage(Model model){
+        return "host/price";
     }
     @PatchMapping("/price")
     String roomPrice(PriceDto priceDto){
         // TODO: 객실 가격 변경 로직 구현
         hostService.modifyRoomPrice(priceDto);
-            // Exception 처리할 것 (IllegalArgumentException)
-        return "redirect:/host";
+        // Exception 처리할 것 (IllegalArgumentException)
+        return "host/price";
+    }
+
+    // 재고 변경 페이지
+    @GetMapping("/stock")
+    String stockPage(Model model){
+        return "host/stock";
     }
     @PatchMapping("/stock")
     String roomStock(RoomStockDto roomStockDto){
         // TODO: 객실 재고 변경 로직 구현
         hostService.modifyRoomStock(roomStockDto);
             // Exception 처리할 것 (IllegalArgumentException)
-        return "redirect:/host";
+        return "host/stock";
     }
+
     @GetMapping("/reservations")
     String reserveAll(Model model){
         // TODO: 호스트의 예약 목록 페이지 로직 구현 (예약 목록을 모델에 담아서 반환)
         List<HotelReservationDto> reservations = hostService.reservationList();
         model.addAttribute("reservations", reservations);
-        return "redirect:/host/reservations";
+        return "host/hostReservationList";
     }
 
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})

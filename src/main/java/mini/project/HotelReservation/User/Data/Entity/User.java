@@ -45,7 +45,7 @@ public class User extends AuditTime {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 

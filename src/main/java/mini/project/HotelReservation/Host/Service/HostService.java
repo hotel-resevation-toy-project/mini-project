@@ -8,6 +8,7 @@ import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import java.util.List;
 
 public interface HostService {
+    String referenceHotel();
     void changePolicy(DiscountPolicy policy);
     void modifyRoomPrice(PriceDto priceDto);
     void modifyRoomStock(RoomStockDto roomStockDto);
