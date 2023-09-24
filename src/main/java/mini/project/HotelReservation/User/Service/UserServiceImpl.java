@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService{
     public UserInfoDto getUserInfo(){
         User user = userRepository.findByEmail(td.currentUser().getEmail()).orElseThrow(
                 () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
-        return new UserInfoDto(user);
+        return new UserInfoDto(user.getName(), user.getEmail(),user.getPhoneNumber());
     }
     //유저 정보 업데이트
     @Override

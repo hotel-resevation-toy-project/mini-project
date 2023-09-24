@@ -13,7 +13,7 @@
         <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
             <form th:object="${userInfoDto}" id="UserInfoForm" name="user" method="put"><br/><br/>
                 <div>
-                    <input th:type="text" th:name="email" th:value="${userInfoDto.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
+                    <input type="text" th:name="email" th:value="${userInfoDto.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
                     <br>
                     <input th:value="${userInfoDto.name}" type="text" name="name" class="form-control" placeholder="이름" autocomplete="off" required/>
                     <br>

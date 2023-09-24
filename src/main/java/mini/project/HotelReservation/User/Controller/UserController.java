@@ -81,15 +81,16 @@ public class UserController {
         return "user/userInfo";
     }
 
-    @PutMapping
-    public String putUserInfo(@RequestParam("user") UserInfoDto user){
-
-        return "user/join";
+    @PutMapping("")
+    public String putUserInfo(Model model, @RequestParam("userInfoDto") UserInfoDto user){
+        userService.updateInfo(user);
+        model.addAttribute("userInfoDto",user);
+        return "user/userInfo";
     }
 
-    @PatchMapping
-    public String quit(Model model){
-//        model.addAttribute("password",userService.deactive());
+    @PostMapping("")
+    public String quit(@RequestParam("password") String password){
+        userService.deactive(password);
         return "redirect:/user/login";
     }
 }
