@@ -43,7 +43,8 @@ public class ReservationServiceImpl implements ReservationService {
         List<HotelDto> hotelDtos = new ArrayList<>();
         for (Hotel hotel : hotels) {
             hotelDtos.add(new HotelDto(hotel.getHotelName(),
-                    roomRepository.findAllByHotelName(hotel.getHotelName()).stream().map(Room::getRoomType).toList(),
+                    roomRepository.findAllByHotelName(hotel.getHotelName())
+                            .stream().map(r -> String.valueOf(r.getRoomType())).toList(),
                     hotel.getCheckInTime(),
                     hotel.getCheckOutTime()));
         }
