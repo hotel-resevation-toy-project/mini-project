@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -19,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity  // 스프링 시큐리티 필터가 스프링 체인필터에 등록
 public class SecurityConfiguration {
     private final JwtTokenDecoder td;
-    private final AccessDeniedHandler accessDeniedHandler;
-
     // 로직을 타지않는 페이지들을 보안 로직에서 권한 검사를 하지않게 하는 시큐리티 메서드
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -43,11 +40,6 @@ public class SecurityConfiguration {
                                 .hasAnyRole("HOST", "USER")
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
                 )
-                .exceptionHandling(
-                        (exception)->exception
-                                .accessDeniedPage("/reservation/main")
-                                .accessDeniedHandler(accessDeniedHandler)
-                )
                 .formLogin((login) ->
                                 login.loginPage("/user/in")
                                         .loginProcessingUrl("/user/in")
@@ -63,8 +55,16 @@ public class SecurityConfiguration {
 //                                .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 쿠키 삭제
                 )
                 // 커스텀 필터 추가 : 요청이 시작되기 전에 만들어놓은 JwtTokenFilter를 사용할 필터로 설정
-                .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                (exception)->exception
+                        .accessDeniedHandler(customAccessDeniedHandler())
+//                        .accessDeniedPage("/")
+                );
         return http.build();    // 설정한 http를 생성
     }
 
+    private AccessDeniedHandler customAccessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
+    }
 }
