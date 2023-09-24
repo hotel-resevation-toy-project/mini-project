@@ -1,29 +1,35 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+<div class="container w-50">
     <div class="position-relative d-flex flex-column align-items-center justify-content-center">
-        <p class="fw-bolder fs-5 text-center">Change Room Stock</p>
-        <br/>
-        <div class = "row">
-            <div class="form-floating mb-3 col-sm">
-                <input type="roomType" class=" form-control w-100" id="floatingInput">
-                <label for="floatingInput">RoomType</label> </div>
-            <div class="form-floating mb-3 col-sm">
-                <input type="Stock" class="form-control w-100" id="floatingPassword">
-                <label for="floatingPassword">Stock</label> </div>
+        <div class ="col g-2 w-50 text-md-center">
+            <span class="col-sm align-self-center fw-bolder fs-5" th:text="${hotelName}">Hotel</span>
+            <br />
+            <span class="col-sm align-self-center fw-bolder fs-5">Change Room Stock</span>
         </div>
-        <br/>
-        <div>
-            <button type="submit" class="btn btn-outline-secondary form-control">Save</button>
-        </div>
+        <br />
+        <br />
+        <form th:action="@{/host/stock}" th:object="${roomStockDto}" method="post">
+            <div class = "row">
+                <div class="form-floating mb-3 col-sm">
+                    <input name="roomType" th:field="*{roomType}" type="text" class=" form-control w-100" id="floatingInput">
+                    <label for="floatingInput">RoomType</label> </div>
+                <div class="form-floating mb-3 col-sm">
+                    <input name="roomStock" th:field="*{roomStock}" type="text" class="form-control w-100" id="floatingStock">
+                    <label for="floatingStock">Stock</label> </div>
+            </div>
+            <br/>
+            <div>
+                <button type="submit" class="btn btn-outline-secondary form-control">Save</button>
+            </div>
+        </form>
+        <hr class="separator"/>
     </div>
-
-
-    <hr class="separator"/>
-    </div>
-    <div th:replace="~{fragments/footer :: footer}"></div>
-    </body>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</div>
+</body>
 </html>

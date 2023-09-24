@@ -6,7 +6,8 @@
 <div th:replace="~{fragments/header :: header}" ></div>
         <div class="position-relative d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
             <div class="position-absolute top-50 start-50 translate-middle-x d-grid gap-2 col-6 mx-auto">
-                <p class="btn_size fw-bolder fs-5 text-center">HostPage</p>
+                <div class ="col g-2 w-50 text-md-center">
+                    <span class="col-sm align-self-center fw-bolder fs-5">HostPage</span></div>
                 <br/>
                 <div>
                     <button th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button></div>
