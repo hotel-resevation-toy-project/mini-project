@@ -28,22 +28,6 @@ public class ReservationController {
 
     @GetMapping("/hotels")
     String hotelList(Model model){
-        //hotel리스트 뿌리기
-        //dto : model(List<HotelListDto>)
-        List<HotelDto> hotelDtoList =
-                reservationService.findByHotelList();
-        //todo:roomTypes를 아래처럼 넘기지 말고 DTO에서 변경하는게 더 나을 꺼같음
-        List<String> roomTypes = new ArrayList<>(hotelDtoList.size());
-        StringBuilder temp = new StringBuilder();
-        for(int i =0;i<hotelDtoList.size() ; i++){
-            temp = new StringBuilder();
-            for(int j = 0; j<hotelDtoList.get(i).getRoomTypes().size(); j++){
-                temp.append(hotelDtoList.get(i).getRoomTypes().get(j).toString());
-            }
-            roomTypes.add(temp.toString());
-        }
-        model.addAttribute("HotelListDto",hotelDtoList);
-        model.addAttribute("roomTypes",roomTypes);
         return "reservation/selectHotel";
     }
     @GetMapping("/{hotelName}")
