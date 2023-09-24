@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -44,11 +45,14 @@ public class SecurityConfiguration {
                                 .hasAnyRole("HOST", "USER")
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
                 )
+//                .exceptionHandling(
+//                        (exception)->exception.accessDeniedHandler(accessDeniedHandler)
+//                )
                 .formLogin((login) ->
                                 login.loginPage("/user/in")
                                         .loginProcessingUrl("/user/in")
-                                        .failureUrl("/user/in")
-                                        .defaultSuccessUrl("/reservation/main")
+                                        .failureUrl("/")
+                                        .defaultSuccessUrl("/")
 //                                .failureHandler()
 //                                .successHandler()
                 )
@@ -62,4 +66,5 @@ public class SecurityConfiguration {
                 .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class);
         return http.build();    // 설정한 http를 생성
     }
+
 }
