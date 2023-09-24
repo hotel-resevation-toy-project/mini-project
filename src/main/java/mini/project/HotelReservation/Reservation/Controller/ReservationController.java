@@ -1,10 +1,7 @@
 package mini.project.HotelReservation.Reservation.Controller;
 
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.HotelDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Controller;
@@ -34,31 +31,35 @@ public class ReservationController {
 
     @GetMapping("/hotel/{hotelName}")
     String selectHotel(@PathVariable("hotelName")String hotelName, Model model){
-        System.out.println("hotelName = " + hotelName);
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
         reservationRequestDto.setHotelName(hotelName);
-        model.addAttribute("reservationRequestDto");
+        model.addAttribute("reservationRequestDto",reservationRequestDto);
 
         return "reservation/selectDate";
     }
-    @GetMapping("/date/{checkInDate}&{checkOutDate}")
-    String selectDate(@PathVariable("checkInDate") LocalDate cid, @PathVariable("checkOutDate")LocalDate cod, Model model,
-                      @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-        reservationRequestDto.setCheckInDate(cid);
-        reservationRequestDto.setCheckOutDate(cod);
+    @PostMapping("/date")
+    String selectDate(Model model, @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
+        System.out.println(reservationRequestDto.getCheckInDate());
+        System.out.println(reservationRequestDto.getCheckOutDate());
+        List<RoomDto> rooms = reservationService.findByRoomList(reservationRequestDto.getHotelName());
         model.addAttribute("reservationRequestDto",reservationRequestDto);
+        model.addAttribute("rooms",rooms);
+
         return "reservation/selectRoom";
     }
     @GetMapping("/room/{roomType}")
     String selectRoom(@PathVariable("roomType")String roomType,Model model,
                       @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
         reservationRequestDto.setRoomType(RoomType.valueOf(roomType));
+        DiscountPriceDto discountPriceDto = reservationService.discountPrice(reservationRequestDto);
+        model.addAttribute("discountPriceDto",discountPriceDto);
         model.addAttribute("reservationRequestDto", reservationRequestDto);
         return "reservation/reservationPay";
     }
     @PostMapping("/payment")
-    String reservePay(@ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto, Model model){
-        DiscountPriceDto discountPriceDto = reservationService.discountPrice(reservationRequestDto);
+    String reservePay(@ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto,
+                      @ModelAttribute("discountPriceDto") DiscountPriceDto discountPriceDto,
+                      Model model){
         ReservationResponseDto reservationResponseDto = reservationService.reserve(reservationRequestDto, discountPriceDto);
         model.addAttribute("reservationResponseDto",reservationResponseDto);
         model.addAttribute("discountPriceDto",discountPriceDto);

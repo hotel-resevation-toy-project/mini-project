@@ -56,7 +56,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<Room> rooms = roomRepository.findAllByHotelName(hotelName);
         List<RoomDto> roomDtos = new ArrayList<>();
         for (Room room : rooms) {
-            roomDtos.add(new RoomDto(room.getRoomType(),room.getRoomPrice(),room.getRoomStock()));
+            roomDtos.add(new RoomDto(String.valueOf(room.getRoomType()),room.getRoomPrice(),room.getRoomStock()));
         }
         return roomDtos;
     }
