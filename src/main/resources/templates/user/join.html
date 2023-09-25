@@ -13,6 +13,11 @@
     margin-right: 100px; /* 각 라디오 버튼 간의 간격 설정 */
   }
 </style>
+  <th:block th:if="${#strings.length(session.error) != 0}">
+    <script>
+      top.alert("[[${session.error}]]");
+    </script>
+  </th:block>
 </head>
 <body>
   <div class="container w-50">

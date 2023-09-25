@@ -1,5 +1,8 @@
 package mini.project.HotelReservation.User.Controller;
 
+import com.sun.jdi.request.DuplicateRequestException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
@@ -13,11 +16,13 @@ import mini.project.HotelReservation.User.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.Socket;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Controller
@@ -40,8 +45,11 @@ public class UserController {
 
     //로그인
     @PostMapping("/in")
-    public String postLogIn(@ModelAttribute("userSignInDto") UserSignInDto userSignInDto){
-        System.out.println(userSignInDto.getEmail());
+    public String postLogIn(@Valid @ModelAttribute("userSignInDto") UserSignInDto userSignInDto, BindingResult result,Model model){
+        if(result.hasErrors()) {
+            model.addAttribute("Error","아이디와 비밀번호를 제대로 입력해주세요.");
+            return "redirect:/user/in";
+        }
         userService.logIn(userSignInDto);
         return "reservation/main";
     }
@@ -55,7 +63,12 @@ public class UserController {
 
     //회원가입
     @PostMapping("/new")
-    public String postJoin(@ModelAttribute("userSignUpDto") UserSignUpDto userSignUpDto){
+    public String postJoin(@Valid @ModelAttribute("userSignUpDto") UserSignUpDto userSignUpDto,
+                           BindingResult result,Model model){
+        if(result.hasErrors()) {
+            model.addAttribute("Error","다시 입력해주세요.");
+            return "redirect:/user/new";
+        }
         userService.join(userSignUpDto);
         return "user/login";
     }
@@ -88,7 +101,13 @@ public class UserController {
 
     @PostMapping()
     public String putUserInfo(Model model,/* @RequestParam("userInfoDto") UserInfoDto user*/
-                              @ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
+                              @Valid @ModelAttribute("userInfoDto") UserInfoDto userInfoDto, BindingResult result){
+        if(result.hasErrors()) {
+            model.addAttribute("Error","변경할 값을 다시 입력해주세요.");
+            System.out.println("%%%%%%%%%%%%%%%%");
+            System.out.println("업데이트 오류");
+            return "redirect:/user";
+        }
         userService.updateInfo(userInfoDto);
 //        model.addAttribute("userInfoDto",userInfoDto);
         return "redirect:/user";
@@ -104,5 +123,18 @@ public class UserController {
     public String quit(@RequestParam("password") String password){
         userService.deactive(password);
         return "redirect:/logout";
+    }
+
+    @ExceptionHandler({NoSuchElementException.class, DuplicateRequestException.class})
+    public String handler(Exception e, HttpServletRequest req) {
+        if(e.getClass().equals(NoSuchElementException.class)) {
+            req.getSession().setAttribute("error", e.getMessage());
+            return "redirect:/user/in";
+        }
+        if(e.getClass().equals(DuplicateRequestException.class)) {
+            req.getSession().setAttribute("error", e.getMessage());
+            return "redirect:/user/new";
+        }
+        return null;
     }
 }

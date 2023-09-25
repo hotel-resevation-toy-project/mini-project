@@ -23,11 +23,11 @@
             <div class="row g-3">
                 <input th:field="*{checkInDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_in_date"
                        name="trip-start" value="2023-09-21"
-                       th:min="${#calendars.createNow()}">
+                       th:min="${#calendars.createNow()}" required>
                 <span class="col-sm"></span>
                 <input th:field="*{checkOutDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_out_date"
                        name="trip-start" value="2018-09-21"
-                       th:min="${#calendars.createNow()}">
+                       th:min="${#calendars.createNow()}" required>
             </div>
             <br/><br/><br/><br/><br/><br/>
             <br/><br/><br/><br/><br/><br/>
