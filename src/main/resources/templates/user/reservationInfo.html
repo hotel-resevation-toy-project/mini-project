@@ -51,5 +51,7 @@
       <a th:href="@{/reservation/{reservationNumber}(reservationNumber=${reservationDto.reserveNumber})}" class="btn btn-outline-secondary">Cancel</a>
     </div>
   </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>
