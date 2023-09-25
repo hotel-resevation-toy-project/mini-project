@@ -13,6 +13,7 @@ import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
+import mini.project.HotelReservation.User.Repository.UserRepository;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,6 +33,7 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
     private final PeakDiscountPolicy peakDiscountPolicy;
@@ -68,15 +71,15 @@ public class ReservationServiceImpl implements ReservationService {
         Hotel hotel = hotelRepository.findByHotelName(requestDto.getHotelName());
         //숙박일
         int days = (int)ChronoUnit.DAYS.between(requestDto.getCheckInDate(), requestDto.getCheckOutDate());
-        
-        
+
+        Room reservedRoom = roomRepository.findByHotelNameAndRoomType(requestDto.getHotelName(), requestDto.getRoomType());
 
         //원가
-        int oneDayPrice = requestDto.getOneDayPrice();
+        int oneDayPrice = reservedRoom.getRoomPrice();
         int reservePrice = oneDayPrice*days;
+
         //할인될 값
         int discountPrice = 0;
-        // discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
 
         int noPeakDays = CheckPeakDays((int) ChronoUnit.DAYS.between(hotel.getStartPeakDate(),hotel.getEndPeakDate()),
                 hotel.getStartPeakDate(),
@@ -87,6 +90,11 @@ public class ReservationServiceImpl implements ReservationService {
             case POLICY_PEAK -> {
                 // 성수기 할인이 적용 되야 할 일 수
                 discountPrice =  peakDiscountPolicy.discount(oneDayPrice,noPeakDays);
+                System.out.println("###############################");
+                System.out.println(reservePrice);
+                System.out.println(discountPrice);
+                System.out.println(oneDayPrice);
+                System.out.println(noPeakDays);
                 return new DiscountPriceDto(reservePrice, // 예약 금액
                                             discountPrice, // 할인 금액
                                             reservePrice - discountPrice, // 예약 금액 - 할인 금액 = 지불 금액
@@ -94,7 +102,7 @@ public class ReservationServiceImpl implements ReservationService {
 
             }
             case POLICY_DAYS -> {
-                discountPrice = daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days);
+                discountPrice = daysDiscountPolicy.discount(oneDayPrice, days);
                 return new DiscountPriceDto(reservePrice,
                                             discountPrice,
                                         reservePrice - discountPrice,
@@ -102,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             default -> {
                 discountPrice = Math.max(peakDiscountPolicy.discount(oneDayPrice,noPeakDays),
-                        daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days));
+                        daysDiscountPolicy.discount(oneDayPrice, days));
                 return new DiscountPriceDto(reservePrice,
                                             discountPrice,
                                         reservePrice - discountPrice,
@@ -122,18 +130,23 @@ public class ReservationServiceImpl implements ReservationService {
 
         // 성수기 할인을 적용 해야하는 일 수
         int discountDays = 0;
-        if(hotelEndPeakDate.isAfter(checkInDate)) {
-            discountDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate,checkOutDate);
+        if(hotelEndPeakDate.isBefore(checkInDate)) {
+            discountDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate, checkOutDate);
         }
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("discountDays = " + discountDays);
+        System.out.println(discountDays);
+        System.out.println(checkInDate);
+        System.out.println(checkOutDate);
+        System.out.println(hotelStartPeakDate);
+        System.out.println(hotelEndPeakDate);
         return discountDays;
     }
 
     @Override
     @Transactional
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
-        User user = td.currentUser();
+        User user =  userRepository.findById(td.currentUser().getUserId()).get();
+
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
 
         Reservation reservation = Reservation.createReserve(user, hotel,
@@ -180,7 +193,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .roomType(reservation.getRoomType())
                 .checkInDate(reservation.getCheckInDate())
                 .checkOutDate(reservation.getCheckOutDate())
-                .reservationNumber(reservation.getReserveNumber())
+                .reserveNumber(reservation.getReserveNumber())
                 .reservePrice(reservation.getReservePrice())
                 .build();
     }
