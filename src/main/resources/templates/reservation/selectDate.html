@@ -7,17 +7,33 @@
     <div class="container text-center justify-content-center w-50">
         <div>
             <div class="row g-3">
-            <span class="col-sm fw-bolder fs-5" th:field="${session.hotelName}">
-                Hotel_A
+            <span class="col-sm fw-bolder fs-5" th:object="${session.hotelName}">
+                Hotel_A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
                 <span class="col-sm"></span>
                 <span class="col-sm fw-bolder fs-5">
-                SelectDate
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SelectDate
             </span>
             </div>
         </div>
 
         <br/>
+        <br/>
+
+        <div>
+            <div class="row g-3">
+            <span class="col-sm fw-bolder fs-5" >
+                Check-In-Date
+            </span>
+                <span class="col-sm"></span>
+                <span class="col-sm fw-bolder fs-5">
+                Check-Out-Date
+            </span>
+            </div>
+        </div>
+
+
+        <p/>
         <br/>
         <form th:method="post" th:action="@{/reservation/date}" th:object="${dateDto}">
             <div class="row g-3">
