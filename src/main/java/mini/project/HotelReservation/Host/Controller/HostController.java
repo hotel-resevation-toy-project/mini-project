@@ -1,6 +1,5 @@
 package mini.project.HotelReservation.Host.Controller;
 
-import groovyjarjarantlr4.v4.codegen.model.ModelElement;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -10,6 +9,8 @@ import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -79,8 +80,8 @@ public class HostController {
 
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     public String handel(Exception e, RedirectAttributes redirectAttributes){
-
+        String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
         redirectAttributes.addFlashAttribute("Error", "다시 입력해주세요.");
-        return "redirect:/host";
+        return "redirect:"+url;
     }
 }
