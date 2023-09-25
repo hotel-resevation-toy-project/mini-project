@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.User.Data.Entity.User;
 
 @Data
 @RequiredArgsConstructor

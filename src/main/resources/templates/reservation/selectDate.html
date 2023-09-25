@@ -5,9 +5,9 @@
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
     <div class="container text-center justify-content-center w-50">
-        <div th:object="${session.reservationRequestDto}">
+        <div>
             <div class="row g-3">
-            <span class="col-sm fw-bolder fs-5" th:field="*{hotelName}">
+            <span class="col-sm fw-bolder fs-5" th:field="${session.hotelName}">
                 Hotel_A
             </span>
                 <span class="col-sm"></span>
@@ -19,16 +19,15 @@
 
         <br/>
         <br/>
-        <form th:method="post" th:action="@{/reservation/date}"th:object="${reservationRequestDto}">
+        <form th:method="post" th:action="@{/reservation/date}" th:object="${dateDto}">
             <div class="row g-3">
-                <input th:field="${session.reservationRequestDto.hotelName}" type="hidden">
                 <input th:field="*{checkInDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_in_date"
                        name="trip-start" value="2023-09-21"
-                       min="2023-01-01" max="2025-12-31">
+                       th:min="${#calendars.createNow()}">
                 <span class="col-sm"></span>
                 <input th:field="*{checkOutDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_out_date"
                        name="trip-start" value="2018-09-21"
-                       min="2023-01-01" max="2025-12-31">
+                       th:min="${#calendars.createNow()}">
             </div>
             <br/><br/><br/><br/><br/><br/>
             <br/><br/><br/><br/><br/><br/>

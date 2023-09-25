@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-//@Primary
+@Primary
 public class DaysFixDiscountPolicy implements DaysDiscountPolicy{
     int discountPrice = 3000;
     @Override

@@ -13,6 +13,7 @@ import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.User.Data.Entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
