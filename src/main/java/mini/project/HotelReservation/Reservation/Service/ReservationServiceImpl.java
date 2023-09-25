@@ -90,11 +90,6 @@ public class ReservationServiceImpl implements ReservationService {
             case POLICY_PEAK -> {
                 // 성수기 할인이 적용 되야 할 일 수
                 discountPrice =  peakDiscountPolicy.discount(oneDayPrice,noPeakDays);
-                System.out.println("###############################");
-                System.out.println(reservePrice);
-                System.out.println(discountPrice);
-                System.out.println(oneDayPrice);
-                System.out.println(noPeakDays);
                 return new DiscountPriceDto(reservePrice, // 예약 금액
                                             discountPrice, // 할인 금액
                                             reservePrice - discountPrice, // 예약 금액 - 할인 금액 = 지불 금액
@@ -129,17 +124,15 @@ public class ReservationServiceImpl implements ReservationService {
         LocalDate hotelEndPeakDate = hotelStartPeakDate.plusDays(peakDays);
 
         // 성수기 할인을 적용 해야하는 일 수
-        int discountDays = 0;
-        if(hotelEndPeakDate.isBefore(checkInDate)) {
-            discountDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate, checkOutDate);
+        int discountEndDays = 0;
+        int discountStartDays = 0 ;
+        if(hotelEndPeakDate.isAfter(checkInDate)) {
+            discountEndDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate, checkOutDate);
         }
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println(discountDays);
-        System.out.println(checkInDate);
-        System.out.println(checkOutDate);
-        System.out.println(hotelStartPeakDate);
-        System.out.println(hotelEndPeakDate);
-        return discountDays;
+        if (hotelStartPeakDate.isBefore(checkOutDate)){
+            discountStartDays = (int) ChronoUnit.DAYS.between(checkInDate, hotelStartPeakDate);
+        }
+        return Math.max(discountEndDays, discountStartDays);
     }
 
     @Override
@@ -203,6 +196,5 @@ public class ReservationServiceImpl implements ReservationService {
     public void reserveDelete(String reserveNumber) {
         Reservation deleteToReserve = reservationRepository.findByReserveNumber(reserveNumber);
         deleteToReserve.deleteReservation();
-        List<Reservation> all = reservationRepository.findAll();
     }
 }
