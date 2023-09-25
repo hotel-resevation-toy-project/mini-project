@@ -13,8 +13,8 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
-  <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-    <ul th:field="${reservationDto}">
+  <div th:object="${reservationDto}" class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+    <ul>
       <div class="fw-bolder fs-5">Name</div>
       <div th:text="${reservationDto.userName}" class="border border-secondary-subtle rounded fw-bolder fs-5">jinseok oh</div><br>
       <div class="fw-bolder fs-5">PhoneNumber</div>
@@ -40,9 +40,8 @@
       <div th:text="${reservationDto.reservePrice}" class="fw-bolder fs-5 border border-secondary-subtle rounded">700,000</div><br>
     </ul>
     <div>
-      <button type="submit" class="btn btn-outline-secondary btn-large form-control">Cancel</button>
+      <a th:href="@{/reservation/{reservationNumber}(reservationNumber=${reservationDto.reserveNumber})}" class="btn btn-outline-secondary">Cancel</a>
     </div>
   </div>
-
 </body>
 </html>

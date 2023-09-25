@@ -128,7 +128,7 @@ class ReservationServiceImplTest {
 
         // 귀찮아서 얘는 호스트 없음
         Hotel saveHotelB = hotelRepository.save(hotelB);
-        hotelRepository.save(hotelC);
+        Hotel saveHotelC = hotelRepository.save(hotelC);
         // 객실 생성
         // 호텔 A꺼
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
@@ -138,7 +138,9 @@ class ReservationServiceImplTest {
         // 호텔 B꺼
         Room roomC = new Room(RoomType.ROOM_TYPE_C_QUEEN, 300000, 20);
         roomC.foreignHotel(saveHotelB);
-        roomRepository.saveAll(List.of(roomA,roomB, roomC));
+        Room roomC_A = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
+        roomC_A.foreignHotel(hotelC);
+        roomRepository.saveAll(List.of(roomA,roomB, roomC,roomC_A));
         // 예약 1, 2, 3 생성
         Reservation reservation1 = new Reservation("AA1-230523",
                 3000000, RoomType.ROOM_TYPE_A_SINGLE, "Hotel_A"
@@ -185,22 +187,19 @@ class ReservationServiceImplTest {
                 new ReservationRequestDto("Hotel_A",
                         LocalDate.of(2023,9,10),
                         LocalDate.of(2023,9,20),
-                        RoomType.ROOM_TYPE_A_SINGLE,
-                        100000));
+                        RoomType.ROOM_TYPE_A_SINGLE));
 
         DiscountPriceDto daysDiscountPriceDto = reservationService.discountPrice(
                 new ReservationRequestDto("Hotel_B",
                         LocalDate.of(2023,9,10),
                         LocalDate.of(2023,9,20),
-                        RoomType.ROOM_TYPE_A_SINGLE,
-                        100000));
+                        RoomType.ROOM_TYPE_C_QUEEN));
 
         DiscountPriceDto allDiscountPriceDto = reservationService.discountPrice(
                 new ReservationRequestDto("Hotel_C",
                         LocalDate.of(2023,9,10),
                         LocalDate.of(2023,9,20),
-                        RoomType.ROOM_TYPE_A_SINGLE,
-                        100000));
+                        RoomType.ROOM_TYPE_A_SINGLE));
 
 //        Peak
         assertEquals(String.valueOf(peakDiscountPriceDto.getDiscountPolicy()), String.valueOf(DiscountPolicy.POLICY_PEAK));
@@ -229,15 +228,13 @@ class ReservationServiceImplTest {
                             "Hotel_A",
                             LocalDate.of(2023, 9, 10),
                             LocalDate.of(2023, 9, 20),
-                            RoomType.ROOM_TYPE_A_SINGLE,
-                            100000),
+                            RoomType.ROOM_TYPE_A_SINGLE),
                     reservationService.discountPrice(
                             new ReservationRequestDto(
                             "Hotel_A",
                             LocalDate.of(2023, 9, 10),
                             LocalDate.of(2023, 9, 20),
-                            RoomType.ROOM_TYPE_A_SINGLE,
-                            100000)));
+                            RoomType.ROOM_TYPE_A_SINGLE)));
         User user = td.currentUser();
         Hotel hotel = hotelRepository.findByHotelName("Hotel_A");
         assertEquals(reserve.getUserName(),user.getName());
@@ -256,8 +253,7 @@ class ReservationServiceImplTest {
                 "Hotel_A",
                 LocalDate.of(2023, 9, 10),
                 LocalDate.of(2023, 9, 20),
-                RoomType.ROOM_TYPE_A_SINGLE,
-                100000);
+                RoomType.ROOM_TYPE_A_SINGLE);
         String reserveNumber = reservationService.createReserveNumber(
                 hotelRepository.findByHotelName(hotelA.getHotelName()),
                 hotelA);
@@ -285,7 +281,6 @@ class ReservationServiceImplTest {
         reservationService.reserveDelete("AA1-230523");
         List<Reservation> all = reservationRepository.findAll();
         assertEquals(all.size(),2);
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@222");
         for (Reservation reservation : all) {
             System.out.println("reservation = " + reservation.getReserveNumber());
         }
