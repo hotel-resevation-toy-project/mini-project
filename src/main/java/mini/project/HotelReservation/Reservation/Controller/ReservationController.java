@@ -3,12 +3,14 @@ package mini.project.HotelReservation.Reservation.Controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,8 +44,13 @@ public class ReservationController {
         return "reservation/selectDate";
     }
     @PostMapping("/date")
-    String selectDate(@ModelAttribute("dateDto") DateDto dateDto,
-                      HttpServletRequest req, Model model) {
+    String selectDate(@Valid @ModelAttribute("dateDto") DateDto dateDto,
+                      HttpServletRequest req, Model model, BindingResult result) {
+        if(result.hasErrors()) {
+            model.addAttribute("Error","*필수* 날짜를 선택해주세요.");
+            String hotelName = (String) req.getSession().getAttribute("hotelName");
+            return "redirect:/reservation/hotel/" + hotelName;
+        }
         // 방 목록 만들기
         String hotelName = (String) req.getSession().getAttribute("hotelName");
         List<RoomDto> rooms = reservationService.findByRoomList(hotelName);
