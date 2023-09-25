@@ -1,15 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
-  <style>
-    /* 부모 요소에 플렉스 스타일을 적용하여 <oi> 블록을 가로로 배열 */
-    .oi-container{
-    display: flex;
-    }
-    oi {
-      margin-right: 20px; /* 각 <oi> 블록 간의 간격 설정(바꿔도 됨) */
-    }
-  </style>
+    <style>
+        /* 부모 요소에 플렉스 스타일을 적용하여 <oi> 블록을 가로로 배열 */
+        .oi-container {
+            display: flex;
+        }
+
+        oi {
+            margin-right: 20px; /* 각 <oi> 블록 간의 간격 설정(바꿔도 됨) */
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
@@ -32,12 +33,19 @@
           <div class="label fw-bolder fs-5">Check-Out date</div>
           <span th:text="${reservationDto.checkOutDate}" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-30&nbsp;
           </span>
-        </oi>
-      </div><br>
-      <div class="fw-bolder fs-5">Reservation Number</div>
-      <div th:text="${reservationDto.reserveNumber}" class="fw-bolder fs-5 border border-secondary-subtle rounded">AAA1-0523</div><br>
-      <div class="fw-bolder fs-5">Pay</div>
-      <div th:text="${reservationDto.reservePrice}" class="fw-bolder fs-5 border border-secondary-subtle rounded">700,000</div><br>
+            </oi>
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">Reservation Number</div>
+        <div th:text="${reservationDto.reserveNumber}" class="fw-bolder fs-5 border border-secondary-subtle rounded">
+            AAA1-0523
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">Pay</div>
+        <div th:text="${reservationDto.reservePrice}" class="fw-bolder fs-5 border border-secondary-subtle rounded">
+            700,000
+        </div>
+        <br>
     </ul>
     <div>
       <a th:href="@{/reservation/{reservationNumber}(reservationNumber=${reservationDto.reserveNumber})}" class="btn btn-outline-secondary">Cancel</a>
