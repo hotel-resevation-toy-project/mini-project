@@ -126,13 +126,22 @@ public class ReservationServiceImpl implements ReservationService {
         // 성수기 할인을 적용 해야하는 일 수
         int discountEndDays = 0;
         int discountStartDays = 0 ;
-        if(hotelEndPeakDate.isAfter(checkInDate)) {
-            discountEndDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate, checkOutDate);
+        int fullDiscountDays = 0;
+
+        // outPeak -> front, behind
+
+        if(hotelEndPeakDate.isAfter(checkInDate.minusDays(1))) {
+            discountEndDays = Math.max((int) ChronoUnit.DAYS.between(hotelEndPeakDate, checkOutDate)-1,0);
+        } else {
+            return (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
         }
-        if (hotelStartPeakDate.isBefore(checkOutDate)){
-            discountStartDays = (int) ChronoUnit.DAYS.between(checkInDate, hotelStartPeakDate);
+        if (hotelStartPeakDate.isBefore(checkOutDate.plusDays(1))){
+            discountStartDays = Math.max((int) ChronoUnit.DAYS.between(checkInDate, hotelStartPeakDate),0);
+        } else {
+            return (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
         }
-        return Math.max(discountEndDays, discountStartDays);
+
+        return discountEndDays + discountStartDays;
     }
 
     @Override
@@ -160,7 +169,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
     @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
-        int roomStock = roomRepository.findByHotelNameAndRoomType(reservationReqDto.getHotelName(), reservationReqDto.getRoomType()).getRoomStock();
         int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
                 reservationReqDto.getRoomType()).intValue();
 
