@@ -81,16 +81,28 @@ public class UserController {
         return "user/userInfo";
     }
 
-    @PutMapping("")
-    public String putUserInfo(Model model, @RequestParam("userInfoDto") UserInfoDto user){
-        userService.updateInfo(user);
-        model.addAttribute("userInfoDto",user);
-        return "redirect:/user/userInfo";
+/*    @PostMapping()
+    public String putUserInfo(@ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
+
+        *//*System.out.println("----------------putUserInfo");
+        System.out.println(userInfoDto.getName());
+        System.out.println(userInfoDto.getPhoneNumber());
+        System.out.println(userInfoDto.getEmail());
+        System.out.println("---------------------------");*//*
+
+        userService.updateInfo(userInfoDto);
+
+        return "redirect:/user/join";
+    }*/
+
+    @GetMapping("/withdraw")
+    public String withDraw(){
+        return "/user/withdraw";
     }
 
-    @PostMapping("")
+    @PostMapping("/quit")
     public String quit(@RequestParam("password") String password){
         userService.deactive(password);
-        return "redirect:/user/login";
+        return "redirect:/logout";
     }
 }
