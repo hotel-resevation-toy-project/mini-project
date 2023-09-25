@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
     <div class="container w-50">
         <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
-            <form th:object="${userInfoDto}" id="UserInfoForm" name="user" method="put"><br/><br/>
+            <form th:action="@{/user}" th:object="${userInfoDto}" id="UserInfoForm" name="user" method="post"><br/><br/>
                 <div>
                     <input type="text" th:name="email" th:value="${userInfoDto.email}" class="form-control" placeholder="이메일" autocomplete="off" readonly/>
                     <br>

@@ -85,7 +85,7 @@ public class UserController {
     public String putUserInfo(Model model, @RequestParam("userInfoDto") UserInfoDto user){
         userService.updateInfo(user);
         model.addAttribute("userInfoDto",user);
-        return "user/userInfo";
+        return "redirect:/user/userInfo";
     }
 
     @PostMapping("")
