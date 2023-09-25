@@ -86,19 +86,14 @@ public class UserController {
         return "user/userInfo";
     }
 
-/*    @PostMapping()
-    public String putUserInfo(@ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
-
-        *//*System.out.println("----------------putUserInfo");
-        System.out.println(userInfoDto.getName());
-        System.out.println(userInfoDto.getPhoneNumber());
-        System.out.println(userInfoDto.getEmail());
-        System.out.println("---------------------------");*//*
-
+    @PostMapping()
+    public String putUserInfo(Model model,/* @RequestParam("userInfoDto") UserInfoDto user*/
+                              @ModelAttribute("userInfoDto") UserInfoDto userInfoDto){
         userService.updateInfo(userInfoDto);
+//        model.addAttribute("userInfoDto",userInfoDto);
+        return "redirect:/user";
+    }
 
-        return "redirect:/user/join";
-    }*/
 
     @GetMapping("/withdraw")
     public String withDraw(){
