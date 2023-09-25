@@ -1,5 +1,8 @@
 package mini.project.HotelReservation.Reservation.Controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
@@ -30,17 +33,19 @@ public class ReservationController {
     }
 
     @GetMapping("/hotel/{hotelName}")
-    String selectHotel(@PathVariable("hotelName")String hotelName, Model model){
+    String selectHotel(@PathVariable("hotelName")String hotelName,
+                       HttpServletRequest req, Model model){
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
         reservationRequestDto.setHotelName(hotelName);
-        model.addAttribute("reservationRequestDto",reservationRequestDto);
+
+        req.getSession().setAttribute("reservationRequestDto", reservationRequestDto);
+        model.addAttribute("reservationRequestDto", reservationRequestDto);
 
         return "reservation/selectDate";
     }
     @PostMapping("/date")
-    String selectDate(Model model, @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-        System.out.println(reservationRequestDto.getCheckInDate());
-        System.out.println(reservationRequestDto.getCheckOutDate());
+    String selectDate(@ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto,
+                      Model model) {
         List<RoomDto> rooms = reservationService.findByRoomList(reservationRequestDto.getHotelName());
         model.addAttribute("reservationRequestDto",reservationRequestDto);
         model.addAttribute("rooms",rooms);
