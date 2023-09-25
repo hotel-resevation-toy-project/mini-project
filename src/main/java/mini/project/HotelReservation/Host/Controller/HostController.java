@@ -1,5 +1,6 @@
 package mini.project.HotelReservation.Host.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -78,10 +79,17 @@ public class HostController {
         return "host/hostReservationList";
     }
 
-    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+   /* @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     public String handel(Exception e, RedirectAttributes redirectAttributes){
         String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
         redirectAttributes.addFlashAttribute("Error", "다시 입력해주세요.");
         return "redirect:"+url;
-    }
+    }*/
+
+   @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+   public String handle(Exception e, HttpSession session) {
+       session.setAttribute("error", "다시 입력해주세요.");
+       String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
+       return "redirect:" + url;
+   }
 }
