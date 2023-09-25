@@ -3,21 +3,23 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<div th:replace="~{fragments/header :: header}" ></div>
-        <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-            <div class="position-absolute top-50 start-50 translate-middle-x d-grid gap-2 col-6 mx-auto">
-                <span class="text-center col-sm align-self-center fw-bolder fs-5">HostPage</span>
-                <br/>
-                <div>
-                    <button th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button></div>
-                <div>
-                    <button th:onclick="|location.href='@{/host/price}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Price</button></div>
-                <div>
-                    <button th:onclick="|location.href='@{/host/stock}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Stock</button></div>
-                <div>
-                    <button th:onclick="|location.href='@{/host/reservations}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Reserve List</button></div>
-            </div>
-        </div>
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+    <div class="container text-center">
+                <div class="top-50 flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+                    <div class="top-25 position-absolute start-50 translate-middle-x d-grid gap-2 col-6 mx-auto translate-middle">
+                        <span class="text-center col-sm align-self-center fw-bolder fs-5">HostPage</span>
+                        <br/>
+                        <div>
+                            <button th:onclick="|location.href='@{/host/policy}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Discount Policy</button></div>
+                        <div>
+                            <button th:onclick="|location.href='@{/host/price}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Price</button></div>
+                        <div>
+                            <button th:onclick="|location.href='@{/host/stock}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Change Room Stock</button></div>
+                        <div>
+                            <button th:onclick="|location.href='@{/host/reservations}'|" class="btn_size w-100 btn btn-outline-secondary fw-bolder fs-5">Reserve List</button></div>
+                    </div>
+                </div>
+    </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
