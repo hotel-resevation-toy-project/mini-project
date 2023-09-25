@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -22,7 +21,7 @@ public class SecurityConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring().requestMatchers("/user/in", "/user/new", "/favicon.ico");
+        return (web) -> web.ignoring().requestMatchers("/", "/user/in", "/user/new", "/favicon.ico");
     }
 
     @Bean
@@ -55,16 +54,8 @@ public class SecurityConfiguration {
 //                                .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 쿠키 삭제
                 )
                 // 커스텀 필터 추가 : 요청이 시작되기 전에 만들어놓은 JwtTokenFilter를 사용할 필터로 설정
-                .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(
-                (exception)->exception
-                        .accessDeniedHandler(customAccessDeniedHandler())
-//                        .accessDeniedPage("/")
-                );
+                .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class);
         return http.build();    // 설정한 http를 생성
     }
 
-    private AccessDeniedHandler customAccessDeniedHandler(){
-        return new CustomAccessDeniedHandler();
-    }
 }

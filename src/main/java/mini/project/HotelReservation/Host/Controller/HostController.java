@@ -79,6 +79,7 @@ public class HostController {
 
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     public String handel(Exception e, RedirectAttributes redirectAttributes){
+
         redirectAttributes.addFlashAttribute("Error", "다시 입력해주세요.");
         return "redirect:/host";
     }
