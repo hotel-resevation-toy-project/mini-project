@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
     @GetMapping("/")
     String index(){
-        return "/reservation/main";
+        return "redirect:/user/in";
     }
 }
