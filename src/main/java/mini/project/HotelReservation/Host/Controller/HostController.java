@@ -1,5 +1,6 @@
 package mini.project.HotelReservation.Host.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -42,11 +43,13 @@ public class HostController {
 
     // 가격 변경 페이지
     @GetMapping("/price")
-    String pricePage(Model model)  {
+    String pricePage(Model model, HttpSession session)  {
+        session.setAttribute("error","");
         model.addAttribute("priceDto", new PriceDto());
         model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/price";
     }
+
     @PostMapping("/price")
     String roomPrice(@ModelAttribute("priceDto") PriceDto priceDto){
         // TODO: 객실 가격 변경 로직 구현
@@ -57,7 +60,8 @@ public class HostController {
 
     // 재고 변경 페이지
     @GetMapping("/stock")
-    String stockPage(Model model){
+    String stockPage(Model model,HttpSession session){
+        session.setAttribute("error","");
         model.addAttribute("roomStockDto", new RoomStockDto());
         model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/stock";
@@ -78,10 +82,17 @@ public class HostController {
         return "host/hostReservationList";
     }
 
-    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+   /* @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     public String handel(Exception e, RedirectAttributes redirectAttributes){
         String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
         redirectAttributes.addFlashAttribute("Error", "다시 입력해주세요.");
         return "redirect:"+url;
-    }
+    }*/
+
+   @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+   public String handle(Exception e, HttpSession session) {
+       session.setAttribute("error", "다시 입력해주세요.");
+       String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
+       return "redirect:" + url;
+   }
 }

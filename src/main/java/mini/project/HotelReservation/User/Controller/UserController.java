@@ -2,6 +2,7 @@ package mini.project.HotelReservation.User.Controller;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
@@ -45,12 +46,15 @@ public class UserController {
 
     //로그인
     @PostMapping("/in")
-    public String postLogIn(@Valid @ModelAttribute("userSignInDto") UserSignInDto userSignInDto, BindingResult result,Model model){
+    public String postLogIn(HttpSession session, @Valid @ModelAttribute("userSignInDto") UserSignInDto userSignInDto, BindingResult result,Model model){
+        session.setAttribute("error", "");
         if(result.hasErrors()) {
-            model.addAttribute("Error","아이디와 비밀번호를 제대로 입력해주세요.");
+            model.addAttribute("error","아이디와 비밀번호를 제대로 입력해주세요.");
             return "redirect:/user/in";
         }
         userService.logIn(userSignInDto);
+
+
         return "reservation/main";
     }
 
@@ -64,13 +68,14 @@ public class UserController {
     //회원가입
     @PostMapping("/new")
     public String postJoin(@Valid @ModelAttribute("userSignUpDto") UserSignUpDto userSignUpDto,
-                           BindingResult result,Model model){
+                           BindingResult result,Model model,HttpSession session){
+        session.setAttribute("error","");
         if(result.hasErrors()) {
-            model.addAttribute("Error","다시 입력해주세요.");
+            session.setAttribute("error","다시 입력해주세요.");
             return "redirect:/user/new";
         }
         userService.join(userSignUpDto);
-        return "user/login";
+        return "redirect:/user/login";
     }
 
     // 로그아웃
@@ -100,8 +105,11 @@ public class UserController {
     }
 
     @PostMapping()
-    public String putUserInfo(Model model,/* @RequestParam("userInfoDto") UserInfoDto user*/
+    public String putUserInfo(HttpSession session, Model model,/* @RequestParam("userInfoDto") UserInfoDto user*/
                               @Valid @ModelAttribute("userInfoDto") UserInfoDto userInfoDto, BindingResult result){
+
+        session.setAttribute("error", "");
+
         if(result.hasErrors()) {
             model.addAttribute("Error","변경할 값을 다시 입력해주세요.");
             System.out.println("%%%%%%%%%%%%%%%%");
