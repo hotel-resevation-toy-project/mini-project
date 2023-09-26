@@ -49,10 +49,12 @@ public class UserController {
     public String postLogIn(HttpSession session, @Valid @ModelAttribute("userSignInDto") UserSignInDto userSignInDto, BindingResult result,Model model){
         session.setAttribute("error", "");
         if(result.hasErrors()) {
-            model.addAttribute("Error","아이디와 비밀번호를 제대로 입력해주세요.");
+            model.addAttribute("error","아이디와 비밀번호를 제대로 입력해주세요.");
             return "redirect:/user/in";
         }
         userService.logIn(userSignInDto);
+
+
         return "reservation/main";
     }
 
@@ -66,13 +68,14 @@ public class UserController {
     //회원가입
     @PostMapping("/new")
     public String postJoin(@Valid @ModelAttribute("userSignUpDto") UserSignUpDto userSignUpDto,
-                           BindingResult result,Model model){
+                           BindingResult result,Model model,HttpSession session){
+        session.setAttribute("error","");
         if(result.hasErrors()) {
-            model.addAttribute("Error","다시 입력해주세요.");
+            session.setAttribute("error","다시 입력해주세요.");
             return "redirect:/user/new";
         }
         userService.join(userSignUpDto);
-        return "user/login";
+        return "redirect:/user/login";
     }
 
     // 로그아웃
