@@ -1,6 +1,7 @@
 package mini.project.HotelReservation.Host.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -9,6 +10,7 @@ import mini.project.HotelReservation.Host.Service.HostService;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -51,8 +53,12 @@ public class HostController {
     }
 
     @PostMapping("/price")
-    String roomPrice(@ModelAttribute("priceDto") PriceDto priceDto){
+    String roomPrice(@Valid @ModelAttribute("priceDto") PriceDto priceDto, BindingResult result, HttpSession session){
         // TODO: 객실 가격 변경 로직 구현
+        if (result.hasErrors()) {
+            session.setAttribute("error", "타입과, 가격을 제대로 입력해주세요.");
+            return "redirect:/host/price";
+        }
         hostService.modifyRoomPrice(priceDto);
         // Exception 처리할 것 (IllegalArgumentException)
         return "host/manage";
@@ -67,7 +73,11 @@ public class HostController {
         return "host/stock";
     }
     @PostMapping("/stock")
-    String roomStock(@ModelAttribute("roomStockDto") RoomStockDto roomStockDto){
+    String roomStock(@ModelAttribute("roomStockDto") RoomStockDto roomStockDto, BindingResult result, HttpSession session){
+        if (result.hasErrors()) {
+            session.setAttribute("error", "타입과, 수량을 제대로 입력해주세요.");
+            return "redirect:/host/stock";
+        }
         // TODO: 객실 재고 변경 로직 구현
         hostService.modifyRoomStock(roomStockDto);
             // Exception 처리할 것 (IllegalArgumentException)
@@ -82,14 +92,7 @@ public class HostController {
         return "host/hostReservationList";
     }
 
-   /* @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
-    public String handel(Exception e, RedirectAttributes redirectAttributes){
-        String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
-        redirectAttributes.addFlashAttribute("Error", "다시 입력해주세요.");
-        return "redirect:"+url;
-    }*/
-
-   @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+   @ExceptionHandler(IllegalArgumentException.class)
    public String handle(Exception e, HttpSession session) {
        session.setAttribute("error", "다시 입력해주세요.");
        String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();

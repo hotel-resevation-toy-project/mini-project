@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Primary
 public class DaysFixDiscountPolicy implements DaysDiscountPolicy{
-    int discountPrice = 3000;
+    int discountPrice = 30000;
     @Override
     public int discount(int noDiscountPrice, int days) {
-        return (days / 3) * (discountPrice * days);
+        return discountPrice * (days / 3);
         // 리턴 = 공제 금액
     }
 }

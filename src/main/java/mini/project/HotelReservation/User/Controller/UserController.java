@@ -46,15 +46,9 @@ public class UserController {
 
     //로그인
     @PostMapping("/in")
-    public String postLogIn(HttpSession session, @Valid @ModelAttribute("userSignInDto") UserSignInDto userSignInDto, BindingResult result,Model model){
+    public String postLogIn(HttpSession session, @Valid @ModelAttribute("userSignInDto") UserSignInDto userSignInDto){
         session.setAttribute("error", "");
-        if(result.hasErrors()) {
-            model.addAttribute("error","아이디와 비밀번호를 제대로 입력해주세요.");
-            return "redirect:/user/in";
-        }
         userService.logIn(userSignInDto);
-
-
         return "reservation/main";
     }
 
@@ -68,14 +62,14 @@ public class UserController {
     //회원가입
     @PostMapping("/new")
     public String postJoin(@Valid @ModelAttribute("userSignUpDto") UserSignUpDto userSignUpDto,
-                           BindingResult result,Model model,HttpSession session){
-        session.setAttribute("error","");
+                           BindingResult result, HttpSession session){
+        session.setAttribute("error", "");
         if(result.hasErrors()) {
-            session.setAttribute("error","다시 입력해주세요.");
+            session.setAttribute("error","다시 입력해 주세요.");
             return "redirect:/user/new";
         }
         userService.join(userSignUpDto);
-        return "redirect:/user/login";
+        return "redirect:/user/in";
     }
 
     // 로그아웃
@@ -105,30 +99,29 @@ public class UserController {
     }
 
     @PostMapping()
-    public String putUserInfo(HttpSession session, Model model,/* @RequestParam("userInfoDto") UserInfoDto user*/
-                              @Valid @ModelAttribute("userInfoDto") UserInfoDto userInfoDto, BindingResult result){
+    public String putUserInfo(HttpSession session, @Valid @ModelAttribute("userInfoDto") UserInfoDto userInfoDto, BindingResult result){
 
         session.setAttribute("error", "");
 
         if(result.hasErrors()) {
-            model.addAttribute("Error","변경할 값을 다시 입력해주세요.");
-            System.out.println("%%%%%%%%%%%%%%%%");
-            System.out.println("업데이트 오류");
+            session.setAttribute("error","변경할 값을 다시 입력해주세요.");
             return "redirect:/user";
         }
         userService.updateInfo(userInfoDto);
-//        model.addAttribute("userInfoDto",userInfoDto);
         return "redirect:/user";
     }
 
-
     @GetMapping("/withdraw")
-    public String withDraw(){
+    public String withDraw(HttpSession session){
+        if (session.getAttribute("error").equals("탈퇴시 비밀번호를 정확히 입력해주세요.")) {
+            return "/user/withdraw";
+        }
+        session.setAttribute("error", "");
         return "/user/withdraw";
     }
 
     @PostMapping("/quit")
-    public String quit(@RequestParam("password") String password){
+    public String quit(@Valid @RequestParam("password") String password){
         userService.deactive(password);
         return "redirect:/logout";
     }
@@ -136,8 +129,13 @@ public class UserController {
     @ExceptionHandler({NoSuchElementException.class, DuplicateRequestException.class})
     public String handler(Exception e, HttpServletRequest req) {
         if(e.getClass().equals(NoSuchElementException.class)) {
-            req.getSession().setAttribute("error", e.getMessage());
-            return "redirect:/user/in";
+            if (e.getMessage().equals("탈퇴시 비밀번호를 정확히 입력해주세요.")) {
+                req.getSession().setAttribute("error", e.getMessage());
+                return "redirect:/user/withdraw";
+            } else {
+                req.getSession().setAttribute("error", e.getMessage());
+                return "redirect:/user/in";
+            }
         }
         if(e.getClass().equals(DuplicateRequestException.class)) {
             req.getSession().setAttribute("error", e.getMessage());

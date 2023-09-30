@@ -1,15 +1,17 @@
 package mini.project.HotelReservation.Host.Data.Dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import mini.project.HotelReservation.enumerate.RoomType;
+import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PriceDto {
-    @NotBlank(message = "객실 타입을 지정해주세요.")
+    @Pattern(regexp = "^[A-D]$")
     private String roomType;
-    @NotBlank(message = "변경할 가격을 지정해주세요.")
+
     private Integer discountPrice;
 }
