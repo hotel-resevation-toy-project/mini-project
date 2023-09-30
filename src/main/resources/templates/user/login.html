@@ -9,11 +9,11 @@
         <hr class="separator"/>
         <form th:action th:object="${userSignInDto}" method="post">
             <div class="form-floating mb-3">
-                <input type="email" th:field="*{email}" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="email" th:field="${userSignInDto.email}" class="form-control" id="floatingInput" required>
                 <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="password" th:field="*{password}" class="form-control" id="floatingPassword" placeholder="Password">
+                <input type="password" th:field="*{password}" class="form-control" id="floatingPassword" required>
                 <label for="floatingPassword">Password</label>
             </div>
             <div>
@@ -48,9 +48,7 @@
                 'error'
             )
         }
-
     });
-
 </script>
 </body>
 </html>

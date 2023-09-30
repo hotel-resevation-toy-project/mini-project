@@ -9,6 +9,7 @@
 </style>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+    <div style="display:none" id="sessionValue" th:text="${session.error}"></div>
     <div class="container w-50">
         <div class="login_wrapper" style="margin: calc(50vh - 320px) auto 0px;">
             <form th:action th:object="${userInfoDto}"  id="UserInfoForm" name="user" method="post"><br/><br/>
@@ -35,6 +36,28 @@
         </a>
     </div> <!-- /container -->
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
 
+        var sessionValue = document.getElementById('sessionValue').textContent;
+
+        var isEmpty = function(value){
+            if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+                return true
+            }else{
+                return false
+            }
+        };
+
+        if(!isEmpty(sessionValue)){
+            Swal.fire(
+                sessionValue,
+                '',
+                'error'
+            )
+        }
+    });
+</script>
 </body>
 </html>

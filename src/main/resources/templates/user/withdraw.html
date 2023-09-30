@@ -9,6 +9,7 @@
 </style>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+<div style="display:none" id="sessionValue" th:text="${session.error}"></div>
 <div class="container w-50">
   <div class="login_wrapper" style="margin: calc(50vh - 320px) auto;">
     <form method="post" th:action="@{/user/quit}">
@@ -22,21 +23,37 @@
         </a>
         <br>
       </div>
-      <div class="form-floating mb-3"><input type="password" th:name="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <div class="form-floating mb-3">
+        <input type="password" th:name="password" class="form-control" id="floatingPassword" placeholder="Password" required>
         <label for="floatingPassword">Password</label></div>
       <br>
       <div class="button-container">
-        <a th:href="@{/user/in}" th:method="get"></a>
-          <button type="submit" class="btn btn-outline-secondary btn-large form-control"
-                id="btn_modifyForm">Yes</button>
-
-        <button type="submit" class="btn btn-outline-secondary btn-large form-control"
-                id="btn_withdrawForm">No</button>
+        <button type="submit" class="btn btn-outline-secondary btn-large form-control" id="btn_modifyForm">Yes</button>
+        <a th:href="@{/reservation/main}" class="btn btn-outline-secondary btn-large form-control" id="btn_withdrawForm">No</a>
       </div>
     </form>
     <hr class="separator"/>
   </div>
  <div th:replace="~{fragments/footer :: footer}"></div>
 </div> <!-- /container -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+
+    var sessionValue = document.getElementById('sessionValue').textContent;
+
+    var isEmpty = function(value){
+      return value === "" || value == null || false || (typeof value == "object" && !Object.keys(value).length);
+    };
+
+    if(!isEmpty(sessionValue)){
+      Swal.fire(
+              sessionValue,
+              '',
+              'error'
+      )
+    }
+  });
+</script>
 </body>
 </html>

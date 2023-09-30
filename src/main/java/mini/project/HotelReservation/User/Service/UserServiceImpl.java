@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService{
     public void deactive(String password) {
         User user = userRepository.findById(td.currentUser().getUserId()).get();
         if(!(passwordEncoder.matches(password, user.getPassword()))){
-            throw new NoSuchElementException("비밀번호를 정확히 입력해주세요.");
+            throw new NoSuchElementException("탈퇴시 비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();
     }

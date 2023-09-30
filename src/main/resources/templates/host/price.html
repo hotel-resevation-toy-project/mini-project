@@ -18,10 +18,10 @@
         <form th:action="@{/host/price}" th:object="${priceDto}" method="post">
             <div class = "row">
                 <div class="form-floating mb-3 col-sm">
-                    <input name="roomType" th:field="*{roomType}" type="text" class=" form-control w-100" id="floatingInput">
+                    <input name="roomType" th:field="*{roomType}" type="text" class=" form-control w-100" id="floatingInput" required>
                     <label for="floatingInput">RoomType</label> </div>
                 <div class="form-floating mb-3 col-sm">
-                    <input name="discountPrice" th:field="*{discountPrice}" type="text" class="form-control w-100" id="floatingPrice">
+                    <input name="discountPrice" th:field="*{discountPrice}" type="number" class="form-control w-100" id="floatingPrice" required>
                     <label for="floatingPrice">Price</label> </div>
             </div>
             <br />
