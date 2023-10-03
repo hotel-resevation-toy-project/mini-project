@@ -22,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 @Transactional(readOnly = true)
@@ -144,11 +146,19 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
-        User user =  userRepository.findById(td.currentUser().getUserId()).get();
+//        User user =  userRepository.findById(td.currentUser().getUserId()).get();
+
+        Optional<User> user = userRepository.findById(td.currentUser().getUserId());
+        User user1 = user.orElseGet(new Supplier<User>() {
+            @Override
+            public User get() {
+                return null;
+            }
+        });
 
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
 
-        Reservation reservation = Reservation.createReserve(user, hotel,
+        Reservation reservation = Reservation.createReserve(user1, hotel,
                                     reservationReqDto,
                                     discountPriceDto.getPay(),/* 결제 금액 */
                                     createReserveNumber(hotel, reservationReqDto)/* 예약 번호 */);
