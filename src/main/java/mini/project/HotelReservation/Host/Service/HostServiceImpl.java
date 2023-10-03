@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,14 +31,16 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public String referenceHotel(){
-        String hotelName = td.currentUser().getHotel().getHotelName();
-        return hotelName;
+        return td.currentUser().getHotel().getHotelName();
     }
+
     @Override
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
+
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
+
         hotel.changePolicy(policy);
     }
 
@@ -45,14 +48,10 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        RoomType roomType = switch (priceDto.getRoomType()) {
-            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
-            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
-            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
-            case "D" -> RoomType.ROOM_TYPE_D_KING;
-            default -> null;
-        };
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
+
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
+                selectRoomType(priceDto.getRoomType()));
+
         room.modifyPrice(priceDto.getDiscountPrice());
     }
 
@@ -60,28 +59,28 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        RoomType roomType = switch (roomStockDto.getRoomType()) {
-            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
-            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
-            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
-            case "D" -> RoomType.ROOM_TYPE_D_KING;
-            default -> null;
-        };
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
+
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
+                selectRoomType(roomStockDto.getRoomType()));
+
         room.modifyStock(roomStockDto.getRoomStock());
     }
 
     @Override
     public List<HotelReservationDto> reservationList() {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
-        List<HotelReservationDto> reservations = new ArrayList<>();
-        for (Reservation reservation : reservationsByHotelId) {
-            reservations.add(new HotelReservationDto(reservation.getReserveNumber(),
-                                                             reservation.getUserName(),
-                                                               reservation.getPhoneNumber()));
-        }
-        return reservations;
+        return reservationRepository
+                .findAllByHotel_HotelId(hotelId)
+                .stream().map(HotelReservationDto::new).toList();
     }
 
+    public RoomType selectRoomType(String roomType) {
+        return switch (roomType) {
+            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
+            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
+            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
+            case "D" -> RoomType.ROOM_TYPE_D_KING;
+            default -> null;
+        };
+    }
 }
