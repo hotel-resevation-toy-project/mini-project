@@ -3,12 +3,14 @@ package mini.project.HotelReservation.Reservation.Controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -33,44 +35,53 @@ public class ReservationController {
     @GetMapping("/hotel/{hotelName}")
     String selectHotel(@PathVariable("hotelName")String hotelName,
                        HttpServletRequest req, Model model){
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto();
-        reservationRequestDto.setHotelName(hotelName);
 
-        req.getSession().setAttribute("reservationRequestDto", reservationRequestDto);
-        model.addAttribute("reservationRequestDto", reservationRequestDto);
+        req.getSession().setAttribute("hotelName", hotelName);
+        model.addAttribute("dateDto", new DateDto());
 
         return "reservation/selectDate";
     }
     @PostMapping("/date")
-    String selectDate(@ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto,
-                      Model model) {
-        List<RoomDto> rooms = reservationService.findByRoomList(reservationRequestDto.getHotelName());
-        model.addAttribute("reservationRequestDto",reservationRequestDto);
+    String selectDate(@Valid @ModelAttribute("dateDto") DateDto dateDto,
+                      HttpServletRequest req, Model model, BindingResult result) {
+        if(result.hasErrors()) {
+            model.addAttribute("Error","*필수* 날짜를 선택해주세요.");
+            String hotelName = (String) req.getSession().getAttribute("hotelName");
+            return "redirect:/reservation/hotel/" + hotelName;
+        }
+        // 방 목록 만들기
+        String hotelName = (String) req.getSession().getAttribute("hotelName");
+        List<RoomDto> rooms = reservationService.findByRoomList(hotelName);
         model.addAttribute("rooms",rooms);
+
+        // 날짜 정보 세션에 올리기
+        req.getSession().setAttribute("dateDto",dateDto);
 
         return "reservation/selectRoom";
     }
     @GetMapping("/room/{roomType}")
-    String selectRoom(@PathVariable("roomType")String roomType,Model model,
-                      @ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto){
-        reservationRequestDto.setRoomType(RoomType.valueOf(roomType));
+    String selectRoom(@PathVariable("roomType")String roomType, HttpServletRequest req) {
+        String hotelName = (String) req.getSession().getAttribute("hotelName");
+        DateDto dateDto = (DateDto) req.getSession().getAttribute("dateDto");
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(hotelName,dateDto, RoomType.valueOf(roomType));
+
         DiscountPriceDto discountPriceDto = reservationService.discountPrice(reservationRequestDto);
-        model.addAttribute("discountPriceDto",discountPriceDto);
-        model.addAttribute("reservationRequestDto", reservationRequestDto);
+
+        req.getSession().setAttribute("reservationRequestDto",reservationRequestDto);
+        req.getSession().setAttribute("discountPriceDto",discountPriceDto);
         return "reservation/reservationPay";
     }
-    @PostMapping("/payment")
-    String reservePay(@ModelAttribute("reservationRequestDto") ReservationRequestDto reservationRequestDto,
-                      @ModelAttribute("discountPriceDto") DiscountPriceDto discountPriceDto,
-                      Model model){
-        ReservationResponseDto reservationResponseDto = reservationService.reserve(reservationRequestDto, discountPriceDto);
-        model.addAttribute("reservationResponseDto",reservationResponseDto);
-        model.addAttribute("discountPriceDto",discountPriceDto);
+    @GetMapping("/payment")
+    String reservePay(HttpServletRequest req, Model model) {
+        ReservationRequestDto reservationRequestDto = (ReservationRequestDto) req.getSession().getAttribute("reservationRequestDto");
+        DiscountPriceDto discountPriceDto = (DiscountPriceDto) req.getSession().getAttribute("discountPriceDto");
+        model.addAttribute("reservationDto",reservationService.reserve(reservationRequestDto, discountPriceDto));
         return "user/reservationInfo";
     }
 
-    @GetMapping()
-    String reserveCancel(){
-        return null;
+    @GetMapping("/{reserveNumber}")
+    String reserveCancel(@PathVariable("reserveNumber") String reserveNumber) {
+        reservationService.reserveDelete(reserveNumber);
+        return "/reservation/main";
     }
 }

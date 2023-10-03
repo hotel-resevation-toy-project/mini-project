@@ -1,6 +1,8 @@
 package mini.project.HotelReservation.User.Data.Dto;
 
 import lombok.Data;
+import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -10,10 +12,10 @@ public class UserReservationDto {
     private final LocalDateTime checkInDate;
     private final LocalDateTime checkOutDate;
 
-    public UserReservationDto(String reserveNumber, String hotelName, LocalDateTime checkInDate, LocalDateTime checkOutDate){
-        this.reserveNumber = reserveNumber;
-        this.hotelName = hotelName;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
+    public UserReservationDto(Reservation reservation){
+        this.reserveNumber = reservation.getReserveNumber();
+        this.hotelName = reservation.getHotelName();
+        this.checkInDate = reservation.getCheckInDate();
+        this.checkOutDate = reservation.getCheckOutDate();
     }
 }

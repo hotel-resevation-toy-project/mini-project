@@ -4,6 +4,7 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+<div style="display:none" id="sessionValue" th:text="${session.error}"></div>
 <div class="container w-50">
     <div class="position-relative d-flex flex-column align-items-center justify-content-center">
         <div class ="col g-2 w-50 text-md-center">
@@ -17,10 +18,10 @@
         <form th:action="@{/host/price}" th:object="${priceDto}" method="post">
             <div class = "row">
                 <div class="form-floating mb-3 col-sm">
-                    <input name="roomType" th:field="*{roomType}" type="text" class=" form-control w-100" id="floatingInput">
+                    <input name="roomType" th:field="*{roomType}" type="text" class=" form-control w-100" id="floatingInput" required>
                     <label for="floatingInput">RoomType</label> </div>
                 <div class="form-floating mb-3 col-sm">
-                    <input name="discountPrice" th:field="*{discountPrice}" type="text" class="form-control w-100" id="floatingPrice">
+                    <input name="discountPrice" th:field="*{discountPrice}" type="number" class="form-control w-100" id="floatingPrice" required>
                     <label for="floatingPrice">Price</label> </div>
             </div>
             <br />
@@ -30,6 +31,31 @@
         </form>
     </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+
+            var sessionValue = document.getElementById('sessionValue').textContent;
+
+            var isEmpty = function(value){
+                if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+                    return true
+                }else{
+                    return false
+                }
+            };
+
+            if(!isEmpty(sessionValue)){
+                Swal.fire(
+                    sessionValue,
+                    '',
+                    'error'
+                )
+            }
+
+        });
+
+    </script>
 </div>
 </body>
 </html>

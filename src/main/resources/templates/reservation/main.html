@@ -3,6 +3,14 @@
 <head th:replace="~{fragments/header :: header}">
 </head>
 <body>
+    <!--<script src = " https://unpkg.com/sweetalert/dist/sweetalert.min.js "> </script>
+    <script>
+        swal({
+            title: "로그인 성공",
+            text: "",
+            icon: "success",
+        });
+    </script>-->
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
     <div class="container text-center justify-content-center w-25">
         <div class="row">
@@ -36,5 +44,6 @@
             </div>
         </div>
     </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

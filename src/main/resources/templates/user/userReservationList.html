@@ -4,60 +4,40 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
-<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
-<<<<<<< HEAD
-    <th:block th:each="reservationResponseDto: ${userReservationDtoList}">
-        <form th:action="@{'/user/reservation/'+${reservationResponseDto.reserveNumber}}">
-            <div class="list-group">
-                <a th:href="@{${reservationResponseDto.reserveNumber}}" class="list-group-item list-group-item-action d-flex gap-3 py-3 d-flex flex-column" aria-current="true">
-                    <div>
-              <span class="fw-bolder fs-5">
-                Hotel Name :&nbsp;
-              </span>
-                        <span th:text="${reservationResponseDto.hotelName}" class="fw-bolder fs-5">Hotel_A</span>
+<div class="container w-100"><div class="w-25"></div>
+    <div class="row w-100">
+        <th:block th:each="reservationResponseDto: ${userReservationDtoList}">
+            <div class="col-md-4 w-100"> <!-- 각 리스트 아이템을 3개의 열로 나눕니다. -->
+                <form th:action="@{/reservation/{reserveNumber}(reserveNumber=${reservationResponseDto.reserveNumber})}">
+                    <div class="list-group w-100">
+                        <a th:href="@{${reservationResponseDto.reserveNumber}}" class="list-group-item list-group-item-action d-flex gap-3 py-3 d-flex flex-column" aria-current="true">
+                            <div>
+                                <span class="fw-bolder fs-5">
+                                    Hotel Name :&nbsp;
+                                </span>
+                                <span th:text="${reservationResponseDto.hotelName}" class="fw-bolder fs-5">Hotel_A</span>
+                            </div>
+                            <div>
+                                <span class="fw-bolder fs-5">
+                                    Check-In :&nbsp;
+                                </span>
+                                <span th:text="${reservationResponseDto.checkInDate}" class="fw-bolder fs-5">23-05-23</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="fw-bolder fs-5">
+                                    Check-Out :&nbsp;
+                                </span>
+                                <span th:text="${reservationResponseDto.checkOutDate}" class="fw-bolder fs-5">23-05-30</span>
+                            </div>
+                        </a>
                     </div>
-                    <div>
-              <span class="fw-bolder fs-5">
-                Check-In :&nbsp;
-              </span>
-                        <span th:text="${reservationResponseDto.checkInDate}" class="fw-bolder fs-5">23-05-23</span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="fw-bolder fs-5">
-                Check-Out :&nbsp;
-                </span>
-                        <span th:text="${reservationResponseDto.checkOutDate}" class="fw-bolder fs-5">23-05-30</span>
-                    </div>
-                </a>
+                    <br/>
+                </form>
             </div>
-        </form>
-    </th:block>
-=======
-  <th:block th:each="reservationResponseDto: ${userReservationDtoList}">
-    <form th:action="@{/reservation/{reserveNumber}(reserveNumber=${reservationResponseDto.reserveNumber})}">
-      <div class="list-group">
-        <a th:href="@{${reservationResponseDto.reserveNumber}}" class="list-group-item list-group-item-action d-flex gap-3 py-3 d-flex flex-column" aria-current="true">
-          <div>
-              <span class="fw-bolder fs-5">
-                Hotel Name :&nbsp;
-              </span>
-            <span th:text="${reservationResponseDto.hotelName}" class="fw-bolder fs-5">Hotel_A</span>
-          </div>
-          <div>
-              <span class="fw-bolder fs-5">
-                Check-In :&nbsp;
-              </span>
-            <span th:text="${reservationResponseDto.checkInDate}" class="fw-bolder fs-5">23-05-23</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <span class="fw-bolder fs-5">
-                Check-Out :&nbsp;
-                </span>
-            <span th:text="${reservationResponseDto.checkOutDate}" class="fw-bolder fs-5">23-05-30</span>
-          </div>
-        </a>
-      </div>
-    </form>
-  </th:block>
->>>>>>> ba3fc4c3df4bda53b0b8f49363c886398a1d4bbd
+            <br/>
+        </th:block>
+    </div>
 </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

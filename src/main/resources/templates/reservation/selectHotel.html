@@ -4,7 +4,7 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
-    <p>selectHotel</p>
+    <p class="text-end fw-bolder fs-5 me-1">selectHotel&nbsp;&nbsp;&nbsp;&nbsp;</p>
     <div class="d-flex justify-content-between w-100">
         <div class="w-25">
 
@@ -13,7 +13,7 @@
     <ul class="list-group border border-white rounded justify-content-center w-50" th:each="hotel : ${hotelListDto}">
         <ol class="align-self-center p-2">
             <a th:method="get" th:href="@{/reservation/hotel/{hotelName}(hotelName = ${hotel.hotelName})}" class=" list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-                <p th:text="${hotel.hotelName}" class="mb-0 fw-bolder fs-5"></p>
+                <p th:text="${hotel.hotelName}" class="mb-0 fw-bolder fs-5 "></p>
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>
                         <div class="fw-bolder fs-5"> RoomType </div>
@@ -44,6 +44,6 @@
         </div>
 
     </div>
-
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

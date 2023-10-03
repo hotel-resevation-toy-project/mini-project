@@ -4,50 +4,50 @@
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
+    <p class="text-end fw-bolder fs-5 me-1">selectRoom&nbsp;&nbsp;&nbsp;&nbsp;</p>
     <div class="container text-center justify-content-center w-50" >
-        <form th:object="${reservationRequestDto}">
-            <div class="row g-3">
-                <div class="col-sm">
-                    <span th:text="${reservationRequestDto.hotelName}" class="fw-bolder fs-5" >Hotel_A</span>
-                    &nbsp;&nbsp;&nbsp;
-                    <span class="fw-bolder fs-5" ></span>
-                </div>
-                <div class="col-sm">
-                    <div>
-                        <div>
-                            <span class="fw-bolder fs-5">
-                                Check-In : &nbsp;
-                            </span>
-                            <span class="fw-bolder fs-5" th:text="${reservationRequestDto.checkInDate}">2023-05-23</span>
-                        </div>
-                    </div>
+        <div class="row g-3">
+            <div class="col-sm">
+                <span th:text="${session.hotelName}" class="fw-bolder fs-5" >Hotel_A</span>
+                &nbsp;&nbsp;&nbsp;
+                <span class="fw-bolder fs-5" ></span>
+            </div>
+            <div class="col-sm">
+                <div>
                     <div>
                         <span class="fw-bolder fs-5">
-                            Check-Out : &nbsp;
+                            Check-In : &nbsp;
                         </span>
-                        <span class="fw-bolder fs-5" th:text="${reservationRequestDto.checkOutDate}">2023-05-30</span>
+                        <span class="fw-bolder fs-5" th:text="${session.dateDto.checkInDate}">2023-05-23</span>
                     </div>
                 </div>
-            </div>
-
-            <ul th:each="room : ${rooms}">
-                <br/>
-                <div class="list-group">
-                    <ol>
-                        <a th:href="@{/reservation/room/{roomType}(roomType = ${room.roomType})}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-                            <div class="d-flex w-100 justify-content-between">
-                                <p class="mb-0 fw-bolder fs-5" th:text="${room.roomType}">RoomType_A_SuperSingle</p>
-                                <br/>
-                                <div class="row g-2">
-                                    <span class="col-sm-7 mb-0 fw-bolder w-100" th:text="'1Day - '+${room.roomPrice}">1Day - 100,000</span>
-                                    <span class="col-sm mb-0 fw-bolder " th:text="'abailable : '+${room.roomStock}">available : 20</span>
-                                </div>
-                            </div>
-                        </a>
-                    </ol>
+                <div>
+                    <span class="fw-bolder fs-5">
+                        Check-Out : &nbsp;
+                    </span>
+                    <span class="fw-bolder fs-5" th:text="${session.dateDto.checkOutDate}">2023-05-30</span>
                 </div>
-            </ul>
-        </form>
+            </div>
+        </div>
+
+        <ul th:each="room : ${rooms}">
+            <br/>
+            <div class="list-group">
+                <ol>
+                    <a th:href="@{/reservation/room/{roomType}(roomType = ${room.roomType})}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <p class="mb-0 fw-bolder fs-5" th:text="${room.roomType}">RoomType_A_SuperSingle</p>
+                            <br/>
+                            <div class="row g-2">
+                                <span class="col-sm-7 mb-0 fw-bolder w-100" th:text="'1Day - '+${room.roomPrice}">1Day - 100,000</span>
+                                <span class="col-sm mb-0 fw-bolder " th:text="'abailable : '+${room.roomStock}">available : 20</span>
+                            </div>
+                        </div>
+                    </a>
+                </ol>
+            </div>
+        </ul>
     </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

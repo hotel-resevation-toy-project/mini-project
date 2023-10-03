@@ -11,12 +11,12 @@
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
   <div class="container text-center justify-content-center w-50" >
-    <div method="post"  th:action="@{/reservation/payment}" th:object="${reservationRequestDto}">
+    <div th:object="${session.reservationRequestDto}">
       <div class="row g-3">
         <div class="col-sm">
-          <span th:text="${reservationRequestDto.hotelName}" class="fw-bolder fs-5" >Hotel_A</span>
+          <span th:text="*{hotelName}" class="fw-bolder fs-5" >Hotel_A</span>
           &nbsp;&nbsp;&nbsp;
-          <span th:text="${reservationRequestDto.roomType}" class="fw-bolder fs-5" >RoomType_A</span>
+          <span th:text="*{roomType}" class="fw-bolder fs-5" >RoomType_A</span>
         </div>
         <div class="col-sm">
           <div>
@@ -24,13 +24,13 @@
                 <span class="fw-bolder fs-5">
                   Check-In : &nbsp;
                 </span>
-              <span class="fw-bolder fs-5" th:text="${reservationRequestDto.checkInDate}">2023-05-23</span>
+              <span class="fw-bolder fs-5" th:text="*{checkInDate}">2023-05-23</span>
             </div>
             <div>
               <span class="fw-bolder fs-5">
                 Check-Out : &nbsp;
               </span>
-              <span class="fw-bolder fs-5" th:text="${reservationRequestDto.checkOutDate}">2023-05-30</span>
+              <span class="fw-bolder fs-5" th:text="*{checkOutDate}">2023-05-30</span>
             </div>
           </div>
         </div>
@@ -38,31 +38,32 @@
     </div>
 
     <br>
-    <div class="div_pay" th:object="${discountPriceDto}">
+    <div class="div_pay" th:object="${session.discountPriceDto}">
       <p class="div_pay fw-bolder fs-5">TotalPrice</p>
-      <div th:text="${discountPriceDto.pay}" class="fw-bolder fs-5 div_pay rounded border border-secondary-subtle">
+      <div th:text="*{totalPrice}" class="fw-bolder fs-5 div_pay rounded border border-secondary-subtle">
         100,000
       </div>
       <br>
       <p class="div_pay fw-bolder fs-5">Discount</p>
       <div class="div_pay  row g-2 rounded border border-secondary-subtle">
-        <span class="col-sm fw-bolder fs-5" th:text="${discountPriceDto.discountPolicy}">
+        <span class="col-sm fw-bolder fs-5" th:text="*{discountPolicy}">
           PeakDiscount
         </span>
-        <span class="col-sm fw-bolder fs-5"  th:text="${discountPriceDto.discountPrice}">
+        <span class="col-sm fw-bolder fs-5"  th:text="*{discountPrice}">
           30,000
         </span>
       </div>
       <br>
       <p class="div_pay fw-bolder fs-5" >Pay</p>
-      <div th:text="${discountPriceDto.totalPrice}" class="div_pay fw-bolder fs-5 rounded border border-secondary-subtle">
+      <div th:text="*{pay}" class="div_pay fw-bolder fs-5 rounded border border-secondary-subtle">
           70,000
       </div>
       <br>
     </div>
     <div class="button-container">
-      <button type="submit" id="btn_modifyForm" class="btn btn-outline-secondary ">&nbsp;&nbsp;Pay&nbsp;&nbsp;</button>
+      <a th:href="@{/reservation/payment}" class="btn btn-outline-secondary">&nbsp;&nbsp;Pay&nbsp;&nbsp;</a>
     </div>
   </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

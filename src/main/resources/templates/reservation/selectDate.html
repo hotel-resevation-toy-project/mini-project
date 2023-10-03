@@ -5,30 +5,45 @@
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
     <div class="container text-center justify-content-center w-50">
-        <div th:object="${session.reservationRequestDto}">
+        <div>
             <div class="row g-3">
-            <span class="col-sm fw-bolder fs-5" th:field="*{hotelName}">
-                Hotel_A
+            <span class="col-sm fw-bolder fs-5" th:text="${session.hotelName}">
+                Hotel_A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
                 <span class="col-sm"></span>
                 <span class="col-sm fw-bolder fs-5">
-                SelectDate
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SelectDate
             </span>
             </div>
         </div>
 
         <br/>
         <br/>
-        <form th:method="post" th:action="@{/reservation/date}"th:object="${reservationRequestDto}">
+
+        <div>
             <div class="row g-3">
-                <input th:field="${session.reservationRequestDto.hotelName}" type="hidden">
+            <span class="col-sm fw-bolder fs-5" >
+                Check-In-Date
+            </span>
+                <span class="col-sm"></span>
+                <span class="col-sm fw-bolder fs-5">
+                Check-Out-Date
+            </span>
+            </div>
+        </div>
+
+
+        <p/>
+        <br/>
+        <form th:method="post" th:action="@{/reservation/date}" th:object="${dateDto}">
+            <div class="row g-3">
                 <input th:field="*{checkInDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_in_date"
                        name="trip-start" value="2023-09-21"
-                       min="2023-01-01" max="2025-12-31">
+                       th:min="${#calendars.createNow()}" required>
                 <span class="col-sm"></span>
                 <input th:field="*{checkOutDate}" class="col-sm rounded border border-secondary-subtle" type="date" id="check_out_date"
                        name="trip-start" value="2018-09-21"
-                       min="2023-01-01" max="2025-12-31">
+                       th:min="${#calendars.createNow()}" required>
             </div>
             <br/><br/><br/><br/><br/><br/>
             <br/><br/><br/><br/><br/><br/>
@@ -37,5 +52,6 @@
             </div>
         </form>
     </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

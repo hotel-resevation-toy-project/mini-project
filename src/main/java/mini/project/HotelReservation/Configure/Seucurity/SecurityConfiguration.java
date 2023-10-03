@@ -9,9 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,7 +20,7 @@ public class SecurityConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Spring Security를 적용하지 않을 리소스 설정
-        return (web) -> web.ignoring().requestMatchers("/user/in", "/user/new", "/favicon.ico");
+        return (web) -> web.ignoring().requestMatchers("/", "/user/in", "/user/new", "/favicon.ico");
     }
 
     @Bean
@@ -39,32 +37,23 @@ public class SecurityConfiguration {
                                 .requestMatchers("/user", "/user/**", "/reservation/**")
                                 .hasAnyRole("HOST", "USER")
                                 .anyRequest().authenticated()   // 그 외 인증없이 접근 X
-                )
-                .formLogin((login) ->
+                ).formLogin((login) ->
                                 login.loginPage("/user/in")
                                         .loginProcessingUrl("/user/in")
                                         .failureUrl("/")
                                         .defaultSuccessUrl("/")
 //                                .failureHandler()
 //                                .successHandler()
-                )
-                .logout((logout) ->
+                ).logout((logout) ->
                                 logout.logoutUrl("/logout") // 로그아웃 처리 URL, default: /logout, 원칙적으로 post 방식만 지원
                                         .invalidateHttpSession(true) // 로그아웃시 세션 밀어버리기
                                         .logoutSuccessUrl("/user/in") // 로그아웃 성공 후 이동페이지 (로그인 화면)
 //                                .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 쿠키 삭제
                 )
                 // 커스텀 필터 추가 : 요청이 시작되기 전에 만들어놓은 JwtTokenFilter를 사용할 필터로 설정
-                .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(
-                (exception)->exception
-                        .accessDeniedHandler(customAccessDeniedHandler())
-//                        .accessDeniedPage("/")
-                );
+                .exceptionHandling((e) -> e.accessDeniedPage("/reservation/main"))
+                .addFilterBefore(new JwtTokenFilter(td), UsernamePasswordAuthenticationFilter.class);
         return http.build();    // 설정한 http를 생성
     }
 
-    private AccessDeniedHandler customAccessDeniedHandler(){
-        return new CustomAccessDeniedHandler();
-    }
 }

@@ -13,13 +13,11 @@ import mini.project.HotelReservation.Reservation.Data.Dto.*;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
-import mini.project.HotelReservation.enumerate.RoomType;
+import mini.project.HotelReservation.User.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
     private final PeakDiscountPolicy peakDiscountPolicy;
@@ -68,15 +67,15 @@ public class ReservationServiceImpl implements ReservationService {
         Hotel hotel = hotelRepository.findByHotelName(requestDto.getHotelName());
         //숙박일
         int days = (int)ChronoUnit.DAYS.between(requestDto.getCheckInDate(), requestDto.getCheckOutDate());
-        
-        
+
+        Room reservedRoom = roomRepository.findByHotelNameAndRoomType(requestDto.getHotelName(), requestDto.getRoomType());
 
         //원가
-        int oneDayPrice = requestDto.getOneDayPrice();
+        int oneDayPrice = reservedRoom.getRoomPrice();
         int reservePrice = oneDayPrice*days;
+
         //할인될 값
         int discountPrice = 0;
-        // discountPrice(hotel.getDiscountPolicy(),requestDto.getOneDayPrice(),days);
 
         int noPeakDays = CheckPeakDays((int) ChronoUnit.DAYS.between(hotel.getStartPeakDate(),hotel.getEndPeakDate()),
                 hotel.getStartPeakDate(),
@@ -94,7 +93,7 @@ public class ReservationServiceImpl implements ReservationService {
 
             }
             case POLICY_DAYS -> {
-                discountPrice = daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days);
+                discountPrice = daysDiscountPolicy.discount(oneDayPrice, days);
                 return new DiscountPriceDto(reservePrice,
                                             discountPrice,
                                         reservePrice - discountPrice,
@@ -102,7 +101,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
             default -> {
                 discountPrice = Math.max(peakDiscountPolicy.discount(oneDayPrice,noPeakDays),
-                        daysDiscountPolicy.discount(requestDto.getOneDayPrice(), days));
+                        daysDiscountPolicy.discount(oneDayPrice, days));
                 return new DiscountPriceDto(reservePrice,
                                             discountPrice,
                                         reservePrice - discountPrice,
@@ -121,19 +120,31 @@ public class ReservationServiceImpl implements ReservationService {
         LocalDate hotelEndPeakDate = hotelStartPeakDate.plusDays(peakDays);
 
         // 성수기 할인을 적용 해야하는 일 수
-        int discountDays = 0;
-        if(hotelEndPeakDate.isAfter(checkInDate)) {
-            discountDays = (int) ChronoUnit.DAYS.between(hotelEndPeakDate,checkOutDate);
+        int discountEndDays = 0;
+        int discountStartDays = 0 ;
+        int fullDiscountDays = 0;
+
+        // outPeak -> front, behind
+
+        if(hotelEndPeakDate.isAfter(checkInDate.minusDays(1))) {
+            discountEndDays = Math.max((int) ChronoUnit.DAYS.between(hotelEndPeakDate, checkOutDate)-1,0);
+        } else {
+            return (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
         }
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("discountDays = " + discountDays);
-        return discountDays;
+        if (hotelStartPeakDate.isBefore(checkOutDate.plusDays(1))){
+            discountStartDays = Math.max((int) ChronoUnit.DAYS.between(checkInDate, hotelStartPeakDate),0);
+        } else {
+            return (int) ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+        }
+
+        return discountEndDays + discountStartDays;
     }
 
     @Override
     @Transactional
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
-        User user = td.currentUser();
+        User user =  userRepository.findById(td.currentUser().getUserId()).get();
+
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
 
         Reservation reservation = Reservation.createReserve(user, hotel,
@@ -152,9 +163,9 @@ public class ReservationServiceImpl implements ReservationService {
                 save.getReserveNumber(),
                 save.getReservePrice());
     }
+
     @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
-        int roomStock = roomRepository.findByHotelNameAndRoomType(reservationReqDto.getHotelName(), reservationReqDto.getRoomType()).getRoomStock();
         int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
                 reservationReqDto.getRoomType()).intValue();
 
@@ -180,16 +191,16 @@ public class ReservationServiceImpl implements ReservationService {
                 .roomType(reservation.getRoomType())
                 .checkInDate(reservation.getCheckInDate())
                 .checkOutDate(reservation.getCheckOutDate())
-                .reservationNumber(reservation.getReserveNumber())
+                .reserveNumber(reservation.getReserveNumber())
                 .reservePrice(reservation.getReservePrice())
                 .build();
     }
+
     //예약 취소
     @Override
     @Transactional
     public void reserveDelete(String reserveNumber) {
         Reservation deleteToReserve = reservationRepository.findByReserveNumber(reserveNumber);
         deleteToReserve.deleteReservation();
-        List<Reservation> all = reservationRepository.findAll();
     }
 }

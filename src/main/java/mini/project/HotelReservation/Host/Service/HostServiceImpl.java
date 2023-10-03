@@ -8,7 +8,6 @@ import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
-import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
@@ -16,7 +15,6 @@ import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,6 +31,7 @@ public class HostServiceImpl implements HostService {
     public String referenceHotel(){
         return td.currentUser().getHotel().getHotelName();
     }
+
     @Override
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
@@ -45,7 +44,10 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, selectRoomType(priceDto.getRoomType()));
+
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
+                selectRoomType(priceDto.getRoomType()));
+
         room.modifyPrice(priceDto.getDiscountPrice());
     }
 
@@ -53,24 +55,22 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, selectRoomType(roomStockDto.getRoomType()));
+
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
+                selectRoomType(roomStockDto.getRoomType()));
+
         room.modifyStock(roomStockDto.getRoomStock());
     }
 
     @Override
     public List<HotelReservationDto> reservationList() {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        List<Reservation> reservationsByHotelId = reservationRepository.findAllByHotel_HotelId(hotelId);
-        List<HotelReservationDto> reservations = new ArrayList<>();
-        for (Reservation reservation : reservationsByHotelId) {
-            reservations.add(new HotelReservationDto(reservation.getReserveNumber(),
-                                                             reservation.getUserName(),
-                                                               reservation.getPhoneNumber()));
-        }
-        return reservations;
+        return reservationRepository
+                .findAllByHotel_HotelId(hotelId)
+                .stream().map(HotelReservationDto::new).toList();
     }
 
-    public RoomType selectRoomType(String roomType){
+    public RoomType selectRoomType(String roomType) {
         return switch (roomType) {
             case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
             case "B" -> RoomType.ROOM_TYPE_B_TWIN;
@@ -79,5 +79,4 @@ public class HostServiceImpl implements HostService {
             default -> null;
         };
     }
-
 }

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
-import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Dto.*;
 import mini.project.HotelReservation.User.Data.Entity.User;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -113,20 +111,18 @@ public class UserServiceImpl implements UserService{
     public void deactive(String password) {
         User user = userRepository.findById(td.currentUser().getUserId()).get();
         if(!(passwordEncoder.matches(password, user.getPassword()))){
-            throw new NoSuchElementException("비밀번호를 정확히 입력해주세요.");
+            throw new NoSuchElementException("탈퇴시 비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();
     }
+
+    //user 측, 예약 리스트
     @Override
     public List<UserReservationDto> reservationList(){
-        List<Reservation> reservationsByUserId = reservationRepository.findAllByUser_UserId(td.currentUser().getUserId());
-        List<UserReservationDto> reservations = new ArrayList<>();
-        for (Reservation reservation : reservationsByUserId) {
-            reservations.add(new UserReservationDto(reservation.getReserveNumber(), reservation.getHotelName(),
-                                                            reservation.getCheckInDate(),
-                                                            reservation.getCheckOutDate()));
-        }
-        return reservations;
+        Long userId = td.currentUser().getUserId();
+        return reservationRepository
+                .findAllByUser_UserId(userId)
+                .stream().map(UserReservationDto::new).toList();
     }
 
     @Override

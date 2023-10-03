@@ -27,4 +27,5 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
             "AND r.roomType = :roomType")
     Long findCountByHotelNameAndRoom(@Param("hotelName")String hotelName,
                                      @Param("roomType")RoomType roomType);
+
 }
