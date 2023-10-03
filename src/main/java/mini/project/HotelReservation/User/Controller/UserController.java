@@ -39,8 +39,8 @@ public class UserController {
 
     // 로그인 화면(시작)
     @GetMapping("/in")
-    public String getLogIn(Model model){
-        model.addAttribute("userSignInDto",new UserSignInDto());
+    public String getLogIn(Model model) {
+        model.addAttribute("userSignInDto", new UserSignInDto());
         return "user/login";
     }
 
@@ -54,8 +54,8 @@ public class UserController {
 
     //회원가입 화면
     @GetMapping("/new")
-    public String  getJoin(Model model){
-        model.addAttribute("userSignUpDto",new UserSignUpDto());
+    public String getJoin(Model model) {
+        model.addAttribute("userSignUpDto", new UserSignUpDto());
         return "user/join";
     }
 

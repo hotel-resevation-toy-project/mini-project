@@ -8,7 +8,6 @@ import mini.project.HotelReservation.Host.Data.Dto.RoomStockDto;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
-import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
@@ -16,9 +15,7 @@ import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +26,7 @@ public class HostServiceImpl implements HostService {
     private final ReservationRepository reservationRepository;
     private final TokenDecoder td;
 
+    //호텔 이름 가져오기
     @Override
     public String referenceHotel(){
         return td.currentUser().getHotel().getHotelName();
@@ -38,9 +36,7 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
-
         hotel.changePolicy(policy);
     }
 

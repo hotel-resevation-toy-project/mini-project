@@ -3,7 +3,6 @@ package mini.project.HotelReservation.User.Data.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
@@ -52,7 +51,6 @@ public class User extends AuditTime {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @Builder
     public User(String name, String email, String password,
                 String phoneNumber, UserStatus status, UserRole role){
         this.name = name;

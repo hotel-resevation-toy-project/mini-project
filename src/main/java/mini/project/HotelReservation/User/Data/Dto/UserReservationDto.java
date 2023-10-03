@@ -1,13 +1,11 @@
 package mini.project.HotelReservation.User.Data.Dto;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
 public class UserReservationDto {
     private final String reserveNumber;
     private final String hotelName;

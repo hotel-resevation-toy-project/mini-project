@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
-import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Dto.*;
 import mini.project.HotelReservation.User.Data.Entity.User;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,20 +37,14 @@ public class UserServiceImpl implements UserService{
         Optional<User> optionalUser = userRepository.findByEmail(sud.getEmail());
         //처음 가입하는 경우
         if(optionalUser.isEmpty()) {
-            User newUser = User.builder()
-                    .name(sud.getName())
-                    .email(sud.getEmail())
-                    .password(passwordEncoder.encode(sud.getPassword()))
-                    .phoneNumber(sud.getPhoneNumber())
-                    .status(UserStatus.USER_STATUS_ACTIVE)
-                    .role(sud.getRole())
-                    .build();
+            User newUser = new User(sud.getName(), sud.getEmail(), sud.getPassword(), sud.getPhoneNumber(), UserStatus.USER_STATUS_ACTIVE, sud.getRole());
+
             //HOST가 가입하는 경우
             if(sud.getRole() == UserRole.ROLE_HOST) {
                 Hotel hotel = hotelRepository.findByHotelName(sud.getName());
                 newUser.foreignHotel(hotel);
             }
-            User saveUser = userRepository.save(newUser);
+            userRepository.save(newUser);
         } else {
             User findUser = optionalUser.get();
             //재가입 방지
@@ -70,13 +62,8 @@ public class UserServiceImpl implements UserService{
     //유저 상태 확인
     @Override
     public Boolean checkStatus(User user) {
-        if (user.getStatus() == UserStatus.USER_STATUS_DEACTIVE) {
-            //재가입하는 경우
-            return true;
-        } else {
-            //가입된 경우
-            return false;
-        }
+        //재가입하는 경우 -> true
+        return user.getStatus() == UserStatus.USER_STATUS_DEACTIVE;
     }
 
     //로그인
@@ -84,21 +71,21 @@ public class UserServiceImpl implements UserService{
     public void logIn(UserSignInDto sid) {
         User user = userRepository.findByEmail(sid.getEmail()).orElseThrow(
                 () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
-        //계정 정보 확인
+        //탈퇴한 회원이 로그인하는 경우
         if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
             throw new NoSuchElementException("탈퇴한 회원 입니다.");
         }
-        if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
 
+        if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
+            //user 로그인
             if (user.getRole() == UserRole.ROLE_USER) {
                 td.createToken(String.valueOf(user.getRole()),
-                        String.valueOf(user.getUserId()));
-            } else {
-                td.createToken(String.valueOf(user.getRole()),
+                        String.valueOf(user.getUserId()));}
+            //host 로그인
+            else {td.createToken(String.valueOf(user.getRole()),
                                 String.valueOf(user.getUserId()),
-                                String.valueOf(user.getHotel().getHotelId()));
-            }
-        }else {
+                                String.valueOf(user.getHotel().getHotelId()));}
+        }else { //비밀번호 not matches인 경우
             throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -128,16 +115,14 @@ public class UserServiceImpl implements UserService{
         }
         user.deactive();
     }
+
+    //user 측, 예약 리스트
     @Override
     public List<UserReservationDto> reservationList(){
-        List<Reservation> reservationsByUserId = reservationRepository.findAllByUser_UserId(td.currentUser().getUserId());
-        List<UserReservationDto> reservations = new ArrayList<>();
-        for (Reservation reservation : reservationsByUserId) {
-            reservations.add(new UserReservationDto(reservation.getReserveNumber(), reservation.getHotelName(),
-                                                            reservation.getCheckInDate(),
-                                                            reservation.getCheckOutDate()));
-        }
-        return reservations;
+        Long userId = td.currentUser().getUserId();
+        return reservationRepository
+                .findAllByUser_UserId(userId)
+                .stream().map(UserReservationDto::new).toList();
     }
 
     @Override
