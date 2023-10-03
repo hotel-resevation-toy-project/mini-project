@@ -34,28 +34,47 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void join(UserSignUpDto sud) {
-        Optional<User> optionalUser = userRepository.findByEmail(sud.getEmail());
-        //처음 가입하는 경우
-        if(optionalUser.isEmpty()) {
-            User newUser = new User(sud.getName(), sud.getEmail(), sud.getPassword(), sud.getPhoneNumber(), UserStatus.USER_STATUS_ACTIVE, sud.getRole());
+        // 처음 가입이라면 (Optional -> null)
+        User newUser = userRepository.findByEmail(sud.getEmail())
+                .orElseGet(() -> new User(sud.getName(),
+                        sud.getEmail(),
+                        passwordEncoder.encode(sud.getPassword()),
+                        sud.getPhoneNumber(),
+                        UserStatus.USER_STATUS_DEACTIVE,
+                        sud.getRole()));
+        //HOST가 가입하는 경우
+        if(newUser.getRole() == UserRole.ROLE_HOST) {
+            Hotel hotel = hotelRepository.findByHotelName(sud.getName());
+            newUser.foreignHotel(hotel);
+        }
 
-            //HOST가 가입하는 경우
-            if(sud.getRole() == UserRole.ROLE_HOST) {
-                Hotel hotel = hotelRepository.findByHotelName(sud.getName());
-                newUser.foreignHotel(hotel);
-            }
-            userRepository.save(newUser);
+        //재가입 방지
+        if(!checkStatus(newUser)){
+            throw new DuplicateRequestException("이미 가입한 사용자입니다.");
         } else {
-            User findUser = optionalUser.get();
-            //재가입 방지
-            if(!checkStatus(findUser)){
-                throw new DuplicateRequestException("이미 가입한 사용자입니다.");
-            }
             //탈퇴한 회원이 재가입하는 경우
-            else {
-                findUser.changeStatus();
-                userRepository.save(findUser);
-            }
+            newUser.changeStatus();
+        }
+        userRepository.save(newUser);
+    }
+
+    //로그인
+    @Override
+    public void logIn(UserSignInDto sid) {
+        User findUser = userRepository.findByEmail(sid.getEmail()).orElseThrow(
+                () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
+
+        //탈퇴한 회원이 로그인하는 경우
+        if(checkStatus(findUser)){
+            throw new NoSuchElementException("탈퇴한 회원 입니다.");
+        }
+
+        if(passwordEncoder.matches(sid.getPassword(), findUser.getPassword())){
+            //user 로그인
+            td.createToken(String.valueOf(findUser.getRole()),
+                    String.valueOf(findUser.getUserId()));
+        } else { //비밀번호 not matches인 경우
+            throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -66,32 +85,14 @@ public class UserServiceImpl implements UserService{
         return user.getStatus() == UserStatus.USER_STATUS_DEACTIVE;
     }
 
-    //로그인
     @Override
-    public void logIn(UserSignInDto sid) {
-        User user = userRepository.findByEmail(sid.getEmail()).orElseThrow(
-                () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
-        //탈퇴한 회원이 로그인하는 경우
-        if(user.getStatus() == UserStatus.USER_STATUS_DEACTIVE){
-            throw new NoSuchElementException("탈퇴한 회원 입니다.");
-        }
-
-        if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
-            //user 로그인
-            td.createToken(String.valueOf(user.getRole()),
-                    String.valueOf(user.getUserId()));
-        } else { //비밀번호 not matches인 경우
-            throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-    @Override
-    @Transactional
     public UserInfoDto getUserInfo(){
-        Long userId = td.currentUserId();
-        return userRepository.findById(userId)
-                .map(user -> new UserInfoDto(user))
-                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
+        User byTokenId = userRepository.findByTokenId(td.currentUserId());
+        System.out.println(byTokenId);
+        return new UserInfoDto(byTokenId);
     }
+
     //유저 정보 업데이트
     @Override
     @Transactional
@@ -114,9 +115,8 @@ public class UserServiceImpl implements UserService{
     //user 측, 예약 리스트
     @Override
     public List<UserReservationDto> reservationList(){
-        Long userId = td.currentUserId();
         return reservationRepository
-                .findAllByUser_UserId(userId)
+                .findAllByUser_UserId(td.currentUserId())
                 .stream().map(UserReservationDto::new).toList();
     }
 }
