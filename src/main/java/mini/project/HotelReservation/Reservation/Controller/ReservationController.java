@@ -1,17 +1,19 @@
 package mini.project.HotelReservation.Reservation.Controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.Reservation.Data.Dto.*;
+import mini.project.HotelReservation.Reservation.Data.Dto.DateDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.DiscountPriceDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
+import mini.project.HotelReservation.Reservation.Data.Dto.RoomDto;
 import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -22,7 +24,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @GetMapping("/main")
-    String mainPage(Model model){
+    String mainPage(){
         return "reservation/main";
     }
 

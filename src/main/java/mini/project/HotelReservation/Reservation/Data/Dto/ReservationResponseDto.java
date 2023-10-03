@@ -1,11 +1,9 @@
 package mini.project.HotelReservation.Reservation.Data.Dto;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.enumerate.RoomType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

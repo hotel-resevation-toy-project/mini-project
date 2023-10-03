@@ -24,8 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 @Service
 @Transactional(readOnly = true)
@@ -98,7 +96,7 @@ public class ReservationServiceImpl implements ReservationService {
         int reservePrice = oneDayPrice*days;
 
         //할인될 값
-        int discountPrice = 0;
+        int discountPrice;
 
         int noPeakDays = CheckPeakDays((int) ChronoUnit.DAYS.between(hotel.getStartPeakDate(),hotel.getEndPeakDate()),
                 hotel.getStartPeakDate(),
@@ -131,7 +129,6 @@ public class ReservationServiceImpl implements ReservationService {
                                             "성수기, 연박 두 할인 중 더 큰 할인이 적용 되었습니다.");
             }
         }
-
     }
 
     //성수기를 판별하여 성수기에 해당하는 숙박일과 해당하지 않는 숙박일을 리턴해주는 메서드
@@ -143,8 +140,8 @@ public class ReservationServiceImpl implements ReservationService {
         LocalDate hotelEndPeakDate = hotelStartPeakDate.plusDays(peakDays);
 
         // 성수기 할인을 적용 해야하는 일 수
-        int discountEndDays = 0;
-        int discountStartDays = 0 ;
+        int discountEndDays;
+        int discountStartDays;
 
         // outPeak -> front, behind
 
@@ -203,7 +200,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ReservationResponseDto reserveInfo(String reserveNumber) {
 
-        reservationRepository.findByReserveNumber(reserveNumber);
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
 
         return new ReservationResponseDto(reservation.getUserName(),
@@ -214,14 +210,12 @@ public class ReservationServiceImpl implements ReservationService {
                 reservation.getCheckOutDate(),
                 reservation.getReserveNumber(),
                 reservation.getReservePrice());
-
     }
 
     //예약 취소
     @Override
     @Transactional
     public void reserveDelete(String reserveNumber) {
-        Reservation deleteToReserve = reservationRepository.findByReserveNumber(reserveNumber);
-        deleteToReserve.deleteReservation();
+        reservationRepository.findByReserveNumber(reserveNumber).deleteReservation();
     }
 }

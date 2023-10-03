@@ -2,7 +2,6 @@ package mini.project.HotelReservation.Reservation.Data.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor

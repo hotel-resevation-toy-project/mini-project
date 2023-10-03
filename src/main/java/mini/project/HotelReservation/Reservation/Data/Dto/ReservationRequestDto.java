@@ -1,13 +1,11 @@
 package mini.project.HotelReservation.Reservation.Data.Dto;
 
-import lombok.*;
-import mini.project.HotelReservation.Host.Data.Entity.Hotel;
-import mini.project.HotelReservation.Host.Data.Entity.Room;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.enumerate.RoomType;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
