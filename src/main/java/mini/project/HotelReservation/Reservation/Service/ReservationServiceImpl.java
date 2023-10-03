@@ -38,8 +38,10 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<HotelDto> findByHotelList() {
+
         List<Hotel> hotels = hotelRepository.findAll();
         List<HotelDto> hotelDtos = new ArrayList<>();
+
         for (Hotel hotel : hotels) {
             hotelDtos.add(new HotelDto(hotel.getHotelName(),
                     roomRepository.findAllByHotelName(hotel.getHotelName())
@@ -122,7 +124,6 @@ public class ReservationServiceImpl implements ReservationService {
         // 성수기 할인을 적용 해야하는 일 수
         int discountEndDays = 0;
         int discountStartDays = 0 ;
-        int fullDiscountDays = 0;
 
         // outPeak -> front, behind
 
@@ -184,16 +185,15 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.findByReserveNumber(reserveNumber);
         Reservation reservation = reservationRepository.findByReserveNumber(reserveNumber);
 
-        return ReservationResponseDto.builder()
-                .userName(reservation.getUserName())
-                .phoneNumber(reservation.getPhoneNumber())
-                .hotelName(reservation.getHotelName())
-                .roomType(reservation.getRoomType())
-                .checkInDate(reservation.getCheckInDate())
-                .checkOutDate(reservation.getCheckOutDate())
-                .reserveNumber(reservation.getReserveNumber())
-                .reservePrice(reservation.getReservePrice())
-                .build();
+        return new ReservationResponseDto(reservation.getUserName(),
+                reservation.getPhoneNumber(),
+                reservation.getHotelName(),
+                reservation.getRoomType(),
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate(),
+                reservation.getReserveNumber(),
+                reservation.getReservePrice());
+
     }
 
     //예약 취소
