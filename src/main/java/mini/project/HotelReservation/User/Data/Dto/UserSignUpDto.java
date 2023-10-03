@@ -1,7 +1,5 @@
 package mini.project.HotelReservation.User.Data.Dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import mini.project.HotelReservation.enumerate.UserRole;
