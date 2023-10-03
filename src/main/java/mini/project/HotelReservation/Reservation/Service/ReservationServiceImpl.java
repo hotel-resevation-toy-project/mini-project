@@ -149,12 +149,7 @@ public class ReservationServiceImpl implements ReservationService {
 //        User user =  userRepository.findById(td.currentUser().getUserId()).get();
 
         Optional<User> user = userRepository.findById(td.currentUser().getUserId());
-        User user1 = user.orElseGet(new Supplier<User>() {
-            @Override
-            public User get() {
-                return null;
-            }
-        });
+        User user1 = user.orElseGet(() -> null);
 
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
 
