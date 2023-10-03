@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-//@Primary
 public class DaysRateDiscountPolicy implements DaysDiscountPolicy{
 
     double discountRate = 0.95;

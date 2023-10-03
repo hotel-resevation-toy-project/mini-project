@@ -1,10 +1,11 @@
 package mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy;
 
+import mini.project.HotelReservation.Configure.CustomAnnotation.MainDiscountPolicy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-@Primary
+@MainDiscountPolicy
 public class DaysFixDiscountPolicy implements DaysDiscountPolicy{
     int discountPrice = 30000;
     @Override

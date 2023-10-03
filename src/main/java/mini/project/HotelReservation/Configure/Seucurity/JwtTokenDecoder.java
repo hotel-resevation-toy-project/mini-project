@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Key;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -40,21 +41,12 @@ public class JwtTokenDecoder implements TokenDecoder{
     }
 
     @Override
-    public void createToken(String role, String... ids) {
-        Claims claims = Jwts.claims();
-        // 호텔 ID가 포함된 ids라면 Host 계정이므로 hotelID도 저장한다
-        if(ids.length > 1){
-            claims.setSubject(ids[0]+"/"+ids[1]);
-        } else{ // HOST가 아니라면 유저ID만 저장한다.
-            claims.setSubject(ids[0]);
-        }
-        // Audience(대상) 값에 role 등록
-        claims.setAudience(role);
+    public void createToken(String role, String id) {
         // 유효기간 계산할 현재 시간 저장
         Date now = new Date();
 
         String token =Jwts.builder()
-                .setClaims(claims)
+                .setClaims(Jwts.claims().setSubject(id).setAudience(role))// 유저 아이디와 롤을 claims 형태로 저장
                 .setIssuedAt(now)   // 토큰 생성 시간
                 .setExpiration(new Date(now.getTime() + tokenValidMillisecond)) // 토큰 만료 기간
                 .signWith(key) // 암호화 알고리즘과 SecretKey 세팅
@@ -63,10 +55,6 @@ public class JwtTokenDecoder implements TokenDecoder{
         // 생성된 토큰값 세션에 저장
         HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         req.getSession().setAttribute("Token", token);
-
-        // 헤더에 전송
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add("Authorization", "Token " + token);
     }
 
     // 토큰으로 클레임을 만들고 이를 이용해 유저 객체를 만들어서 최종적으로 authentication 객체를 리턴
@@ -76,9 +64,13 @@ public class JwtTokenDecoder implements TokenDecoder{
         // 토큰에서 추출한 Role을 기반으로 시큐리티 메소드에 들어갈 Authority Collection 생성
         // List형태로 생성하는 이유는, 한 User마다 여러 역할을 가질 수 있기 때문이다
         // User A가 게시판1에서는 관리자이지만 게시판2에서는 그냥 user일 수 있음.
-        User principal = userRepository.findById(tokenToIds(token)[0]).get();
+        User principal = userRepository.findById(tokenToId(token)).get();
+
+        // 복수 권한 로직
 //        Collection<? extends GrantedAuthority> authorities =
 //                Arrays.stream(new String[]{tokenToRole(token)}).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+        // 단일 권한 로직
         Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
         setAuths.add(new SimpleGrantedAuthority(principal.getRole().toString()));
 
@@ -90,16 +82,12 @@ public class JwtTokenDecoder implements TokenDecoder{
     }
 
     @Override
-    public Long[] tokenToIds(String token) {
-        // 토큰을 들고와서 Id로 반환해주는 메소드
-        //    토큰을 생성했을 때, User라면 userId
-        //           Host라면 userId + "/" + hotelId 로 저장한 값을
-        //    Long[]으로 반환함
-        String info = Jwts.parserBuilder().setSigningKey(key).build()
+    public Long tokenToId(String token) {
+        // 토큰을에서 아이디를 추출해서 리턴
+        return Long.parseLong(Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
-        return Arrays.stream(info.split("/")).mapToLong(Long::parseLong).boxed().toArray(Long[]::new);
+                .getSubject());
     }
 
     @Override

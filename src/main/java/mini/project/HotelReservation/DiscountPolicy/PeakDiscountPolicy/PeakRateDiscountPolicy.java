@@ -1,10 +1,11 @@
 package mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy;
 
+import mini.project.HotelReservation.Configure.CustomAnnotation.MainDiscountPolicy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-@Primary
+@MainDiscountPolicy
 public class PeakRateDiscountPolicy implements PeakDiscountPolicy{
     double discountRate = 0.3;
 
