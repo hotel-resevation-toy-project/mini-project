@@ -12,6 +12,5 @@ import org.springframework.format.annotation.NumberFormat;
 public class PriceDto {
     @Pattern(regexp = "^[A-D]$")
     private String roomType;
-
     private Integer discountPrice;
 }

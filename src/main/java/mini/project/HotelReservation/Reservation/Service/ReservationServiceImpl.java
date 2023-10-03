@@ -167,6 +167,7 @@ public class ReservationServiceImpl implements ReservationService {
                 save.getReserveNumber(),
                 save.getReservePrice());
     }
+
     @Override
     public String createReserveNumber(Hotel hotel, ReservationRequestDto reservationReqDto){
         int reservationCount = reservationRepository.findCountByHotelNameAndRoom(hotel.getHotelName(),
@@ -198,6 +199,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .reservePrice(reservation.getReservePrice())
                 .build();
     }
+
     //예약 취소
     @Override
     @Transactional
