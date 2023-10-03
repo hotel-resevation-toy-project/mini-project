@@ -15,6 +15,7 @@ import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.User.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +29,33 @@ import java.util.function.Supplier;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
-    @MainDiscountPolicy
     private final PeakDiscountPolicy peakDiscountPolicy;
-    @MainDiscountPolicy
     private final DaysDiscountPolicy daysDiscountPolicy;
     private final TokenDecoder td;
+
+    @Autowired
+    public ReservationServiceImpl(ReservationRepository reservationRepository,
+                                  UserRepository userRepository,
+                                  HotelRepository hotelRepository,
+                                  RoomRepository roomRepository,
+                                  @MainDiscountPolicy PeakDiscountPolicy peakDiscountPolicy,
+                                  @MainDiscountPolicy DaysDiscountPolicy daysDiscountPolicy,
+                                  TokenDecoder td) {
+
+        this.reservationRepository = reservationRepository;
+        this.userRepository = userRepository;
+        this.hotelRepository = hotelRepository;
+        this.roomRepository = roomRepository;
+        this.peakDiscountPolicy = peakDiscountPolicy;
+        this.daysDiscountPolicy = daysDiscountPolicy;
+        this.td = td;
+    }
 
     @Override
     public List<HotelDto> findByHotelList() {
