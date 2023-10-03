@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class DateDto {
     @NotNull
     private LocalDate checkInDate;

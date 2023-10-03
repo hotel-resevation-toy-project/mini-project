@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
-@Builder
 public class ReservationResponseDto {
     private final String userName;
     private final String phoneNumber;
