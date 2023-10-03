@@ -28,10 +28,10 @@ public class HostServiceImpl implements HostService {
     private final ReservationRepository reservationRepository;
     private final TokenDecoder td;
 
+    //호텔 이름 가져오기
     @Override
     public String referenceHotel(){
-        String hotelName = td.currentUser().getHotel().getHotelName();
-        return hotelName;
+        return td.currentUser().getHotel().getHotelName();
     }
     @Override
     @Transactional
@@ -45,14 +45,7 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        RoomType roomType = switch (priceDto.getRoomType()) {
-            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
-            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
-            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
-            case "D" -> RoomType.ROOM_TYPE_D_KING;
-            default -> null;
-        };
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, selectRoomType(priceDto.getRoomType()));
         room.modifyPrice(priceDto.getDiscountPrice());
     }
 
@@ -60,14 +53,7 @@ public class HostServiceImpl implements HostService {
     @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
         Long hotelId = td.currentUser().getHotel().getHotelId();
-        RoomType roomType = switch (roomStockDto.getRoomType()) {
-            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
-            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
-            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
-            case "D" -> RoomType.ROOM_TYPE_D_KING;
-            default -> null;
-        };
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, roomType);
+        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId, selectRoomType(roomStockDto.getRoomType()));
         room.modifyStock(roomStockDto.getRoomStock());
     }
 
@@ -82,6 +68,16 @@ public class HostServiceImpl implements HostService {
                                                                reservation.getPhoneNumber()));
         }
         return reservations;
+    }
+
+    public RoomType selectRoomType(String roomType){
+        return switch (roomType) {
+            case "A" -> RoomType.ROOM_TYPE_A_SINGLE;
+            case "B" -> RoomType.ROOM_TYPE_B_TWIN;
+            case "C" -> RoomType.ROOM_TYPE_C_QUEEN;
+            case "D" -> RoomType.ROOM_TYPE_D_KING;
+            default -> null;
+        };
     }
 
 }

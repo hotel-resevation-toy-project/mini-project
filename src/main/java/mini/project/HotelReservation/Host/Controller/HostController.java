@@ -1,6 +1,5 @@
 package mini.project.HotelReservation.Host.Controller;
 
-import groovyjarjarantlr4.v4.codegen.model.ModelElement;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Dto.HotelReservationDto;
 import mini.project.HotelReservation.Host.Data.Dto.PriceDto;
@@ -22,7 +21,7 @@ public class HostController {
 
     @GetMapping("")
     String manage(){
-        // TODO: 호스트의 메인 페이지 로직을 구현 (호텔 관련 정보를 모델에 담아서 반환)
+        //호스트의 메인 페이지 로직을 구현 (호텔 관련 정보를 모델에 담아서 반환)
         return "host/manage";
     }
     // 정책 변경 페이지
@@ -33,7 +32,7 @@ public class HostController {
     }
     @PostMapping("/policy")
     String discountPolicy(@RequestParam("policy") String policy){
-        // TODO: 할인 정책 변경 로직 구현
+
         hostService.changePolicy(DiscountPolicy.valueOf(policy));
         // Exception 처리할 것 (IllegalArgumentException)
         return "host/manage";
@@ -46,11 +45,11 @@ public class HostController {
         model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/price";
     }
+
     @PostMapping("/price")
     String roomPrice(@ModelAttribute("priceDto") PriceDto priceDto){
-        // TODO: 객실 가격 변경 로직 구현
+
         hostService.modifyRoomPrice(priceDto);
-        // Exception 처리할 것 (IllegalArgumentException)
         return "host/manage";
     }
 
@@ -61,24 +60,23 @@ public class HostController {
         model.addAttribute("hotelName", hostService.referenceHotel());
         return "host/stock";
     }
+
     @PostMapping("/stock")
     String roomStock(@ModelAttribute("roomStockDto") RoomStockDto roomStockDto){
-        // TODO: 객실 재고 변경 로직 구현
         hostService.modifyRoomStock(roomStockDto);
-            // Exception 처리할 것 (IllegalArgumentException)
         return "host/manage";
     }
 
     @GetMapping("/reservations")
     String reserveAll(Model model){
-        // TODO: 호스트의 예약 목록 페이지 로직 구현 (예약 목록을 모델에 담아서 반환)
+        //호스트의 예약 목록 페이지 로직 구현 (예약 목록을 모델에 담아서 반환)
         List<HotelReservationDto> reservations = hostService.reservationList();
         model.addAttribute("reservations", reservations);
         return "host/hostReservationList";
     }
 
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
-    public String handel(Exception e, RedirectAttributes redirectAttributes){
+    public String handler(RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("Error", "다시 입력해주세요.");
         return "redirect:/host";
     }

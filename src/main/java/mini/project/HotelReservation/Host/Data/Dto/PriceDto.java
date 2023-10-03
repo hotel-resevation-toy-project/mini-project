@@ -2,7 +2,6 @@ package mini.project.HotelReservation.Host.Data.Dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import mini.project.HotelReservation.enumerate.RoomType;
 
 @Data
 @AllArgsConstructor

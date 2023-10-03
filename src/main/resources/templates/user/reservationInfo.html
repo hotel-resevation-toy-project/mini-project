@@ -1,48 +1,70 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
-  <style>
-    /* 부모 요소에 플렉스 스타일을 적용하여 <oi> 블록을 가로로 배열 */
-    .oi-container{
-    display: flex;
-    }
-    oi {
-      margin-right: 20px; /* 각 <oi> 블록 간의 간격 설정(바꿔도 됨) */
-    }
-  </style>
+    <style>
+        /* 부모 요소에 플렉스 스타일을 적용하여 <oi> 블록을 가로로 배열 */
+        .oi-container {
+            display: flex;
+        }
+
+        oi {
+            margin-right: 20px; /* 각 <oi> 블록 간의 간격 설정(바꿔도 됨) */
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div>
-  <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
     <ul th:field="${reservationDto}">
-      <div class="fw-bolder fs-5">Name</div>
-      <div th:text="${reservationDto.userName}" class="border border-secondary-subtle rounded fw-bolder fs-5">jinseok oh</div><br>
-      <div class="fw-bolder fs-5">PhoneNumber</div>
-      <div th:text="${reservationDto.phoneNumber}" class="border border-secondary-subtle rounded fw-bolder fs-5">010-1234-5678</div><br>
-      <div class="fw-bolder fs-5">Hotel name</div>
-      <div th:text="${reservationDto.hotelName}" class="border border-secondary-subtle rounded fw-bolder fs-5">Hotal_A</div><br>
-      <div class="fw-bolder fs-5">Room type</div>
-      <div th:text="${reservationDto.roomType}" class="border border-secondary-subtle rounded fw-bolder fs-5">Room_A_SuperSingle</div><br>
-      <div class = "oi-container d-flex gap-2 w-100 justify-content-between">
-        <oi>
-          <div class="label fw-bolder fs-5">Check-In date</div>
-          <span th:text="${reservationDto.checkInDate}" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-23&nbsp;</span>
-        </oi>
-        <oi>
-          <div class="label fw-bolder fs-5">Check-Out date</div>
-          <span th:text="${reservationDto.checkOutDate}" class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-30&nbsp;
+        <div class="fw-bolder fs-5">Name</div>
+        <div th:text="${reservationDto.userName}" class="border border-secondary-subtle rounded fw-bolder fs-5">jinseok
+            oh
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">PhoneNumber</div>
+        <div th:text="${reservationDto.phoneNumber}" class="border border-secondary-subtle rounded fw-bolder fs-5">
+            010-1234-5678
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">Hotel name</div>
+        <div th:text="${reservationDto.hotelName}" class="border border-secondary-subtle rounded fw-bolder fs-5">
+            Hotal_A
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">Room type</div>
+        <div th:text="${reservationDto.roomType}" class="border border-secondary-subtle rounded fw-bolder fs-5">
+            Room_A_SuperSingle
+        </div>
+        <br>
+        <div class="oi-container d-flex gap-2 w-100 justify-content-between">
+            <oi>
+                <div class="label fw-bolder fs-5">Check-In date</div>
+                <span th:text="${reservationDto.checkInDate}"
+                      class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-23&nbsp;</span>
+            </oi>
+            <oi>
+                <div class="label fw-bolder fs-5">Check-Out date</div>
+                <span th:text="${reservationDto.checkOutDate}"
+                      class="fw-bolder fs-5 rounded border border-secondary-subtle">&nbsp;2023-05-30&nbsp;
           </span>
-        </oi>
-      </div><br>
-      <div class="fw-bolder fs-5">Reservation Number</div>
-      <div th:text="${reservationDto.reserveNumber}" class="fw-bolder fs-5 border border-secondary-subtle rounded">AAA1-0523</div><br>
-      <div class="fw-bolder fs-5">Pay</div>
-      <div th:text="${reservationDto.reservePrice}" class="fw-bolder fs-5 border border-secondary-subtle rounded">700,000</div><br>
+            </oi>
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">Reservation Number</div>
+        <div th:text="${reservationDto.reserveNumber}" class="fw-bolder fs-5 border border-secondary-subtle rounded">
+            AAA1-0523
+        </div>
+        <br>
+        <div class="fw-bolder fs-5">Pay</div>
+        <div th:text="${reservationDto.reservePrice}" class="fw-bolder fs-5 border border-secondary-subtle rounded">
+            700,000
+        </div>
+        <br>
     </ul>
     <div>
-      <button type="submit" class="btn btn-outline-secondary btn-large form-control">Cancel</button>
+        <button type="submit" class="btn btn-outline-secondary btn-large form-control">Cancel</button>
     </div>
-  </div>
+</div>
 
 </body>
 </html>
