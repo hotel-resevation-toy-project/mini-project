@@ -3,20 +3,15 @@ package mini.project.HotelReservation.Reservation.Data.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
-import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
-import mini.project.HotelReservation.enumerate.RoomType;
 import mini.project.HotelReservation.User.Data.Entity.User;
-import org.springframework.transaction.annotation.Transactional;
+import mini.project.HotelReservation.enumerate.RoomType;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
