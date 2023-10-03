@@ -14,7 +14,7 @@ public class RoomDto {
     public RoomDto(String roomType, Integer roomPrice, Integer roomStock){
         this.roomType = roomType;
         this.roomPrice = roomPrice;
-        this.roomStock = roomStock;
+        this.roomStock =roomStock;
     }
 
 }
