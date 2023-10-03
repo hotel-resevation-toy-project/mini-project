@@ -78,30 +78,23 @@ public class UserServiceImpl implements UserService{
 
         if(passwordEncoder.matches(sid.getPassword(), user.getPassword())){
             //user 로그인
-            if (user.getRole() == UserRole.ROLE_USER) {
-                td.createToken(String.valueOf(user.getRole()),
-                        String.valueOf(user.getUserId()));}
-            //host 로그인
-            else {td.createToken(String.valueOf(user.getRole()),
-                                String.valueOf(user.getUserId()),
-                                String.valueOf(user.getHotel().getHotelId()));}
-        }else { //비밀번호 not matches인 경우
+            td.createToken(String.valueOf(user.getRole()),
+                    String.valueOf(user.getUserId()));
+        } else { //비밀번호 not matches인 경우
             throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
         }
     }
     @Override
     @Transactional
     public UserInfoDto getUserInfo(){
-        User user = userRepository.findByEmail(td.currentUser().getEmail()).orElseThrow(
-                () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
+        User user = userRepository.findByTokenId(td.currentUserId());
         return new UserInfoDto(user.getName(), user.getEmail(),user.getPhoneNumber());
     }
     //유저 정보 업데이트
     @Override
     @Transactional
     public void updateInfo(UserInfoDto userInfoDto) {
-        User user = userRepository.findById(td.currentUser().getUserId()).orElseThrow(
-                () -> new NoSuchElementException("해당 유저를 찾을 수 없습니다."));
+        User user = userRepository.findByTokenId(td.currentUserId());
         user.updateInfo(userInfoDto);
     }
 
@@ -109,7 +102,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deactive(String password) {
-        User user = userRepository.findById(td.currentUser().getUserId()).get();
+        User user = userRepository.findByTokenId(td.currentUserId());
         if(!(passwordEncoder.matches(password, user.getPassword()))){
             throw new NoSuchElementException("탈퇴시 비밀번호를 정확히 입력해주세요.");
         }
@@ -119,20 +112,9 @@ public class UserServiceImpl implements UserService{
     //user 측, 예약 리스트
     @Override
     public List<UserReservationDto> reservationList(){
-        Long userId = td.currentUser().getUserId();
+        Long userId = td.currentUserId();
         return reservationRepository
                 .findAllByUser_UserId(userId)
                 .stream().map(UserReservationDto::new).toList();
-    }
-
-    @Override
-    // 유저 정보 수정시 토큰에 mapping되어 있는 유저 객체도 refresh 해줘야함.
-    public User loadUserByUserId(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if(userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            throw new NoSuchElementException("해당 유저를 찾을 수 없습니다.");
-        }
     }
 }
