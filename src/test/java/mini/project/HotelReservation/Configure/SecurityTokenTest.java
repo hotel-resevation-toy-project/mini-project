@@ -67,9 +67,9 @@ public class SecurityTokenTest {
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
         jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), "1");
         String token = jwtTokenDecoder.resolveToken(mockRequest);
-        Long[] id = jwtTokenDecoder.tokenToIds(token);
+        Long id = jwtTokenDecoder.tokenToId(token);
 
-        assertArrayEquals(new Long[] {1L, }, id);
+        assertEquals(1L, id.longValue());
     }
 
     @Test
@@ -79,9 +79,9 @@ public class SecurityTokenTest {
         //      (CreateToken는 void로 반환하고 세션에 저장한 메소드임)
         jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_USER), "1");
         String token = jwtTokenDecoder.resolveToken(mockRequest);
-        Long[] id = jwtTokenDecoder.tokenToIds(token);
+        Long id = jwtTokenDecoder.tokenToId(token);
 
-        assertArrayEquals(new Long[] {1L, }, id);
+        assertEquals(1L, id.longValue());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class SecurityTokenTest {
         // SecurityContext에서 꺼내 현재 User 객체와 비교하기
         User checkUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        assertEquals(jwtTokenDecoder.currentUser().getUserId(), checkUser.getUserId());
+        assertEquals(jwtTokenDecoder.currentUserId(), checkUser.getUserId());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class SecurityTokenTest {
         SecurityContextHolder.getContext().setAuthentication(jwtTokenDecoder.getAuthentication(token));
 
         // SecurityContext에서 꺼낸 객체의 Role값
-        assertEquals(userRepository.findAll().get(0).getRole().toString(), jwtTokenDecoder.currentUser().getRole().toString());
+        assertEquals(userRepository.findAll().get(0).getRole().toString(), jwtTokenDecoder.tokenToRole(token));
     }
 
 //    @Test
@@ -145,6 +145,6 @@ public class SecurityTokenTest {
         jwtTokenDecoder.createToken(String.valueOf(UserRole.ROLE_HOST), String.valueOf(userRepository.findAll().get(0).getUserId()));
         String token = jwtTokenDecoder.resolveToken(mockRequest);
 
-        assertEquals(jwtTokenDecoder.tokenToIds(token)[0], userRepository.findAll().get(0).getUserId());
+        assertEquals(jwtTokenDecoder.tokenToId(token), userRepository.findAll().get(0).getUserId());
     }
 }

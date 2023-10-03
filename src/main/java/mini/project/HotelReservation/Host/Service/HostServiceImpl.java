@@ -9,6 +9,7 @@ import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
 import mini.project.HotelReservation.Host.Repository.RoomRepository;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
+import mini.project.HotelReservation.User.Repository.UserRepository;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.Host.Repository.HotelRepository;
 import mini.project.HotelReservation.enumerate.RoomType;
@@ -21,6 +22,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class HostServiceImpl implements HostService {
+    private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
     private final ReservationRepository reservationRepository;
@@ -29,13 +31,13 @@ public class HostServiceImpl implements HostService {
     //호텔 이름 가져오기
     @Override
     public String referenceHotel(){
-        return td.currentUser().getHotel().getHotelName();
+        return userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelName();
     }
 
     @Override
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
-        Long hotelId = td.currentUser().getHotel().getHotelId();
+        Long hotelId = userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId();
         Hotel hotel = hotelRepository.findByHotelId(hotelId);
         hotel.changePolicy(policy);
     }
@@ -43,7 +45,7 @@ public class HostServiceImpl implements HostService {
     @Override
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
-        Long hotelId = td.currentUser().getHotel().getHotelId();
+        Long hotelId = userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId();
 
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
                 selectRoomType(priceDto.getRoomType()));
@@ -54,7 +56,7 @@ public class HostServiceImpl implements HostService {
     @Override
     @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
-        Long hotelId = td.currentUser().getHotel().getHotelId();
+        Long hotelId = userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId();
 
         Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
                 selectRoomType(roomStockDto.getRoomType()));
@@ -64,9 +66,8 @@ public class HostServiceImpl implements HostService {
 
     @Override
     public List<HotelReservationDto> reservationList() {
-        Long hotelId = td.currentUser().getHotel().getHotelId();
         return reservationRepository
-                .findAllByHotel_HotelId(hotelId)
+                .findAllByHotel_HotelId(userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId())
                 .stream().map(HotelReservationDto::new).toList();
     }
 

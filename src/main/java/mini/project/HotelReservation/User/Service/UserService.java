@@ -14,5 +14,4 @@ public interface UserService {
     void updateInfo(UserInfoDto userInfoDto);
     List<UserReservationDto> reservationList();
     void deactive(String password);
-    User loadUserByUserId(Long id);
 }

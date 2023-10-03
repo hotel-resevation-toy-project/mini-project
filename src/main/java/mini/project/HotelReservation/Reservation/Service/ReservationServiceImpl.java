@@ -2,6 +2,7 @@ package mini.project.HotelReservation.Reservation.Service;
 
 
 import lombok.RequiredArgsConstructor;
+import mini.project.HotelReservation.Configure.CustomAnnotation.MainDiscountPolicy;
 import mini.project.HotelReservation.Configure.Seucurity.TokenDecoder;
 import mini.project.HotelReservation.DiscountPolicy.DaysDiscountPolicy.DaysDiscountPolicy;
 import mini.project.HotelReservation.DiscountPolicy.PeakDiscountPolicy.PeakDiscountPolicy;
@@ -34,7 +35,9 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
+    @MainDiscountPolicy
     private final PeakDiscountPolicy peakDiscountPolicy;
+    @MainDiscountPolicy
     private final DaysDiscountPolicy daysDiscountPolicy;
     private final TokenDecoder td;
 
@@ -146,14 +149,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public ReservationResponseDto reserve(ReservationRequestDto reservationReqDto, DiscountPriceDto discountPriceDto) {
-//        User user =  userRepository.findById(td.currentUser().getUserId()).get();
-
-        Optional<User> user = userRepository.findById(td.currentUser().getUserId());
-        User user1 = user.orElseGet(() -> null);
+        User user = userRepository.findByTokenId(td.currentUserId());
 
         Hotel hotel = hotelRepository.findByHotelName(reservationReqDto.getHotelName());
 
-        Reservation reservation = Reservation.createReserve(user1, hotel,
+        Reservation reservation = Reservation.createReserve(user, hotel,
                                     reservationReqDto,
                                     discountPriceDto.getPay(),/* 결제 금액 */
                                     createReserveNumber(hotel, reservationReqDto)/* 예약 번호 */);
