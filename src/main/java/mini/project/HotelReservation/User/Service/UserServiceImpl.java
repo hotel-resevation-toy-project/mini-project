@@ -87,8 +87,10 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserInfoDto getUserInfo(){
-        User user = userRepository.findByTokenId(td.currentUserId());
-        return new UserInfoDto(user.getName(), user.getEmail(),user.getPhoneNumber());
+        Long userId = td.currentUserId();
+        return userRepository.findById(userId)
+                .map(user -> new UserInfoDto(user))
+                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
     }
     //유저 정보 업데이트
     @Override
