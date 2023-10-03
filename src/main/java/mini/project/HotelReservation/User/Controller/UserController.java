@@ -5,24 +5,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationRequestDto;
-import mini.project.HotelReservation.Reservation.Data.Dto.ReservationResponseDto;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
-import mini.project.HotelReservation.Reservation.Service.ReservationService;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
-import mini.project.HotelReservation.User.Data.Dto.UserReservationDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignInDto;
 import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.User.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.net.Socket;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 
