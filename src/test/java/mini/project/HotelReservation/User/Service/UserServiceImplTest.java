@@ -278,9 +278,9 @@ class UserServiceImplTest {
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
 
         //when
-        User user = td.currentUser();
-        userService.updateInfo(new UserInfoDto("김채림", "abc2@example.com", "010-5607-7854"));
+        userService.updateInfo(new UserInfoDto(userRepository.findByTokenId(td.currentUserId())));
         User changeUser = userRepository.findByEmail("abc2@example.com").get();
+
         //then
         assertThat(changeUser.getName().equals("김채림"));
         assertThat(changeUser.getEmail().equals("abc2@example.com"));
