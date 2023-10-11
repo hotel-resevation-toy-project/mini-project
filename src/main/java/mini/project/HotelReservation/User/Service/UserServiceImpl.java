@@ -36,16 +36,10 @@ public class UserServiceImpl implements UserService{
     public void join(UserSignUpDto sud) {
         // 처음 가입이라면 (Optional -> null)
         User newUser = userRepository.findByEmail(sud.getEmail())
-                .orElseGet(() -> new User(sud.getName(),
-                        sud.getEmail(),
-                        passwordEncoder.encode(sud.getPassword()),
-                        sud.getPhoneNumber(),
-                        UserStatus.USER_STATUS_DEACTIVE,
-                        sud.getRole()));
+                .orElseGet(() -> new User(sud));
         //HOST가 가입하는 경우
         if(newUser.getRole() == UserRole.ROLE_HOST) {
-            Hotel hotel = hotelRepository.findByHotelName(sud.getName());
-            newUser.foreignHotel(hotel);
+            newUser.foreignHotel(hotelRepository.findByHotelName(sud.getName()));
         }
 
         //재가입 방지
@@ -58,11 +52,18 @@ public class UserServiceImpl implements UserService{
         userRepository.save(newUser);
     }
 
+    //유저 상태 확인
+    @Override
+    public Boolean checkStatus(User user) {
+        //재가입하는 경우 -> true
+        return user.getStatus() == UserStatus.USER_STATUS_DEACTIVE;
+    }
+
     //로그인
     @Override
     public void logIn(UserSignInDto sid) {
-        User findUser = userRepository.findByEmail(sid.getEmail()).orElseThrow(
-                () -> new NoSuchElementException("회원을 찾을 수 없습니다."));
+        User findUser = userRepository.findByEmail(sid.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
 
         //탈퇴한 회원이 로그인하는 경우
         if(checkStatus(findUser)){
@@ -78,27 +79,16 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    //유저 상태 확인
-    @Override
-    public Boolean checkStatus(User user) {
-        //재가입하는 경우 -> true
-        return user.getStatus() == UserStatus.USER_STATUS_DEACTIVE;
-    }
-
     @Override
     public UserInfoDto getUserInfo(){
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
-        User byTokenId = userRepository.findByTokenId(td.currentUserId());
-        System.out.println(byTokenId);
-        return new UserInfoDto(byTokenId);
+        return userRepository.findDtoByTokenId(td.currentUserId());
     }
 
     //유저 정보 업데이트
     @Override
     @Transactional
     public void updateInfo(UserInfoDto userInfoDto) {
-        User user = userRepository.findByTokenId(td.currentUserId());
-        user.updateInfo(userInfoDto);
+        userRepository.findByTokenId(td.currentUserId()).updateInfo(userInfoDto);
     }
 
     //비밀번호 입력 받은 후 회원 탈퇴
@@ -106,7 +96,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void deactive(String password) {
         User user = userRepository.findByTokenId(td.currentUserId());
-        if(!(passwordEncoder.matches(password, user.getPassword()))){
+        if(!(passwordEncoder.matches(password, user.getPassword()))) {
             throw new NoSuchElementException("탈퇴시 비밀번호를 정확히 입력해주세요.");
         }
         user.deactive();
@@ -115,8 +105,6 @@ public class UserServiceImpl implements UserService{
     //user 측, 예약 리스트
     @Override
     public List<UserReservationDto> reservationList(){
-        return reservationRepository
-                .findAllByUser_UserId(td.currentUserId())
-                .stream().map(UserReservationDto::new).toList();
+        return reservationRepository.findDtosByUserId(td.currentUserId());
     }
 }

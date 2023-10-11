@@ -21,28 +21,28 @@ public class Reservation extends AuditTime {
     @Id @GeneratedValue
     private Long reserveId;
 
-    @NotNull
+    @Column(nullable = false)
     private String reserveNumber;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer reservePrice;
 
-    @NotNull
+    @Column(nullable = false)
     private RoomType roomType;
 
-    @NotNull
+    @Column(nullable = false)
     private String hotelName;
 
-    @NotNull
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @NotNull
+    @Column(nullable = false)
     private String userName;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDateTime checkInDate;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDateTime checkOutDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -31,44 +31,38 @@ public class HostServiceImpl implements HostService {
     //호텔 이름 가져오기
     @Override
     public String referenceHotel(){
-        return userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelName();
+        return userRepository.findHotelNameByTokenId(td.currentUserId());
     }
 
     @Override
     @Transactional
     public void changePolicy(DiscountPolicy policy) {
-        Long hotelId = userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId();
-        Hotel hotel = hotelRepository.findByHotelId(hotelId);
-        hotel.changePolicy(policy);
+        hotelRepository.findByHotelId(
+            userRepository.findHotelIdByTokenId(td.currentUserId())
+        ).changePolicy(policy);
     }
 
     @Override
     @Transactional
     public void modifyRoomPrice(PriceDto priceDto) {
-        Long hotelId = userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId();
-
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
-                selectRoomType(priceDto.getRoomType()));
-
-        room.modifyPrice(priceDto.getDiscountPrice());
+        roomRepository.findByHotel_HotelIdAndRoomType(
+            userRepository.findHotelIdByTokenId(td.currentUserId()),
+            selectRoomType(priceDto.getRoomType())
+        ).modifyPrice(priceDto.getDiscountPrice());
     }
 
     @Override
     @Transactional
     public void modifyRoomStock(RoomStockDto roomStockDto) {
-        Long hotelId = userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId();
-
-        Room room = roomRepository.findByHotel_HotelIdAndRoomType(hotelId,
-                selectRoomType(roomStockDto.getRoomType()));
-
-        room.modifyStock(roomStockDto.getRoomStock());
+        roomRepository.findByHotel_HotelIdAndRoomType(
+            userRepository.findHotelIdByTokenId(td.currentUserId()),
+            selectRoomType(roomStockDto.getRoomType())
+        ).modifyStock(roomStockDto.getRoomStock());
     }
 
     @Override
     public List<HotelReservationDto> reservationList() {
-        return reservationRepository
-                .findAllByHotel_HotelId(userRepository.findByTokenId(td.currentUserId()).getHotel().getHotelId())
-                .stream().map(HotelReservationDto::new).toList();
+        return reservationRepository.findDtosByHotelId(userRepository.findHotelIdByTokenId(td.currentUserId()));
     }
 
     public RoomType selectRoomType(String roomType) {

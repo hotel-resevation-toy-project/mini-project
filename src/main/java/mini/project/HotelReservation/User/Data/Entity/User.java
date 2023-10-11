@@ -9,8 +9,10 @@ import mini.project.HotelReservation.AuditTime;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.User.Data.Dto.UserInfoDto;
+import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.enumerate.UserRole;
 import mini.project.HotelReservation.enumerate.UserStatus;
+import org.apache.catalina.users.SparseUserDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,41 +26,40 @@ public class User extends AuditTime {
     @Id @GeneratedValue
     private Long userId;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private String email;
 
-    @NotNull
+    @Column(nullable = false)
     private String password;
 
-    @NotNull
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Reservation> reservations = new ArrayList<>();
 
-    public User(String name, String email, String password,
-                String phoneNumber, UserStatus status, UserRole role){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.status = status;
-        this.role = role;
+    public User(UserSignUpDto userSignUpDto){
+        this.name = userSignUpDto.getName();
+        this.email = userSignUpDto.getEmail();
+        this.password = userSignUpDto.getPassword();
+        this.phoneNumber = userSignUpDto.getPhoneNumber();
+        this.status = UserStatus.USER_STATUS_ACTIVE;
+        this.role = userSignUpDto.getRole();
     }
 
     //유저가 호텔인 경우, 호텔 아이디를 조회해서 호텔 가져오기
