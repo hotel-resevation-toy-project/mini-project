@@ -2,6 +2,7 @@ package mini.project.HotelReservation.Host.Repository;
 
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
+import mini.project.HotelReservation.Reservation.Data.Dto.RoomDto;
 import mini.project.HotelReservation.Reservation.Data.Entity.Reservation;
 import mini.project.HotelReservation.Reservation.Repository.ReservationRepository;
 import mini.project.HotelReservation.User.Data.Entity.User;
@@ -122,12 +123,7 @@ class RoomRepositoryTest {
     }
     @Test
     void 호텔이름으로_객실타입찾기(){
-        List<Room> roomList = roomRepository.findAllByHotelName("Hotel_A");
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@");
-        for(Room rooms : roomList){
-            System.out.println("객실 타입 : "+rooms.getRoomType()+"\t | 호텔명 : "+rooms.getHotel().getHotelName());
-        }
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@");
+        List<RoomDto> roomList = roomRepository.findAllByHotelName("Hotel_A");
         assertEquals(2, roomList.size());
     }
 }

@@ -88,8 +88,10 @@ public class HostController {
     @GetMapping("/reservations")
     String reserveAll(Model model){
         // TODO: 호스트의 예약 목록 페이지 로직 구현 (예약 목록을 모델에 담아서 반환)
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         List<HotelReservationDto> reservations = hostService.reservationList();
         model.addAttribute("reservations", reservations);
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         return "host/hostReservationList";
     }
 
@@ -98,6 +100,7 @@ public class HostController {
    public String handler(Exception e, HttpSession session) {
        session.setAttribute("error", "다시 입력해주세요.");
        String url = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRequestURI();
+       e.printStackTrace();
        return "redirect:" + url;
    }
 }

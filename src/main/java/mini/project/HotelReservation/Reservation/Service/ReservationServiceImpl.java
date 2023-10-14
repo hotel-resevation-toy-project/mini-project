@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -57,28 +58,18 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<HotelDto> findByHotelList() {
-
-        List<Hotel> hotels = hotelRepository.findAll();
-        List<HotelDto> hotelDtos = new ArrayList<>();
-
-        for (Hotel hotel : hotels) {
-            hotelDtos.add(new HotelDto(hotel.getHotelName(),
-                    roomRepository.findAllByHotelName(hotel.getHotelName())
-                            .stream().map(r -> String.valueOf(r.getRoomType())).toList(),
-                    hotel.getCheckInTime(),
-                    hotel.getCheckOutTime()));
-        }
-        return hotelDtos;
+        return hotelRepository.findDtos().stream().map(HotelDto::new).collect(Collectors.toList());
+        // 리스트<호텔> -> 스트림<호텔> -> 맵(호텔 -> 호텔 디티오)-> 스트림<호텔 디티오> -> 리스트<호텔 디티오>
     }
 
     @Override
     public List<RoomDto> findByRoomList(String hotelName) {
-        List<Room> rooms = roomRepository.findAllByHotelName(hotelName);
-        List<RoomDto> roomDtos = new ArrayList<>();
-        for (Room room : rooms) {
-            roomDtos.add(new RoomDto(String.valueOf(room.getRoomType()),room.getRoomPrice(),room.getRoomStock()));
-        }
-        return roomDtos;
+//        List<Room> rooms = ;
+//        List<RoomDto> roomDtos = new ArrayList<>();
+//        for (Room room : rooms) {
+//            roomDtos.add(new RoomDto((room.getRoomType(),room.getRoomPrice(),room.getRoomStock()));
+//        }
+        return roomRepository.findAllByHotelName(hotelName);
     }
 
     @Override

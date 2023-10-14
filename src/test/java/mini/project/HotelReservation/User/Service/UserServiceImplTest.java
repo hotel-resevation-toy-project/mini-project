@@ -81,20 +81,22 @@ class UserServiceImplTest {
         mockRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         // 호스트 생성
-        User host = new User("Hotel_A",
+        User host = new User(new UserSignUpDto(
+                "Hotel_A",
                 "abc@example.com",
                 "1234",
                 "010-1234-5678",
-                UserStatus.USER_STATUS_ACTIVE,
-                UserRole.ROLE_HOST);
+                UserRole.ROLE_HOST));
+
         // 유저 생성
-        User user = new User("오진석",
+        User user = new User(new UserSignUpDto(
+                "오진석",
                 "abc2@example.com",
                 passwordEncoder.encode("1234"),
                 "010-1234-5678",
-                UserStatus.USER_STATUS_ACTIVE,
-                UserRole.ROLE_USER);
+                UserRole.ROLE_USER));
         userRepository.save(user);
+
         // 호텔 생성
         // A
         Hotel hotel = new Hotel("성북구",
@@ -107,6 +109,7 @@ class UserServiceImplTest {
                 LocalDate.now().plusMonths(2));
         hotel.foreignUser(host);
         Hotel saveHotel = hotelRepository.save(hotel);
+
         // B
         Hotel hotelB = new Hotel("신대방",
                 "Hotel_B",
@@ -118,6 +121,7 @@ class UserServiceImplTest {
                 LocalDate.now().plusMonths(2));
         // 귀찮아서 얘는 호스트 없음
         Hotel saveHotelB = hotelRepository.save(hotelB);
+
         // 객실 생성
         // 호텔 A꺼
         Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
@@ -208,7 +212,7 @@ class UserServiceImplTest {
 
         //when
         userService.deactive("1234");
-        User user = td.currentUser();
+        User user = userRepository.findByTokenId(td.currentUserId());
 
         //then
         assertThat(user.getStatus().equals(UserStatus.USER_STATUS_DEACTIVE));
@@ -232,12 +236,13 @@ class UserServiceImplTest {
     void 로그인() {
         //given
         UserSignInDto sid = new UserSignInDto("abc2@example.com","1234");
-        userService.logIn(sid);
+
         //when
+        userService.logIn(sid);
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
-        String email = td.currentUser().getEmail();
+        User user = userRepository.findByTokenId(td.currentUserId());
         //then
-        assertEquals(email,"abc2@example.com");
+        assertEquals(user.getEmail(),sid.getEmail());
     }
     @Test
     void 비회원_로그인(){
@@ -278,7 +283,7 @@ class UserServiceImplTest {
         SecurityContextHolder.getContext().setAuthentication(td.getAuthentication(td.resolveToken(mockRequest)));
 
         //when
-        userService.updateInfo(new UserInfoDto(userRepository.findByTokenId(td.currentUserId())));
+        userService.updateInfo((userRepository.findDtoByTokenId(td.currentUserId())));
         User changeUser = userRepository.findByEmail("abc2@example.com").get();
 
         //then

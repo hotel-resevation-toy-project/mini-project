@@ -23,29 +23,29 @@ public class Hotel extends AuditTime {
     @Id @GeneratedValue
     private Long hotelId;
 
-    @NotNull
+    @Column(nullable = false)
     private String address;
 
-    @NotNull
+    @Column(nullable = false)
     private String hotelName;
 
-    @NotNull
+    @Column(nullable = false)
     private String hotelPhoneNumber;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private DiscountPolicy discountPolicy;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalTime checkInTime;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalTime checkOutTime;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDate startPeakDate;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDate endPeakDate;
 
     @OneToOne(mappedBy ="hotel",fetch = FetchType.LAZY, cascade = CascadeType.ALL)

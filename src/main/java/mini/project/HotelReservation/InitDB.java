@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import mini.project.HotelReservation.Host.Data.Entity.Hotel;
 import mini.project.HotelReservation.Host.Data.Entity.Room;
+import mini.project.HotelReservation.User.Data.Dto.UserSignUpDto;
 import mini.project.HotelReservation.User.Data.Entity.User;
 import mini.project.HotelReservation.enumerate.DiscountPolicy;
 import mini.project.HotelReservation.enumerate.RoomType;
@@ -42,19 +43,21 @@ public class InitDB {
         }
 
         public void hotelA(){
-            User user = new User("오진석",
-                    "ojs258@naver.com",
-                    pe.encode("1234"),//1234
-                    "010-4620-9138",
-                    UserStatus.USER_STATUS_ACTIVE,
-                    UserRole.ROLE_USER);
+            User user = new User(
+            new UserSignUpDto(
+            "오진석",
+            "ojs258@naver.com",
+            pe.encode("1234"),//1234
+            "010-4620-9138",
+            UserRole.ROLE_USER));
 
-            User host = new User("Carder_Garden",
-                    "Carder_Garden@reservation.com",
-                    pe.encode("1234"),//1234
-                    "031-239-5572",
-                    UserStatus.USER_STATUS_ACTIVE,
-                    UserRole.ROLE_HOST);
+            User host = new User(
+            new UserSignUpDto(
+            "Carder_Garden",
+            "Carder_Garden@reservation.com",
+            pe.encode("1234"),//1234
+            "031-239-5572",
+            UserRole.ROLE_HOST));
 
             Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
             Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 20);
@@ -77,19 +80,21 @@ public class InitDB {
         }
 
         public void hotelB(){
-            User user = new User("김채림",
-                    "notcherry@naver.com",
-                    pe.encode("2580"),//2580
-                    "010-4433-4815",
-                    UserStatus.USER_STATUS_ACTIVE,
-                    UserRole.ROLE_USER);
+            User user = new User(
+            new UserSignUpDto(
+            "김채림",
+            "notcherry@naver.com",
+            pe.encode("2580"),//2580
+            "010-4433-4815",
+            UserRole.ROLE_USER));
 
-            User host = new User("Hilton_Budapest",
-                    "Hilton_Budapest@reservation.com",
-                    pe.encode("2580"),//2580
-                    "+36)1-889-6600",
-                    UserStatus.USER_STATUS_ACTIVE,
-                    UserRole.ROLE_HOST);
+            User host = new User(
+            new UserSignUpDto(
+            "Hilton_Budapest",
+            "Hilton_Budapest@reservation.com",
+            pe.encode("2580"),//2580
+            "+36)1-889-6600",
+            UserRole.ROLE_HOST));
 
             Room roomA = new Room(RoomType.ROOM_TYPE_A_SINGLE, 100000, 10);
             Room roomB = new Room(RoomType.ROOM_TYPE_B_TWIN, 200000, 15);

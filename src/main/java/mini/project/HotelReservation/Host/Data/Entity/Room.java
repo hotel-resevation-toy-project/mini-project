@@ -17,14 +17,14 @@ public class Room extends AuditTime {
     @Id @GeneratedValue
     private Long roomId;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer roomPrice;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer roomStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,6 +42,7 @@ public class Room extends AuditTime {
         hotel = foreignHotel;
         hotel.getRooms().add(this);
     }
+
     //비즈니스 로직
     public void modifyPrice(Integer newPrice){
         roomPrice = newPrice;

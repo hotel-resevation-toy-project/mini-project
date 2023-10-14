@@ -1,6 +1,7 @@
 package mini.project.HotelReservation.Host.Repository;
 
 import mini.project.HotelReservation.Host.Data.Entity.Room;
+import mini.project.HotelReservation.Reservation.Data.Dto.RoomDto;
 import mini.project.HotelReservation.enumerate.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +16,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             "JOIN r.hotel h " +
             "WHERE h.hotelName = :hotelName AND r.roomType = :roomType")
     Room findByHotelNameAndRoomType(@Param("hotelName") String hotelName, @Param("roomType") RoomType roomType);
-    @Query("SELECT r FROM Room r " +
+    @Query("SELECT new mini.project.HotelReservation.Reservation.Data.Dto.RoomDto(r.roomType, r.roomPrice, r.roomStock)" +
+            "FROM Room r " +
             "JOIN r.hotel h " +
             "WHERE h.hotelName = :hotelName")
-    List<Room> findAllByHotelName(@Param("hotelName")String hotelName);
+    List<RoomDto> findAllByHotelName(@Param("hotelName")String hotelName);
 
 }
